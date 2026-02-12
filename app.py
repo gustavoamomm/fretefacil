@@ -888,3 +888,8 @@ def excluir_frete(frete_id):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+print('oi')
