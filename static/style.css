@@ -1,0 +1,2035 @@
+html{
+    scroll-behavior: smooth;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-decoration: none;
+    /* text-transform: capitalize; */
+    transition: 0.2s linear;
+    font-family: "Roboto", sans-serif;
+    font-size:15px;
+    box-sizing: border-box
+}
+
+body {
+    background: #000;
+    color: #fff;
+}
+
+.header {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 1.5rem 0;
+    background: #000;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    z-index: 999;
+}
+
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.logo img {
+    height: 40px;
+}
+
+.navbar a {
+    margin: 0 1rem;
+    font-size: 1.4rem;
+    color: #fff;
+}
+
+
+.navbar a:hover {
+    color: #FF9900;
+    border-bottom: 0.1rem solid #FF9900;
+    padding-bottom: 0.5rem;
+    font-size: 1.5rem;
+
+
+}
+
+.btn-login,
+.btn-cadastro {
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.5rem;
+    border-bottom: none;
+    font-size: 1.6rem;
+    cursor: pointer;
+}
+
+.btn-login {
+    background: transparent;
+
+
+}
+
+
+/* HERO / BANNER */
+.hero {
+    width: 100%;
+    height: 100vh;
+    background: url("img/caminhao-home.jpg") center/cover no-repeat;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-left: 6rem;
+}
+
+/* Overlay escura */
+.overlay {
+    position: absolute;
+    inset: 0;
+    background:rgba(0,0,0,0.55);
+}
+
+.hero-text {
+    z-index: 2;
+    max-width: 550;
+}
+
+.hero-text h2 {
+    font-size: 4.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -1px;
+}
+
+.hero-text span {
+    color: #FF9900;
+    font-weight: 900;
+}
+
+.hero-text p {
+    margin-bottom: 2.5rem;
+    margin-top: 1.5rem;
+    font-size: 1.9rem;
+    font-weight: 300;
+    opacity: 0.9;
+    line-height: 1.6;
+}
+
+/* FORM NO CENTRO */
+.form-cadastro-login {
+    background: rgba(255,255,255,0.1);
+    padding: 2.5rem;
+    width: 400px;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    position: relative;
+
+}
+
+
+.form-cadastro-login h3 {
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #fff;
+}
+
+.form-cadastro-login form {
+    width: 100%;
+    /* display: flex;
+    flex-direction: column;
+    gap: 1rem; */
+}
+
+.form-cadastro-login input {
+    padding: 14px;
+    border-radius: 5px;
+    border: none;
+}
+
+.avatar-icon{
+    position: absolute;
+    top: -50px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #FF9900;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    border: 5px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatar-icon img{
+    width: 50px;
+    height: 50px;
+    filter: invert(100%) opacity(70%)
+}
+
+.input-field-group {
+    display: flex;
+    align-items: center;
+    /* background-color: rgba(255, 255, 255, 0.2); */
+    background-color: #333;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border: 1px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.input-field-group:focus-within{
+    border-color: #FF9900;
+}
+
+.input-field-group input{
+    background: transparent;
+    border: none;
+    flex-grow: 1;
+    color: #fff;
+    padding: 14px 10px;
+}
+
+.input-field-group input::placeholder{
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.input-icon {
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon img {
+    width: 18px;
+    height: 18px;
+    filter: invert(100%) opacity(70%);
+}
+
+.input-container .toggle-password {
+    /* Mantenha o posicionamento que você já tem para sobrepor o input */
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+
+}
+
+.btn-login-custom {
+    /* Estilos do seu .btn-cadastro, mas talvez com mais destaque */
+    background-color: #FF9900;
+    color: white;
+    padding: 14px 34px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px; /* Menos margem */
+    transition: 0.3s ease;
+    width: 100%; /* Largura total */
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
+
+.btn-login-custom:hover{
+    background-color: #d67f00;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+}
+
+.form-cadastro-pcu{
+    width: 700px;
+    max-width: 90%;
+    padding: 2rem;
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+.form-cadrastro-pcu, .form-aba-carro{
+    margin-top: 20px;
+}
+
+.form-cadastro-pcu label,
+.form-cadastro-pcu h3,
+.form-cadastro-pcu .titulo-form {
+    color: #fff;
+}
+
+.form-cadastro-pcu h3{
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+
+.form-cadastro-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 2.5rem;
+    width: 100%;
+}
+
+.form-cadastro-grid .full{
+    grid-column: 1 / 3;
+}
+
+.form-cadastro-grid .campo{
+    display: flex;
+    flex-direction: column;
+}
+
+.form-cadastro-grid .campo .input-field-group{
+    margin-bottom: 0;
+}
+
+.input-field-group input[type="date"]{
+    color: #fff;
+    filter: invert(1);
+}
+
+.input-field-group input[type="date"]:invalid {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-cadastro-pcu, .btn-cadastro{
+    background-color: #FF9900;
+    color: white;
+    padding: 14px 34px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: 0.3s ease;
+    width: 100%;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
+
+.btn-cadastro-pcu:hover,
+.btn-cadastro:hover{
+    background-color: #d67f00;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+}
+
+.btn-hero-more{
+    background-color: #ff9900;
+    color: white;
+    padding: 14px 34px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.6rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 40px !important;
+    transition: 0.3s ease;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
+
+.btn-hero-more:hover{
+
+    background-color: #d67f00;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+
+}
+
+.pagina-cadastro{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #000;
+    padding: 0;
+  
+}
+
+.pagina-cadastro .navbar {
+    display: none;
+}
+
+.pagina-cadastro .header{
+    display: none;
+}
+
+
+.cadastro-escolha{
+    padding: 6rem 0;
+    text-align: center;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.escolha-container{
+    width: 100%;
+    max-width: 600px;
+}
+
+.escolha-container h2{
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    color: #fff;
+}
+
+.opcoes-cadastro{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+
+}
+
+.opcao-card{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1F2937;
+    padding: 1.5rem;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.3s, border-color 0.3s;
+
+}
+
+.opcao-card:hover{
+    background: #2D3A4B;
+    border-color: #FF9900;
+    cursor: pointer;
+}
+
+.card-icon img{
+    height: 40px;
+    width: 40px;
+    margin-right: 1.5rem;
+}
+
+.card-content{
+    text-align: left;
+    flex-grow: 1;
+}
+
+.card-content h3{
+    font-size: 1.8rem;
+    margin-bottom: 0.3rem;
+    color: #FF9900;
+}
+
+.card-content p{
+    font-size: 1rem;
+    color: #ccc;
+}
+
+.card-arrow{
+    font-size: 2rem;
+    color: #FF9900;
+    margin-left: 1rem;
+}
+
+
+.pagina-cadastro::before {
+    content: "";
+    height: 100px;
+}
+
+.pagina-cadastro2 .logo-topo{
+
+    background: #000;
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+
+}
+
+
+.header {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    padding: 15px 0;
+}
+
+.header .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 30px; /* Tamanho do ícone de caminhão no logo */
+     /* Deixa o caminhão branco */
+}
+
+.logo h1 {
+    font-size: 1.4em;
+    font-weight: 700;
+    /* color: var(--cor-texto-principal); */
+}
+
+.navbar a {
+    color: var(--cor-texto-secundario);
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.navbar a:hover {
+    color: var(--cor-primaria);
+}
+
+/* --- 4. CONTEÚDO PRINCIPAL (MENU) --- */
+.menu-pcu-section {
+    flex-grow: 1; /* Garante que ocupe o espaço restante */
+    display: flex;
+    justify-content: center;
+    padding: 50px 20px;
+}
+
+.menu-container {
+    width: 100%;
+    max-width: 500px; /* Limita a largura para melhor legibilidade dos cards */
+    text-align: center;
+}
+
+.menu-container h2 {
+    font-size: 2.2em;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.menu-container .sub {
+    color: var(--cor-texto-secundario);
+    font-size: 1em;
+    margin-bottom: 40px;
+}
+
+.menu-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* --- 5. ESTILO DOS CARDS (OPÇÕES) --- */
+.menu-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none; /* Remove o sublinhado do link */
+
+    background-color: var(--cor-cartao);
+    padding: 20px;
+    border-radius: 12px;
+
+    /* Efeito de Profundidade */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    border: 1px solid transparent; /* Para a borda do hover */
+
+    transition: all 0.25s ease-out;
+}
+
+.menu-card:hover {
+    background-color: var(--cor-cartao-hover);
+    transform: translateY(-3px); /* Efeito de elevação */
+    border-color: var(--cor-primaria); /* Borda de destaque na cor primária */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.7);
+}
+
+.menu-icon {
+    width: 45px;
+    height: 45px;
+    margin-right: 15px;
+    flex-shrink: 0; /* Impede que o ícone diminua */
+}
+
+.menu-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    /* Transforma o ícone (que parece ser colorido) em branco */
+    filter: invert(100%);
+}
+
+.menu-content {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.menu-content h3 {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 600;
+    color: var(--cor-texto-principal);
+}
+
+.menu-content p {
+    margin: 3px 0 0 0;
+    font-size: 0.9em;
+    color: var(--cor-texto-secundario);
+}
+
+.menu-arrow {
+    font-size: 1.5em;
+    color: var(--cor-primaria); /* Seta na cor de destaque */
+    margin-left: 10px;
+    transition: transform 0.25s;
+}
+
+.menu-card:hover .menu-arrow {
+    transform: translateX(5px);
+}
+
+/* ESCONDER SENHA */
+
+/* Container para posicionar o ícone de forma absoluta */
+.input-container {
+    position: relative;
+    /* Ajuste a largura conforme necessário */
+    margin-bottom: 15px;
+}
+
+/* Garante que o input preencha o container */
+.input-container input[type="password"],
+.input-container input[type="text"] {
+    width: 100%;
+    /* Adicione padding à direita para evitar que o texto fique por baixo do ícone */
+    padding-right: 40px;
+}
+
+/* Estilo para o ícone */
+.toggle-password {
+    position: absolute;
+    /* Posiciona o ícone no canto superior direito do input */
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    /* Define o tamanho do ícone */
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toggle-password img {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* Título */
+.titulo-form {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #000;
+}
+
+/* Tabs */
+.tabs-cadastro {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tabs-cadastro .tab {
+    padding: 8px 18px;
+    background: #e4e4e4;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+}
+
+
+/* Subtítulo */
+.subtitulo {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #000;
+}
+
+/* Grid do formulário */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.campo label {
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+
+/* Campo de linha inteira */
+.full {
+    grid-column: 1 / 3;
+}
+
+/* Botão */
+.botao-area {
+    text-align: center;
+}
+
+.btn-cadastro {
+    background: #FF9900;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 6px;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-cadastro:hover {
+    background: #c27c14;
+}
+
+
+/* DASHBOARD PCU*/
+
+.pagina-dashboard-pcu {
+    background: #000; /* Fundo leve para destaque do container */
+    color: #f1f5f9;
+    padding-top: 80px;
+    min-height: 100vh;
+}
+
+.pagina-dashboard-pcu .dashboard-container,
+.pagina-dashboard-empresa .dashboard-container {
+    padding-top: 130px; 
+}
+
+.pagina-dashboard-pcu .header,
+.pagina-dashboard-empresa .header {
+    /* background: #000; Garante o fundo preto no header fixo superior
+    border-bottom: 1px solid rgba(255,255,255,0.1); */
+    display: none;
+}
+
+.dashboard-fixed-header-top {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: #000; /* Fundo preto (como o header original) */
+    z-index: 1000;
+    padding: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.dashboard-fixed-header-top .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.dashboard-fixed-header-top .logo h1 {
+    font-size: 1.6em; 
+    font-weight: 700;
+    color: #fff;
+}
+
+.dashboard-fixed-header-top .user-greeting p,
+.dashboard-fixed-header-top .user-greeting span {
+    color: #fff !important;
+}
+
+.dashboard-fixed-header-top .user-greeting a {
+    color: #FF9900 !important; /* Link Sair Laranja */
+}
+
+.dashboard-fixed-header-top .user-avatar img {
+    border: none; /* Remove a borda laranja que tinha no header original do dashboard */
+    background: #333; /* Fundo do avatar */
+}
+
+.dashboard-fixed-tabs-bar {
+    width: 100%;
+    position: fixed;
+    top: 69px; 
+    left: 0;
+    background: #000; /* Fundo laranja (como o dashboard-header original) */
+    z-index: 1000;
+    padding: 0.8rem 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid #FF9900;
+}
+
+.dashboard-fixed-tabs-bar .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.dashboard-fixed-tabs-bar .dashboard-tabs {
+    border-bottom: none !important;
+    justify-content: flex-start;
+    margin-bottom: 0 !important;
+    display: flex;
+}
+
+.dashboard-fixed-tabs-bar .tab-link {
+    color: #FF9900 !important; /* Texto preto no fundo laranja */
+    font-weight: 700;
+    border-bottom: 3px solid transparent !important;
+    padding: 10px 15px !important;
+    margin-right: 10px;
+}
+
+.dashboard-fixed-tabs-bar .tab-link.active {
+    /* color: #000 !important; */
+    border-bottom: 3px solid #ff9900 !important; /* Borda preta para aba ativa */
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dashboard-header {
+    background: #FF9900;
+    padding: 25px 30px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+}
+
+/* .dashboard-header h2 {
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: 600;
+} */
+
+.user-info {
+    display: flex;
+    align-items: center;
+    /* gap: 15px; */
+}
+
+.user-avatar img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-left: 15px;
+    border: 3px solid #FF9900;
+    /* object-fit: cover; */
+}
+
+.user-greeting p {
+    color: #555;
+    font-size: 1rem;
+}
+
+/*
+  -------------------------------------
+  Tabs de Navegação
+  -------------------------------------
+*/
+.dashboard-tabs {
+    display: flex;
+    /* gap: 10px; */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #334155;
+    color: #FF9900;
+}
+
+.tab-link {
+    padding: 15px 25px;
+    text-decoration: none;
+    color: #cbd5e1;
+    font-size: 1.1rem;
+    font-weight: 500;
+    /* text-transform: uppercase; */
+    transition: all 0.2s ease;
+    border-bottom: 3px solid transparent; /* Para o efeito de aba */
+    margin-right: 15px;
+}
+
+.tab-link:hover {
+    color: #FF9900;
+    transform: translateY(-4px);
+}
+
+.tab-link.active {
+    color: #FF9900;
+    border-bottom: 3px solid #FF9900;
+    font-weight: 700;
+}
+
+/*
+  -------------------------------------
+  Conteúdo da Aba (Card)
+  -------------------------------------
+*/
+.tab-content-card {
+    padding: 25px;
+    background: #FF9900;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/*
+  -------------------------------------
+  Card de Saldo
+  -------------------------------------
+*/
+.saldo-card {
+    background-color: #FF9900;
+    color: #000;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    display: inline-block;
+}
+
+.saldo-card h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.saldo-card p {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin: 5px 0 0 0;
+}
+
+/*
+  -------------------------------------
+  Tabela
+  -------------------------------------
+*/
+.dashboard-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.dashboard-table th {
+    background-color: #475569;
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    /* font-size: 0.9rem; */
+    border-bottom: none;
+}
+
+.dashboard-table tbody tr {
+    background: #1e293b;
+    border-radius: 8px;
+}
+
+.dashboard-table tbody tr:hover {
+    background-color: #fffaf5; /* Efeito hover sutil */
+}
+
+/*
+  -------------------------------------
+  Status da Transação
+  -------------------------------------
+*/
+.status-frete {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: 600;
+    display: inline-block
+}
+
+/* Exemplo de cor para status "completo" */
+.status-completo {
+    background-color: #059669;
+    color: #ecfdf5;
+}
+
+.status-pendente {
+    background-color: #f59e0b; 
+    color: #fff;
+}
+.status-cancelado {
+    background-color: #ef4444; 
+    color: #fff;
+}
+
+.fretes-listagem {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr))
+}
+
+.frete-card{
+    background: #000;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #1f1f1f;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+.frete-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #222;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.frete-header h4 {
+    font-size: 1.3rem;
+    color: #fff;
+    font-weight: 600;
+    margin: 0;
+}
+
+.frete-valor {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #10b981;
+}
+
+.frete-body p {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.frete-body .label {
+    color: #ccc;
+    font-weight: 400;
+    margin-right: 5px;
+}
+
+.frete-body .local {
+    font-weight: 700;
+    color: #FF9900;
+}
+
+.frete-detalhe {
+    font-size: 0.9rem !important;
+    color: #aaa;
+    margin-top: 10px;
+}
+
+.frete-detalhe .separator {
+    margin: 0 10px;
+    color: #333;
+}
+
+.frete-footer {
+    padding-top: 15px;
+    border-top: 1px solid #222;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.btn-aceitar, .btn-pagar {
+    background: #FF9900;
+    color: #000;
+    padding: 10px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: background 0.2s;
+}
+
+.btn-aceitar:hover, .btn-pagar:hover {
+    background: #ffb84d;
+}
+
+.btn-ver-detalhes {
+    background: none;
+    color: #ccc;
+    padding: 10px 18px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-ver-detalhes:hover {
+    background: #222;
+}
+
+.titulo-meus-fretes {
+    font-size: 28px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    color: #000;
+    letter-spacing: 1px;
+}
+
+.lista-fretes-aceitos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
+}
+
+.card-frete-aceito {
+    background: #111;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #222;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-frete-aceito:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.card-header h3 {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.badge-status {
+    background: #0f0;
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.card-frete-aceito p {
+    margin: 6px 0;
+    color: #ccc;
+}
+
+.card-frete-aceito p strong {
+    color: #fff;
+}
+
+.nenhum {
+    color: #000;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.btn-detalhes {
+    width: 100%;
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #e60000;
+    color: #fff;
+    transition: 0.2s ease;
+}
+
+.btn-detalhes:hover {
+    background: #ff3333;
+    transform: scale(1.02);
+}
+
+.form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px; /* Adiciona padding para o formulário */
+    background: #1a1a1a; /* Fundo levemente mais escuro para o bloco */
+    border-radius: 12px;
+}
+
+.form-group {
+    flex: 1 1 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.half-width {
+    flex: 1 1 calc(50% - 10px);
+}
+
+.form-group label {
+    color: #f0f0f0;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-grid input[type="text"],
+.form-grid input[type="number"],
+.form-grid select {
+    padding: 10px;
+    border: 1px solid #444;
+    border-radius: 8px; /* Mantendo o arredondamento */
+    background-color: #333;
+    color: #f0f0f0;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-grid input[type="text"]:focus,
+.form-grid select:focus {
+    border-color: #ff9900; /* Laranja para foco da empresa */
+    outline: none;
+}
+
+.btn-submit {
+    background-color: #ff9900; /* Laranja para ação principal da empresa */
+    color: #1a1a1a;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-top: 10px;
+    transition: background-color 0.3s;
+}
+
+.btn-submit:hover {
+    background-color: #e68a00;
+}
+
+.full-width {
+    flex: 1 1 100%;
+}
+
+
+/* Estilos para VER FRETES (Empresa) - Usando a estrutura de Card existente */
+.empresa-card {
+    /* Usando a classe principal do PCU, mas adicionando um destaque visual */
+    border-left: 5px solid #ff9900; /* Destaque lateral laranja */
+}
+
+.frete-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.valor-frete-empresa {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Estilos de Status da Empresa */
+.status-pendente {
+    background-color: #4a4a00; /* Amarelo escuro (Aguardando PCU) */
+    color: #ffff00;
+}
+/* 
+.status-aceito {
+    background-color: #003366; Azul escuro (Aceito/Pendente Pagamento)
+    color: #99ccff;
+} */
+
+.status-pago {
+    background-color: #004a00; /* Verde escuro (Concluído/Pago) */
+    color: #00ff00;
+}
+
+.frete-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+.btn-edit {
+    /* Amarelo para Editar */
+    background-color: #4a4a00; 
+    color: #ffff00 !important;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.btn-delete {
+    /* Vermelho para Excluir (Usando o vermelho do btn-detalhes) */
+    background-color: #e60000; 
+    color: #fff !important;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+
+/* --- Estilos para PAGAMENTOS --- */
+
+.pagamentos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.pagamento-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px;
+    background-color: #000  ;
+    border-radius: 12px;
+    border-left: 5px solid #00ff00; /* Destaque verde para pagamentos */
+}
+
+.pagamento-info h3 {
+    margin: 0;
+    font-size: 1.1em;
+    color: #fff;
+}
+
+.pagamento-info p {
+    margin: 3px 0;
+    font-size: 0.9em;
+    color: #ccc;
+}
+
+.pagamento-valor {
+    text-align: right;
+}
+
+.valor-destaque {
+    font-size: 1.3em;
+    font-weight: bold;
+    color: #00ff00; /* Verde para valores monetários */
+}
+
+.prazo {
+    color: #ff6666; /* Vermelho suave para prazo */
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+.pagamento-action .btn-aceitar {
+    /* Botão de Pagamento */
+    background-color: #00aa00;
+    color: #fff;
+    padding: 10px 18px;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.pagamento-action .btn-aceitar:hover {
+    background-color: #00cc00;
+}
+
+/* Estilo para Tabela de Histórico */
+.tabela-historico {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.tabela-historico th, .tabela-historico td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.tabela-historico th {
+    background-color: #222;
+    color: #ff9900;
+    font-weight: 500;
+}
+
+.tabela-historico tr:hover {
+    background-color: #1a1a1a;
+}
+
+/* -------------------------------------
+  ESTILOS DO DASHBOARD EMPRESA (Reaproveitamento da base PCU)
+------------------------------------- */
+
+.pagina-dashboard-empresa {
+    background: #000; 
+    color: #f1f5f9;
+    padding-top: 80px;
+    min-height: 100vh;
+}
+
+/* Garante que o cabeçalho da empresa use o mesmo estilo do PCU */
+/* .pagina-dashboard-empresa .dashboard-header {
+    background: #FF9900; 
+} */
+
+/* Ajuste no User Info para destacar a Empresa */
+.pagina-dashboard-empresa .user-greeting {
+    color: #f1f5f9 !important; /* Texto branco */
+}
+
+/* -------------------------------------
+  FORMULÁRIO PUBLICAR FRETE
+------------------------------------- */
+
+/* O cartão de conteúdo que envolve o formulário (Reaproveitamento) */
+.form-card {
+    padding: 25px;
+    background: #000;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.form-publicar-frete {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2.5rem;
+}
+
+.form-publicar-frete .full {
+    grid-column: 1 / 3;
+}
+
+.form-publicar-frete .campo {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-publicar-frete label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #fff; /* Cor de texto mais clara */
+}
+
+.form-publicar-frete input[type="text"],
+.form-publicar-frete input[type="number"],
+.form-publicar-frete select {
+    padding: 12px;
+    border-radius: 8px;
+    background-color: #000; /* Fundo do input mais escuro */
+    color: #fff;
+    border: 1px solid #FF9900;
+    transition: border-color 0.2s;
+    font-size: 1rem;
+}
+
+.form-publicar-frete input:focus,
+.form-publicar-frete select:focus {
+    border-color: #FF9900; /* Destaque laranja */
+    outline: none;
+}
+
+/* Botão de Publicar Frete */
+.btn-publicar-frete {
+    background: #FF9900;
+    color: #000;
+    padding: 14px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 1.1rem;
+    transition: background 0.2s, transform 0.2s;
+    width: 100%;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+.btn-publicar-frete:hover {
+    background: #d67f00;
+    transform: translateY(-1px);
+}
+
+/* -------------------------------------
+  LISTAGEM DE FRETES PUBLICADOS (VER FRETES)
+------------------------------------- */
+.fretes-publicados-list {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+}
+
+.frete-card-empresa {
+    background: #000; /* Fundo do card igual ao do container */
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid #975c03; /* Linha de destaque */
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s;
+}
+
+.frete-card-empresa.status-aceito {
+    border-left-color: #FF9900; /* Destaque se o PCU aceitou */
+}
+.frete-card-empresa.status-finalizado {
+    border-left-color: #10b981; /* Destaque verde ao finalizar */
+}
+
+
+.card-detalhes h4 {
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.card-detalhes p {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    margin-bottom: 5px;
+}
+
+.card-detalhes .label {
+    font-weight: 400;
+    color: #94a3b8;
+}
+
+.card-detalhes .valor-frete {
+    color: #10b981; 
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.status-aceito strong {
+    color: #FF9900 !important;
+}
+
+.card-status-acao {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.status-tag, .btn-editar, .btn-excluir {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    background: #FF9900;
+    color: #1e293b;
+}
+
+
+.acoes-frete {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.acoes-frete a {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.btn-editar:hover {
+    background: #975c03;
+}
+/* 
+.btn-excluir {
+    color: #e24a4a; 
+    border: 1px solid #e24a4a;
+} */
+.btn-excluir:hover {
+    background: rgba(226, 74, 74, 0.1);
+}
+
+/* -------------------------------------
+  LISTAGEM DE PAGAMENTOS (ABA PAGAMENTOS)
+------------------------------------- */
+.pagamentos-empresa-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.pagamento-card {
+    background: #1e293b;
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 5px solid #FF9900; 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.pagamento-info h4 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+.valor-pagar {
+    font-size: 1rem;
+    color: #94a3b8;
+    margin-bottom: 5px;
+}
+
+.pagamento-info .valor-final {
+    font-size: 1.4rem;
+    color: #FF9900; /* Laranja para o valor a pagar */
+    font-weight: 900;
+}
+
+.pagamento-info p span {
+    color: #fff;
+    font-weight: 500;
+}
+
+
+/* Container fixo abaixo do header */
+.flash-fixed {
+    position: fixed;
+    top: 95px;              /* Ajuste fino: se quiser mais para baixo, aumente */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 700px;
+    z-index: 9999;          /* Fica acima do header */
+}
+
+/* Fade-in suave */
+.flash-message {
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* PROS TIP: Fade-out automático após 3 segundos */
+.flash-message.fade-out {
+    animation: fadeOut 0.4s ease-in forwards;
+}
+
+/* Cores originais mantidas */
+.flash-message.sucesso {
+    background-color: #d4edda;
+    color: #155724;
+    border-left: 5px solid #28a745;
+}
+
+.flash-message.erro {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-left: 5px solid #dc3545;
+}
+
+.flash-message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left: 5px solid #ffc107;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to   { opacity: 0; transform: translateY(-10px); }
+}
+
+.revelar {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(30px);
+    transition: all 0.8s ease-out;
+}
+
+/* Estado final: Visível e na posição correta */
+.revelar.ativo {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+/* Opcional: Efeito cascata para itens em sequência (ex: cards) */
+.atraso-1 { transition-delay: 100ms; }
+.atraso-2 { transition-delay: 200ms; }
+.atraso-3 { transition-delay: 300ms; }
+
+
+/* =========================
+   CARTEIRA - PCU
+========================= */
+/* 
+.carteira-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 10px;
+    
+    /* max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px; */
+/* } */
+
+/* ====== SALDO PRINCIPAL ====== */
+/* .saldo-card {
+    background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+    border-radius: 14px;
+    padding: 25px; */
+    /* margin-bottom: 30px;
+    color: #000; */
+    /* box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.saldo-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.saldo-card p {
+    font-size: 2.6rem;
+    font-weight: bold;
+} */
+
+/* ====== RESUMO ====== */
+/* .resumo-carteira {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 35px;
+}
+
+.resumo-box {
+    background-color: #111;
+    border-radius: 12px;
+    padding: 22px;
+    border: 1px solid #222;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+} */
+/* 
+.resumo-box h4 {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #aaa;
+    margin-bottom: 8px;
+} */
+/* 
+.resumo-box p {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ff9900;
+} */
+
+/* ====== TÍTULO SEÇÃO ====== */
+/* .titulo-secao {
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ff9900;
+} */
+
+/* ====== TABELA ====== */
+/* .dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #0e0e0e;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.dashboard-table thead {
+    background-color: #181818;
+}
+
+.dashboard-table th {
+    text-align: left;
+    padding: 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #ff9900;
+    border-bottom: 1px solid #222;
+}
+
+.dashboard-table td {
+    padding: 14px;
+    font-size: 0.9rem;
+    color: #ddd;
+    border-bottom: 1px solid #1f1f1f;
+}
+
+.dashboard-table tr:hover {
+    background-color: #1a1a1a;
+} */
+
+/* ====== VALORES ====== */
+/* .valor-positivo {
+    color: #4caf50;
+    font-weight: 600;
+}
+
+.valor-negativo {
+    color: #f44336;
+    font-weight: 600;
+} */
+
+/* ====== ESTADO VAZIO ====== */
+/* .tabela-vazia {
+    text-align: center;
+    padding: 25px;
+    color: #888;
+    font-style: italic;
+} */
+
+/* ====== RESPONSIVO ====== */
+/* @media (max-width: 768px) {
+    .saldo-card p {
+        font-size: 2.1rem;
+    }
+
+    .dashboard-table th,
+    .dashboard-table td {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+} */ 
+
+/* ===============================
+   CONTAINER PRINCIPAL
+================================ */
+.carteira-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 10px;
+}
+
+/* ===============================
+   CARD SALDO
+================================ */
+.saldo-card {
+    background: linear-gradient(135deg, #1f1f1f, #2a2a2a);
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+}
+
+.saldo-card.destaque {
+    border-left: 5px solid #ff9900;
+}
+
+.saldo-info h4 {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+.saldo-valor {
+    font-size: 2.6rem;
+    font-weight: 700;
+    color: #ff9900;
+    margin-bottom: 6px;
+}
+
+.saldo-descricao {
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+/* ===============================
+   RESUMO FINANCEIRO
+================================ */
+.resumo-financeiro {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.resumo-card {
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease;
+}
+
+.resumo-card:hover {
+    transform: translateY(-3px);
+}
+
+.resumo-card h5 {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin-bottom: 10px;
+}
+
+.resumo-valor {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.resumo-valor.verde {
+    color: #2ecc71;
+}
+
+.resumo-valor.amarelo {
+    color: #f1c40f;
+}
+
+/* ===============================
+   TÍTULO SEÇÃO
+================================ */
+.titulo-secao {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ff9900;
+    margin-top: 10px;
+}
+
+/* ===============================
+   TABELA
+================================ */
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+
+.dashboard-table thead {
+    background-color: #262626;
+}
+
+.dashboard-table th {
+    padding: 14px;
+    font-size: 0.85rem;
+    color: #bbb;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.dashboard-table td {
+    padding: 14px;
+    font-size: 0.9rem;
+    color: #eee;
+    border-bottom: 1px solid #2c2c2c;
+}
+
+.dashboard-table tr:hover {
+    background-color: #2a2a2a;
+}
+
+.dashboard-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ===============================
+   STATUS / CORES
+================================ */
+.verde {
+    color: #2ecc71;
+    font-weight: 600;
+}
+
+.status.pago {
+    background-color: rgba(46, 204, 113, 0.15);
+    color: #2ecc71;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-align: center;
+    display: inline-block;
+}
+
+/* ===============================
+   AÇÕES
+================================ */
+.acoes-carteira {
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.btn-acao {
+    padding: 10px 18px;
+    border-radius: 8px;
+    background-color: #ff9900;
+    color: #000;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-acao:hover {
+    background-color: #e68a00;
+    transform: translateY(-2px);
+}
+
+.btn-acao.secundario {
+    background-color: #333;
+    color: #fff;
+}
+
+.btn-acao.secundario:hover {
+    background-color: #444;
+}

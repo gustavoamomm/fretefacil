@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block title %}Início{% endblock %}
+
+{% block content %}
+
+<body class="pagina-cadastro revelar atraso-1">
+
+    <!-- 🔔 MENSAGENS FLASH PADRONIZADAS -->
+    <div class="flash-wrapper" style="max-width: 500px; margin: 0 auto 20px auto;">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        <div class="flash-container">
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <section class="form-cadastro-login form-cadastro-pcu">
+
+        <div class="avatar-icon">
+            <img src="{{ url_for('static', filename='img/icons/user.png')}}" alt="pcu">
+        </div>
+
+        <h3>Cadastrar Proprietário de Carro Utilitário</h3>
+
+        <!-- FORMULÁRIO COMEÇA AQUI -->
+        <form action="{{ url_for('cadastro_pcu')}}" method="POST" class="form-cadastro-grid">
+
+            <!-- Nome -->
+            <div class="campo full">
+                <label>Nome Completo:</label>
+                <div class="input-field-group">
+                    <input type="text" name="nome" placeholder="Digite seu nome completo" required>
+                </div>
+            </div>
+
+            <!-- Data de nascimento -->
+            <div class="campo full">
+                <label>Data de Nascimento:</label>
+                <div class="input-field-group">
+                    <input type="date" name="dt_nasc" required>
+                </div>
+            </div>
+
+            <!-- CPF e CNH -->
+            <div class="campo">
+                <label>CPF (11 dígitos):</label>
+                <div class="input-field-group">
+                    <input type="text" name="cpf" maxlength="11" required placeholder="Somente números">
+                </div>
+            </div>
+
+            <div class="campo">
+                <label>CNH (9 dígitos):</label>
+                <div class="input-field-group">
+                    <input type="text" name="cnh" maxlength="9" required placeholder="Somente números">
+                </div>
+            </div>
+
+            <!-- Senha e confirmar -->
+            <div class="campo">
+                <label>Senha (8 dígitos):</label>
+                <div class="input-field-group">
+                    <input type="password" name="senha" minlength="8" placeholder="Senha" required>
+                </div>
+            </div>
+
+            <div class="campo">
+                <label>Confirmar Senha:</label>
+                <div class="input-field-group">
+                    <input type="password" name="confirsenha" minlength="8" placeholder="Confirme a senha" required>
+                </div>
+            </div>
+
+            <!-- Botão -->
+            <div class="botao-area full">
+                <button type="submit" class="btn-cadastro-pcu">Cadastrar PCU</button>
+            </div>
+
+        </form>
+
+
+    </section>
+    {% endblock %}

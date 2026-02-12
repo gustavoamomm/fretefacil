@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro{% endblock %}
+
+{% block content %}
+
+<body class="pagina-cadastro">
+<!-- 
+    <div class="logo-topo">
+        <img src="{{ url_for('static', filename='img/delivery-truck.png') }}" alt="logo">
+        <h1>Frete Fácil</h1>
+    </div> -->
+
+
+    <div class="form-cadastro-login revelar atraso-1">
+        <div class="avatar-icon">
+            <img src="{{ url_for('static', filename='img/icons/user.png')}}" alt="user">
+        </div>
+        <h3>Login</h3>
+        <form method="POST" action="{{ url_for('login')}}">
+            <div class="input-field-group">
+                <span class="input-icon"><img src="{{ url_for('static', filename='img/icons/user.png')}}" alt="user"></span>
+                <input type="text" placeholder="CPF ou CNPJ" name="dados" required>
+            </div>
+            
+            <div class="input-container input-field-group">
+                <span class="input-icon"><img src="{{ url_for('static', filename='img/icons/password.png')}}" alt="user"></span>
+                <input type="password" id="senha" placeholder="Senha" name="senha" required>
+
+                <span class="toggle-password" onclick="togglePasswordVisibility()">
+                    <img src="{{ url_for('static', filename='img/visivel.png') }}" id="toggle-icon"
+                        alt="Mostrar Senha">
+                </span>
+            </div>
+
+            <button class="btn-login-custom">Entrar</button>
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert">
+            {% for msg in messages%}
+            <p>{{ msg }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
+
+{% endblock %}

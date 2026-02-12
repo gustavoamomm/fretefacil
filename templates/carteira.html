@@ -1,0 +1,99 @@
+{% extends 'dashboard_base_pcu.html' %}
+
+{% block title %}Carteira PCU{% endblock %}
+
+{% block dashboard_content %}
+
+<!-- BLOCO PRINCIPAL DA CARTEIRA -->
+<div class="carteira-container revelar atraso-1">
+
+    <!-- CARD SALDO ATUAL -->
+    <div class="saldo-card destaque">
+        <div class="saldo-info">
+            <h4>SALDO DISPONÍVEL</h4>
+            <p class="saldo-valor">
+                R$ {{ "{:,.2f}".format(saldo).replace(",", "X").replace(".", ",").replace("X", ".") }}
+            </p>
+            <span class="saldo-descricao">
+                Valor disponível referente aos fretes pagos
+            </span>
+        </div>
+    </div>
+
+    <!-- RESUMO FINANCEIRO -->
+    <div class="resumo-financeiro">
+
+        <div class="resumo-card">
+            <h5>Total Recebido</h5>
+            <p class="resumo-valor verde">
+                R$ {{ "{:,.2f}".format(saldo).replace(",", "X").replace(".", ",").replace("X", ".") }}
+            </p>
+        </div>
+
+        <div class="resumo-card">
+            <h5>Fretes Pagos</h5>
+            <p class="resumo-valor">
+                {{ total_fretes_pagos if total_fretes_pagos is defined else 0 }}
+            </p>
+        </div>
+
+        <div class="resumo-card">
+            <h5>Pendentes</h5>
+            <p class="resumo-valor amarelo">
+                {{ fretes_pendentes if fretes_pendentes is defined else 0 }}
+            </p>
+        </div>
+
+    </div>
+
+    <!-- HISTÓRICO -->
+    <h3 class="titulo-secao">Últimas Movimentações</h3>
+
+    <table class="dashboard-table">
+        <thead>
+            <tr>
+                <th>Data</th>
+                <th>Frete</th>
+                <th>Tipo</th>
+                <th>Valor</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% if transacoes %}
+                {% for t in transacoes %}
+                <tr>
+                    <td>{{ t.data }}</td>
+                    <td>#{{ t.id_frete }}</td>
+                    <td>Recebimento</td>
+                    <td class="verde">
+                        R$ {{ "{:,.2f}".format(t.valor).replace(",", "X").replace(".", ",").replace("X", ".") }}
+                    </td>
+                    <td class="status pago">Pago</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center;">
+                        Nenhuma movimentação registrada ainda.
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <!-- AÇÕES -->
+    <div class="acoes-carteira">
+        <a href="{{ url_for('listar_fretes') }}" class="btn-acao">
+            Listar Fretes
+        </a>
+
+        <a href="{{ url_for('meus_fretes') }}" class="btn-acao secundario">
+            Meus Fretes
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

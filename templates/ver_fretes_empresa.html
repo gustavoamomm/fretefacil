@@ -1,0 +1,79 @@
+{% extends 'dashboard_empresa_base.html' %}
+
+{% block title %}Fretes Publicados{% endblock %}
+
+{% block dashboard_content %}
+
+<h3 style="margin-bottom: 20px; font-size: 1.5rem; color: #000;">
+    Seus Fretes Publicados ({{ fretes|length }} total)
+</h3>
+
+<div class="fretes-publicados-list">
+
+    {% for frete in fretes %}
+    <div class="frete-card-empresa status-{{ frete.status|lower }}">
+
+        <!-- DETALHES DO FRETE -->
+        <div class="card-detalhes">
+            <h4>
+                #{{ frete.id_frete }} | {{ frete.origem }} ➡️ {{ frete.destino }}
+            </h4>
+
+            <p>
+                <span class="label">Valor:</span>
+                <strong class="valor-frete">
+                    R$ {{ "{:,.2f}".format(frete.valor).replace(",", "X").replace(".", ",").replace("X", ".") }}
+                </strong>
+            </p>
+
+            <p>
+                <span class="label">Necessário:</span> {{ frete.carro_necessario }}
+            </p>
+
+            {% if frete.aceito_por %}
+            <p class="status-aceito">
+                Aceito por: <strong>{{ frete.aceito_por }}</strong>
+            </p>
+            {% endif %}
+        </div>
+
+        <!-- STATUS E AÇÕES -->
+        <div class="card-status-acao">
+
+            <span class="status-tag tag-{{ frete.status|lower }}">
+                {{ frete.status }}
+            </span>
+
+            <div class="acoes-frete">
+                {% if frete.status == 'Pendente' %}
+                
+                <!-- EDITAR -->
+                <a href="{{ url_for('editar_frete', frete_id=frete.id_frete) }}"
+                   class="btn-editar">
+                    Editar
+                </a>
+
+                <!-- EXCLUIR -->
+                <form method="POST"
+                    action="{{ url_for('excluir_frete', frete_id=frete.id_frete) }}"
+                    onsubmit="return confirm('Tem certeza que deseja excluir este frete? Essa ação não pode ser desfeita.');">
+                    
+                    <button type="submit" class="btn-excluir">Excluir</button>
+                </form>
+
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+    {% endfor %}
+
+    {% if not fretes %}
+    <p style="text-align: center; padding: 30px; color: #000;">
+        Nenhum frete publicado ainda.
+    </p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
