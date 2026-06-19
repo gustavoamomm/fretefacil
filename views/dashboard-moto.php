@@ -1,6 +1,6 @@
 <?php 
 $bodyClass = 'dashboard';
-include "components/header.php";
+include __DIR__ . "/../components/header.php";
 ?>
 
 <head>
@@ -223,7 +223,7 @@ include "components/header.php";
     </div>
 </div>
 
-<script src="static/script.js"></script>
+<script src="../static/script.js"></script>
 
 </body>
 </html>

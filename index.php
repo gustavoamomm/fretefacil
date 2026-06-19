@@ -7,8 +7,8 @@
   <a href="#" class="logo">🚚 Frete<em>Fácil</em></a> 
   <div class="nav-r">
     <a href="#como" class="nav-link">Como funciona</a>
-    <a href="login.php" class="btn btn-gh">Login</a>
-    <a href="cadastro.php" class="btn btn-o">Cadastre-se</a>
+    <a href="views/login.php" class="btn btn-gh">Login</a>
+    <a href="views/cadastro.php" class="btn btn-o">Cadastre-se</a>
   </div>
 </nav>
 

@@ -2,7 +2,7 @@
 
 <header>
     <nav class="topnav">
-        <a href="index.php" class="logo">🚚 Frete<em>Fácil</em></a>
+        <a href="../index.php" class="logo">🚚 Frete<em>Fácil</em></a>
         <div class="nav-r">
             <span class="nav-link">Já tem conta?</span>
             <a href="login.php" class="btn btn-gh">Entrar</a>
