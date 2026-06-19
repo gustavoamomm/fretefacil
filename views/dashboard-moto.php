@@ -1,6 +1,6 @@
 <?php 
 $bodyClass = 'dashboard';
-include "components/header.php";
+include  __DIR__ . "../components/header.php";
 ?>
 
 <head>
@@ -8,7 +8,7 @@ include "components/header.php";
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
-<aside class="sidebar motorista">
+<aside class="sidebar">
     <a href="index.php" class="sidebar-logo">
         🚚 Frete<em>Fácil</em>
     </a>
@@ -22,16 +22,16 @@ include "components/header.php";
     <div class="sidebar-divider"></div>
     
     <nav class="sidebar-nav">
-        <button class="nav-item ativo" onclick="trocarAba('disponiveis', this)">
+        <button class="nav-item ativo" onclick="trocarAbaMotorista('disponiveis', this)">
             <span class="nav-icon">🔍</span>
             Fretes Disponíveis
             <span class="nav-badge" style="background:var(--blue);">8</span>
         </button>
-        <button class="nav-item" onclick="trocarAba('aceitos', this)">
+        <button class="nav-item" onclick="trocarAbaMotorista('aceitos', this)">
             <span class="nav-icon">📦</span>
             Meus Fretes Aceitos
         </button>
-        <button class="nav-item" onclick="trocarAba('carteira', this)">
+        <button class="nav-item" onclick="trocarAbaMotorista('carteira', this)">
             <span class="nav-icon">👛</span>
             Carteira
         </button>
@@ -193,7 +193,7 @@ include "components/header.php";
     </div>
 </main>
 
-<div class="modal-overlay escondido" id="modal-overlay">
+<!-- <div class="modal-overlay escondido" id="modal-overlay">
     <div class="modal">
         <div class="modal-header">
             <div>
@@ -221,9 +221,9 @@ include "components/header.php";
             <button class="btn btn-b" onclick="aceitarFrete()">✓ Aceitar frete</button>
         </div>
     </div>
-</div>
+</div> -->
 
-<script src="static/script.js"></script>
+<script src="../static/script.js"></script>
 
 </body>
 </html>

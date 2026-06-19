@@ -1,4 +1,4 @@
-<?php include 'components/header.php';?>
+<?php include __DIR__ . '/../components/header.php';?>
 
 <header>
     <nav class="topnav">
@@ -110,7 +110,7 @@
   </div>
 </main>
 
-<script src="static/script.js"></script>
+<script src="/../static/script.js"></script>
     
 </body>
 </html>
