@@ -1,4 +1,4 @@
-<?php include 'components/header.php';?>
+<?php include __DIR__ . '/../components/header.php';?>
 
 <header>
     <nav class="topnav">
@@ -20,7 +20,7 @@
       </p>
     </div>
 
-    <form action="backend/salvar_empresa.php" method="POST" id="form-cadastro" novalidate>
+    <form id="form-cadastro" method="POST" novalidate>
       <input type="hidden" id="tipo-usuario" name="tipo" value="empresa">
 
       <!-- Abas -->
@@ -50,7 +50,7 @@
       <div class="campos escondido" id="campo-motorista">
         <div class="form-group">
           <label for="nome-motorista">Nome completo</label>
-          <input type="text" id="nome-motorista" name="nome_motorista"
+          <input type="text" id="nome-motorista" name="nome"
             placeholder="Ex: João da Silva">
         </div>
         <div class="form-group">
@@ -60,16 +60,21 @@
           <span class="field-hint">Será usado para fazer login</span>
         </div>
         <div class="form-group">
+          <label for="cnh">CNH</label>
+          <input type="text" id="cnh" name="cnh"
+            placeholder="" maxlength="11">
+        </div>
+        <div class="form-group">
           <label for="dt_nasc">Data de nascimento</label>
           <input type="date" id="dt_nasc" name="dt_nasc">
         </div>
         <div class="form-group">
           <label for="veiculo">Tipo de veículo</label>
-          <select id="veiculo" name="veiculo">
+          <select id="veiculo" name="tipo_veiculo">
             <option value="">Selecione seu veículo</option>
-            <option value="fiorino">Fiorino</option>
-            <option value="sprinter">Sprinter</option>
-            <option value="hr">HR</option>
+            <option value="Fiorino">Fiorino</option>
+            <option value="Sprinter">Sprinter</option>
+            <option value="HR">HR</option>
           </select>
         </div>
         <div class="form-group">
@@ -110,7 +115,7 @@
   </div>
 </main>
 
-<script src="static/script.js"></script>
+<script src="../static/script.js"></script>
     
 </body>
 </html>

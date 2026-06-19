@@ -136,6 +136,15 @@ if (form) {
 
     form.addEventListener('submit', function(e) {
 
+        if (abaAtiva === 'empresa'){
+            form.action = '../controllers/EmpresaController.php';
+        }
+
+        if (abaAtiva === 'motorista'){
+            form.action = '../controllers/MotoristaController.php';
+        }
+
+
         const feedback = document.getElementById('feedback');
 
         const senha =
