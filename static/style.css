@@ -642,7 +642,7 @@ main{
 }
 
 .escondido{
-    display: none;
+    display: none !important;
 }
 
 select{

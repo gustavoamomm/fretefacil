@@ -519,7 +519,6 @@ function aceitarFrete() {
 
 //leaflet e openrouteservice
 
-const ORS_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImFkNjU4NmJkMTFlNTRiMmNhOWRkOWVjYmU3YWZkYmM1IiwiaCI6Im11cm11cjY0In0='; 
 
 let mapaLeaflet = null;
 
@@ -528,6 +527,20 @@ async function carregarMapa(origem, destino) {
     const mapaDiv = document.getElementById('mapa-div');
     if (!mapaDiv) return;
 
+
+    mapaDiv.innerHTML = `
+    <div style="
+        height:100%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        color:#ccc;
+        font-size:16px;
+    ">
+        🗺️ Carregando mapa...
+    </div>
+    `;
+
     if (mapaLeaflet) {
         mapaLeaflet.remove();
         mapaLeaflet = null;
@@ -535,8 +548,10 @@ async function carregarMapa(origem, destino) {
 
     try{
 
-        const coordOrigem = await buscarCoordenadas(origem);
-        const coordDestino = await buscarCoordenadas(destino);
+        const [coordOrigem, coordDestino] = await Promise.all([
+            buscarCoordenadas(origem),
+            buscarCoordenadas(destino)
+        ]);
 
         if (!coordOrigem || !coordDestino) {
             mapaDiv.innerHTML = '<p style="padding:20px; color:var(--muted);">Não foi possível localizar a rota.</p>';
@@ -550,10 +565,10 @@ async function carregarMapa(origem, destino) {
 
         );
 
-        L.titleLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
             attribution: '&copy OpenStreetMap contributors',
             maxZoom: 18
-        }).addTO(mapaLeaflet);
+        }).addTo(mapaLeaflet);
 
 
 
@@ -583,10 +598,93 @@ async function carregarMapa(origem, destino) {
 
 async function buscarCoordenadas(cidade){
 
-    const url = 'https://api.openrouteservice.org/geocode/search' + '?api_key=' + ORS_KEY + '&text=' + encodeURIComponent(cidade + ', Santa Catarina, Brasil') + '&size=1';
+    const resposta = await fetch(
+        "../controllers/api.php?acao=geocode&cidade=" +
+        encodeURIComponent(cidade)
+    );
 
-    const resposta = await fetch(url);
     const dados = await resposta.json();
     
+    if (dados.features && dados.features.length > 0){
+
+        const [lon, lat] = dados.features[0].geometry.coordinates;
+
+        return {
+            lat, 
+            lon
+        };
+    }
+
+    return null;
 
 }
+
+async function buscarRota(origem, destino){
+
+    const resposta = await fetch("../controllers/api.php",{
+
+        method:"POST",
+
+        headers:{
+            "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify({
+
+            acao:"rota",
+
+            origem:origem,
+
+            destino:destino
+
+        })
+
+    });
+
+    const dados = await resposta.json();
+
+    if(dados.features && dados.features.length){
+
+        const rota = dados.features[0];
+
+        const coordenadas = rota.geometry.coordinates.map(function(c){
+
+            return [c[1], c[0]];
+
+        });
+
+        return{
+
+            coordenadas:coordenadas,
+
+            distancia:
+            (rota.properties.summary.distance/1000).toFixed(1) + " km",
+
+            duracao:
+            Math.round(rota.properties.summary.duration/60) + " min"
+
+        };
+
+    }
+
+    return null;
+
+}
+
+
+function atualizarInfoRota(distancia, duracao) {
+    const infoEl = document.getElementById('modal-rota-info');
+
+    if (!infoEl) return;
+
+    if (!distancia || !duracao) {
+        infoEl.textContent = '';
+        infoEl.style.display = 'none';
+        return;
+    }
+
+    infoEl.textContent = `🛣️ ${distancia} · ⏱️ ${duracao}`;
+    infoEl.style.display = 'block';
+}
+
+

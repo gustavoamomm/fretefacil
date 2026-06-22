@@ -194,7 +194,7 @@ include __DIR__ . "/../components/header.php";
     </div>
 </main>
 
-<!-- <div class="modal-overlay escondido" id="modal-overlay">
+<div class="modal-overlay escondido" id="modal-overlay">
     <div class="modal">
         <div class="modal-header">
             <div>
@@ -222,10 +222,10 @@ include __DIR__ . "/../components/header.php";
             <button class="btn btn-b" onclick="aceitarFrete()">✓ Aceitar frete</button>
         </div>
     </div>
-</div> -->
+</div>
 
 <script src="../static/script.js"></script>
-<script src="../static/script.js"></script>
+
 
 </body>
 </html>
