@@ -14,9 +14,9 @@ class Motorista {
         $this->nome = $nome;
         $this->dt_nasc = $dt_nasc;
         $this->cpf = $cpf;
-        $this->cpf = $cnh;
-        $this->cpf = $tipo_veiculo;
-        $this->cpf = $placa;
+        $this->cnh = $cnh;
+        $this->tipo_veiculo = $tipo_veiculo;
+        $this->placa = $placa;
         $this->senha = $senha;
     }
 
