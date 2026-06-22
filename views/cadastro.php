@@ -1,4 +1,5 @@
 <?php include __DIR__ . '/../components/header.php';?>
+<?php include __DIR__ . '/../components/header.php';?>
 
 <header>
     <nav class="topnav">
