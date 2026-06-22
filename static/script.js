@@ -580,3 +580,13 @@ async function carregarMapa(origem, destino) {
         mapaDiv.innerHTML = '<p style="padding:20px;color:var(--red);">Erro ao carregar o mapa.</p>';
     }
 }
+
+async function buscarCoordenadas(cidade){
+
+    const url = 'https://api.openrouteservice.org/geocode/search' + '?api_key=' + ORS_KEY + '&text=' + encodeURIComponent(cidade + ', Santa Catarina, Brasil') + '&size=1';
+
+    const resposta = await fetch(url);
+    const dados = await resposta.json();
+    
+
+}
