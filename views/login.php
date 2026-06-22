@@ -16,7 +16,11 @@
             <p class="auth-sub" id="auth-sub">Acesse sua conta para gerenciar seus fretes.</p>
         </div>
 
-        <form id="form-login">
+        <form id="form-login" method="POST" action="../controllers/LoginController.php">
+            <input type="hidden"
+                    id="tipo-usuario-login"
+                    name="tipo"
+                    value="empresa">
             <div class="tabs">
                 <button type="button" class="tab ativo" id="tab-empresa" onclick="trocarAba('empresa')">🏢 Empresa</button>
                 <button type="button" class="tab" id="tab-motorista" onclick="trocarAba('motorista')">🚐 Motorista</button>
@@ -25,7 +29,10 @@
             <div id="campo-empresa">
                 <div class="form-group">
                     <label for="cnpj">CNPJ</label>
-                    <input type="text" id="cnpj" placeholder="00.000.000/0000-00" maxlength="18">
+                    <input type="text"
+                            id="cnpj"
+                            name="cnpj"
+                            placeholder="00.000.000/0000-00">
                 </div>
             </div>
 
@@ -33,14 +40,20 @@
             <div id="campo-motorista" class="escondido">
                 <div class="form-group">
                     <label for="cpf">CPF</label>
-                    <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14">
+                    <input type="text"
+                            id="cpf"
+                            name="cpf"
+                            placeholder="000.000.000-00">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="senha">Senha</label>
                 <div class="senha-wrap">
-                    <input type="password" id="senha" placeholder="Sua senha">
+                    <input type="password"
+                            id="senha"
+                            name="senha"
+                            placeholder="Sua senha">
                     <span class="toggle-senha" id="toggle-senha">👁️</span>
                 </div>
             </div>
