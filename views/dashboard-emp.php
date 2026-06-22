@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (
+    !isset($_SESSION['tipo']) ||
+    $_SESSION['tipo'] !== 'empresa'
+) {
+    header("Location: login.php");
+    exit;
+}
+?>
 <?php 
 $bodyClass = 'dashboard';
 include __DIR__  . "/../components/header.php";
@@ -38,7 +49,7 @@ include __DIR__  . "/../components/header.php";
 
     <div class="sidebar-bottom">
         <div class="sidebar-divider"></div>
-        <a href="login.php" class="nav-item sair">
+        <a href="../logout.php" class="nav-item sair">
             <span class="nav-icon">🚪</span>
             Sair
         </a>
