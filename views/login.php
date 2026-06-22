@@ -1,7 +1,7 @@
-<?php include 'components/header.php';?>
+<?php include __DIR__ . '/../components/header.php';?>
 
 <nav class="topnav">
-    <a href="index.php" class="logo">🚚 Frete<em>Fácil</em></a>
+    <a href="../index.php" class="logo">🚚 Frete<em>Fácil</em></a>
     <div class="nav-r">
         <span class="nav-link">Não tem conta?</span>
         <a href="cadastro.php" class="btn btn-o">Cadastrar</a>
@@ -56,7 +56,7 @@
     </div>
 </main>
 
-<script src="static/script.js"></script>
+<script src="../static/script.js"></script>
 
     
 </body>
