@@ -67,7 +67,7 @@ include __DIR__  . "/../components/header.php";
     </div>
     
     <div class="aba" id="aba-publicar">
-        <form class="dash-form" id="form-frete">
+        <form class="dash-form" id="form-frete" method="POST" action="../controllers/FreteController.php">
             <div class="form-row">
                 <div class="form-group">
                     <label for="origem">Cidade de origem</label>
@@ -244,8 +244,15 @@ include __DIR__  . "/../components/header.php";
   }
 
   // ── Publicar frete ──
-  document.getElementById('form-frete').addEventListener('submit', function(e) {
-    e.preventDefault();
+    if (!origem || !destino || !peso || !valor || !data) {
+        e.preventDefault();
+
+        feedback.className = 'form-feedback erro';
+        feedback.textContent =
+        '⚠️ Preencha todos os campos obrigatórios.';
+
+        return;
+    }
 
     const feedback = document.getElementById('feedback-frete');
     const origem   = document.getElementById('origem').value.trim();
