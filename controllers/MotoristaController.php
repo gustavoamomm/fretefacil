@@ -1,5 +1,4 @@
 <?php
-
 require_once "../models/MotoristaDAO.php";
 
 try {
@@ -15,17 +14,16 @@ try {
     
 
     // Verifica campos obrigatórios
-    if (
-        empty($nome) ||
-        empty($dt_nasc) ||
-        empty($cpf) ||
-        empty($cnh) ||
-        empty($tipo_veiculo) ||
-        empty($placa) ||
-        empty($senha) ||
-        empty($confirmar_senha)
+    if (empty($nome) || empty($dt_nasc) || empty($cpf) || empty($cnh) || empty($tipo_veiculo) || empty($placa) || empty($senha) || empty($confirmar_senha)
     ) {
-        die("Preencha todos os campos obrigatórios.");
+
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ Preencha todos os campos obrigatórios.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
 
     // Remove pontos e traços do CPF
@@ -33,29 +31,62 @@ try {
 
     // Valida CPF
     if (strlen($cpf) !== 11) {
-        die("CPF inválido.");
+
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ CPF inválido.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
 
     $cnh = preg_replace('/\D/', '', $cnh);
 
     if (strlen($cnh) !== 11) {
-        die("CNH Inválida.");
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ CNH inválida.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
 
     $tiposPermitidos = ['Fiorino', 'Sprinter', 'HR'];
 
     if (!in_array($tipo_veiculo, $tiposPermitidos)) {
-        die("Tipo de veículo inválido.");
+
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ Tipo de veículo invalido.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
 
     // Valida senha
     if (strlen($senha) < 8) {
-        die("A senha deve conter no mínimo 8 caracteres.");
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ A senha deve conter no mínimo 8 caracteres.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
+    
 
     // Confirma senha
     if ($senha !== $confirmar_senha) {
-        die("As senhas não coincidem.");
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ As senhas não coincidem.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
 
     // Criptografa a senha
@@ -73,10 +104,24 @@ try {
         $senha_hash
     );
 
-    echo "Motorista cadastrado com sucesso!";
+    $_SESSION['feedback'] = [
+        'tipo' => 'sucesso',
+        'mensagem' => '✅ Motorista cadastrado com sucesso!'
+    ];
+
+    header("Location: ../views/login.php");
+    exit;
 
 } catch (PDOException $e) {
 
-    echo "ERRO SQL: " . $e->getMessage();
+    $_SESSION['feedback'] = [
+        'tipo' => 'erro',
+        'mensagem' => '⚠️ Erro ao cadastrar motorista. Tente novamente.'
+    ];
+
+    header("Location: ../views/cadastro.php");
+    exit;
+
+    
 
 }

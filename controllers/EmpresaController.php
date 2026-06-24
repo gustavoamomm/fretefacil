@@ -10,21 +10,49 @@ try {
     $confirmar_senha = $_POST['confirmar_senha'] ?? '';
 
     if (empty($nome) || empty($cnpj) || empty($senha) || empty($confirmar_senha)) {
-        die("Preencha todos os campos obrigatórios.");
+        
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ Preencha todos os campos obrigatórios.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
+        
     }
 
     $cnpj = preg_replace('/\D/', '', $cnpj);
 
     if (strlen($cnpj) !== 14) {
-        die("CNPJ inválido.");
+
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ CNPJ inválido.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
+
     }
 
     if (strlen($senha) < 8) {
-        die("A senha deve conter no mínimo 8 caracteres.");
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ A senha deve conter no mínimo 8 caracteres.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
 
     if ($senha !== $confirmar_senha) {
-        die("As senhas não coincidem.");
+        $_SESSION['feedback'] = [
+            'tipo' => 'erro',
+            'mensagem' => '⚠️ As senhas não coincidem.'
+        ];
+
+        header("Location: ../views/cadastro.php");
+        exit;
     }
 
     $senha_hash = password_hash($senha, PASSWORD_DEFAULT);
@@ -37,10 +65,22 @@ try {
         $senha_hash
     );
 
-    echo "Empresa cadastrada com sucesso.";
+    $_SESSION['feedback'] = [
+        'tipo' => 'sucesso',
+        'mensagem' => '✅ Empresa cadastrada com sucesso!'
+    ];
+
+    header("Location: ../views/login.php");
+    exit;
 
 } catch (PDOException $e) {
 
-    echo "ERRO SQL: " . $e->getMessage();
+    $_SESSION['feedback'] = [
+        'tipo' => 'erro',
+        'mensagem' => '⚠️ Erro ao cadastrar motorista. Tente novamente.'
+    ];
+
+    header("Location: ../views/cadastro.php");
+    exit;
 
 }

@@ -1,5 +1,8 @@
-<?php include __DIR__ . '/../components/header.php';?>
-<?php include __DIR__ . '/../components/header.php';?>
+<?php 
+session_start();
+include __DIR__ . '/../components/header.php';
+?>
+
 
 <header>
     <nav class="topnav">
@@ -21,7 +24,7 @@
       </p>
     </div>
 
-    <form id="form-cadastro" method="POST" novalidate>
+    <form id="form-cadastro" method="POST" action="../controllers/CadastroController.php" novalidate>
       <input type="hidden" id="tipo-usuario" name="tipo" value="empresa">
 
       <!-- Abas -->
@@ -101,7 +104,22 @@
         </div>
       </div>
 
-      <div class="form-feedback" id="feedback"></div>
+      <?php
+      if (isset($_SESSION['feedback'])) {
+        $feedback = $_SESSION['feedback'];
+      ?>
+        <div class="form-feedback <?= $feedback['tipo']; ?>" id="feedback">
+            <?= $feedback['mensagem']; ?>
+        </div>
+                
+      <?php
+          unset($_SESSION['feedback']);
+      } else {
+      ?>
+        <div class="form-feedback"></div>
+            <?php
+      }
+      ?>
 
       <button type="submit" class="btn btn-o btn-full">
         Criar conta →
