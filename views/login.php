@@ -32,7 +32,7 @@
                     <input type="text"
                             id="cnpj"
                             name="cnpj"
-                            placeholder="00.000.000/0000-00">
+                            placeholder="00.000.000/0000-00" maxlenght="18">
                 </div>
             </div>
 
@@ -43,7 +43,7 @@
                     <input type="text"
                             id="cpf"
                             name="cpf"
-                            placeholder="000.000.000-00">
+                            placeholder="000.000.000-00" maxlenght="14">
                 </div>
             </div>
 

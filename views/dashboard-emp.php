@@ -24,7 +24,7 @@ include __DIR__  . "/../components/header.php";
     <div class="sidebar-user">
         <div class="user-avatar">🏢</div>
         <div>
-            <div class="user-name">Distribuidora Silva</div>
+            <div class="user-name"><?= $_SESSION['nome']?></div>
             <div class="user-role">Empresa</div>
         </div>
     </div>
