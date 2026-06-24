@@ -1,5 +1,7 @@
-<?php include __DIR__ . '/../components/header.php';?>
-
+<?php
+session_start();
+include __DIR__ . '/../components/header.php';
+?>
 <nav class="topnav">
     <a href="../index.php" class="logo">🚚 Frete<em>Fácil</em></a>
     <div class="nav-r">
@@ -58,8 +60,26 @@
                 </div>
             </div>
 
-            <div class="form-feedback" id="feedback"></div>
-            <button type="submit" class="btn btn-o btn-full">
+            <?php
+            if (isset($_SESSION['feedback'])) {
+
+                $feedback = $_SESSION['feedback'];
+            ?>
+                <div class="form-feedback <?= $feedback['tipo']; ?>">
+                    <?= $feedback['mensagem']; ?>
+                </div>
+                
+            <?php
+                unset($_SESSION['feedback']);
+            } else {
+            ?>
+                <div class="form-feedback"></div>
+            <?php
+            }
+            ?>
+
+            
+        <button type="submit" class="btn btn-o btn-full">
             Entrar →</button>
         
         </form>
@@ -71,6 +91,6 @@
 
 <script src="../static/script.js"></script>
 
-    
+
 </body>
 </html>

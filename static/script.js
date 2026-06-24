@@ -61,11 +61,6 @@ function trocarAba(aba) {
 
     const icone   = document.getElementById('auth-icon');
     const sub     = document.getElementById('auth-sub');
-    const feedback = document.getElementById('feedback');
-
-    if (feedback) {
-        feedback.className = 'form-feedback';
-    }
 
     // EMPRESA
     if (aba === 'empresa') {
@@ -133,114 +128,6 @@ setTabFields('campo-empresa', true);
 setTabFields('campo-motorista', false);
 
 
-// =========================
-// FORMULÁRIO
-// =========================
-
-const form = document.getElementById('form-cadastro');
-
-if (form) {
-
-    form.addEventListener('submit', function(e) {
-
-        if (abaAtiva === 'empresa'){
-            form.action = '../controllers/EmpresaController.php';
-        }
-
-        if (abaAtiva === 'motorista'){
-            form.action = '../controllers/MotoristaController.php';
-        }
-
-
-        const feedback = document.getElementById('feedback');
-
-        const senha =
-        document.getElementById('senha').value;
-
-        const confirmar =
-        document.getElementById('confirmar-senha').value;
-
-        // EMPRESA
-        if (abaAtiva === 'empresa') {
-
-            const nome =
-            document.getElementById('nome-empresa').value.trim();
-
-            const cnpj =
-            document.getElementById('cnpj').value.trim();
-
-            if (!nome || !cnpj) {
-
-                feedback.className = 'form-feedback erro';
-                feedback.textContent =
-                '⚠️ Preencha nome e CNPJ.';
-
-                return;
-            }
-
-        }
-
-        // MOTORISTA
-        if (abaAtiva === 'motorista') {
-
-            const nome =
-            document.getElementById('nome-motorista').value.trim();
-
-            const cpf =
-            document.getElementById('cpf').value.trim();
-
-            const veiculo =
-            document.getElementById('veiculo').value;
-
-            const placa =
-            document.getElementById('placa').value.trim();
-
-            if (!nome || !cpf || !veiculo || !placa) {
-
-                e.preventDefault();
-                feedback.className = 'form-feedback erro';
-
-                feedback.textContent =
-                '⚠️ Preencha todos os campos.';
-
-                return;
-            }
-
-        }
-
-        // SENHA
-        if (senha.length < 8) {
-
-            e.preventDefault();
-            feedback.className = 'form-feedback erro';
-
-            feedback.textContent =
-            '⚠️ A senha precisa ter pelo menos 8 caracteres.';
-
-            return;
-        }
-
-        if (senha !== confirmar) {
-
-            e.preventDefault();
-            feedback.className = 'form-feedback erro';
-
-            feedback.textContent =
-            '⚠️ As senhas não coincidem.';
-
-            return;
-        }
-
-        // SUCESSO
-        feedback.className = 'form-feedback sucesso';
-
-        feedback.textContent =
-        '✅ Conta criada!';
-
-    });
-
-}
-
 
 // =========================
 // MÁSCARA CPF
@@ -300,6 +187,23 @@ if (cnpj) {
 
 }
 
+const cnh = document.getElementById('cnh');
+
+if (cnh) {
+
+    cnh.addEventListener('input', function() {
+
+        let v = this.value.replace(/\D/g, '');
+
+        if (v.length > 11)
+            v = v.slice(0, 11);
+
+        this.value = v;
+
+    });
+
+}
+
 
 // =========================
 // MOSTRAR SENHA
@@ -334,7 +238,28 @@ toggleSenha('senha', 'toggle-senha');
 toggleSenha('confirmar-senha', 'toggle-confirmar');
 
 
+//feedback
 
+document.addEventListener("DOMContentLoaded", function () {
+
+    const feedback = document.getElementById("feedback");
+
+    if (feedback && feedback.textContent.trim() !== "") {
+
+        setTimeout(function () {
+
+            feedback.style.transition = "opacity 0.5s ease";
+            feedback.style.opacity = "0";
+
+            setTimeout(function () {
+                feedback.remove();
+            }, 500);
+
+        }, 3000);
+
+    }
+
+});
 
 
 //dashboard motorista

@@ -59,9 +59,21 @@ try {
         }
     }
 
-    echo "Usuário ou senha inválidos.";
+    $_SESSION['feedback'] = [
+        'tipo' => 'sucesso',
+        'mensagem' => '✅ Motorista cadastrado com sucesso!'
+    ];
+
+    header("Location: ../views/login.php");
+    exit;
 
 } catch (PDOException $e) {
 
-    echo "ERRO SQL: " . $e->getMessage();
+    $_SESSION['feedback'] = [
+        'tipo' => 'erro',
+        'mensagem' => '⚠️ Erro ao cadastrar motorista. Tente novamente.'
+    ];
+
+    header("Location: ../views/cadastro.php");
+    exit;
 }
