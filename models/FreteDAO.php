@@ -1,7 +1,7 @@
 <?php
 
 require_once "../config/config.php";
-
+require_once "../models/Frete.php";
 class FreteDAO {
 
     private PDO $conn;
@@ -10,17 +10,7 @@ class FreteDAO {
         $this->conn = Config::getConexao();
     }
 
-    public function cadastrar(
-        $origem,
-        $destino,
-        $peso,
-        $valor,
-        $data_coleta,
-        $hora_coleta,
-        $descricao,
-        $empresa_id,
-        $carro_necessario
-    ) {
+    public function cadastrar(Frete $frete) {
 
         $sql = "INSERT INTO tb_frete
                 (
@@ -52,7 +42,7 @@ class FreteDAO {
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindValue(':origem', $frete->getOrigem());
-        $smt->bindValue(':destino', $frete->getDestino());
+        $stmt->bindValue(':destino', $frete->getDestino());
         $stmt->bindValue(':peso', $frete->getPeso());
         $stmt->bindValue(':valor', $frete->getValor());
         $stmt->bindValue(':data_coleta', $frete->getDataColeta());
@@ -60,7 +50,6 @@ class FreteDAO {
         $stmt->bindValue(':descricao', $frete->getDescricao());
         $stmt->bindValue(':empresa_id', $frete->getEmpresaId());
         $stmt->bindValue(':carro_necessario', $frete->getCarroNecessario());
-        $stmt->bindValue(':status', $frete->getStatus());
 
         return $stmt->execute();
     }

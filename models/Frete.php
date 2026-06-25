@@ -42,16 +42,16 @@ class Frete {
     public function getDestino(){return $this->destino;}
     public function setDestino($destino){$this->destino = $destino;}
     
-    public function getPeso(){return $this->Peso;}
+    public function getPeso(){return $this->peso;}
     public function setPeso($peso){$this->peso = $peso;}
 
     public function getValor(){return $this->valor;}
     public function setValor($valor){$this->valor = $valor;}
 
-    public function getDataColeta(){return $this->DataColeta;}
+    public function getDataColeta(){return $this->data_coleta;}
     public function setDatacoleta($data_coleta){$this->data_coleta = $data_coleta;}
 
-    public function getHoraColeta(){return $this->horaColeta;}
+    public function getHoraColeta(){return $this->hora_coleta;}
     public function setHoraColeta($hora_coleta){$this->hora_coleta = $hora_coleta;}
 
     public function getDescricao(){return $this->descricao;}

@@ -27,7 +27,7 @@ try {
         if ($empresa && password_verify($senha, $empresa['senha'])) {
 
             $_SESSION['tipo'] = 'empresa';
-            $_SESSION['id'] = $empresa['id'];
+            $_SESSION['id'] = $empresa['id_empresa'];
             $_SESSION['nome'] = $empresa['nome'];
 
             header("Location: ../views/dashboard-emp.php");
