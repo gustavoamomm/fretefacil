@@ -8,6 +8,11 @@ if (
     header("Location: login.php");
     exit;
 }
+require_once __DIR__ . "/../models/Frete.php";
+require_once __DIR__ . "/../models/FreteDAO.php";
+
+$dao = new FreteDAO();
+$fretesDisponiveis = $dao->listarDisponiveis();
 ?>
 <?php 
 $bodyClass = 'dashboard';
@@ -37,7 +42,7 @@ include __DIR__ . "/../components/header.php";
         <button class="nav-item ativo" onclick="trocarAbaMotorista('disponiveis', this)">
             <span class="nav-icon">🔍</span>
             Fretes Disponíveis
-            <span class="nav-badge" style="background:var(--blue);">8</span>
+            <span class="nav-badge" style="background:var(--blue);"><?=count($fretesDisponiveis)?></span>
         </button>
         <button class="nav-item" onclick="trocarAbaMotorista('aceitos', this)">
             <span class="nav-icon">📦</span>
@@ -69,60 +74,57 @@ include __DIR__ . "/../components/header.php";
         </div>
     </div>
 
+    <?php if(isset($_SESSION['feedback'])): $feedback = $_SESSION['feedback']; ?>
+        <div class="form-feedback <?= $feedback['tipo']; ?>" style="margin-bottom:20px;">
+            <?= $feedback['mensagem']?>
+        </div>
+        <?php unset($_SESSION['feedback']); ?>
+    <?php endif; ?>
+
+
     <div class="aba" id="aba-disponiveis">
         <div class="filtro-bar">
             <input type="text" id="filtro-cidade" placeholder="🔍 Filtrar por cidade de origem..." oninput="filtrarFretes()"> 
         </div>
 
         <div class="fretes-grid" id="lista-disponiveis">
-            
-            
-            <div class="frete-card disponivel" data-origem="joinville">
-                <div class="frete-card-header">
-                    <div>
-                        <div class="frete-rota">Joinville → Blumenau</div>
-                        <div class="frete-meta">400 kg · Amanhã, 08h · Caixas frágeis</div>
+
+            <?php if(empty($fretesDisponiveis)): ?>
+                <p>Nenhum frete disponível no momento.</p>
+            <?php else: ?>
+                <?php foreach($fretesDisponiveis as $frete): ?>
+                    <div class="frete-card disponivel" data-origem="<?= strtolower(htmlspecialchars($frete['origem'])) ?>">
+                        <div class="frete-card-header">
+                            <div>
+                                <div class="frete-rota">
+                                    <?= htmlspecialchars($frete['origem'])?> → <?= htmlspecialchars($frete['destino'])?>
+                                </div>
+                                <div class="frete-meta">
+                                    <?= htmlspecialchars($frete['peso']) ?> kg ·
+                                    <?= date('d/m', strtotime($frete['data_coleta'])) ?>,
+                                    <?= substr($frete['hora_coleta'], 0, 5) ?>h ·
+                                    <?= htmlspecialchars($frete['carro_necessario']) ?>
+                                </div>
+                            </div>
+                            <span class="frete-status aberto">Disponível</span>
+                        </div>
+                        <div class="frete-card-footer">
+                            <div class="frete-valor">R$ <?= number_format($frete['valor'], 2, ',', '.') ?></div>
+                            <button class="btn btn-b btn-ver" 
+                            onclick="abrirModal(
+                                <?= $frete['id_frete']?>, 
+                                '<?= addslashes($frete['origem'])?>',
+                                '<?= addslashes($frete['destino'])?>',
+                                'R$ <?= number_format($frete['valor'], 2, ',', '.') ?>',
+                                '<?= addslashes($frete['peso'] . ' kg · ' . date('d/m', strtotime($frete['data_coleta'])) . ' ' . substr($frete['hora_coleta'], 0, 5) . 'h') ?>',
+                                '<?= addslashes($frete['descricao']) ?>'
+                                )">
+                                Ver detalhes →
+                            </button>
+                        </div>
                     </div>
-                    <span class="frete-status aberto">Disponível</span>
-                </div>
-                <div class="frete-dist">📍 3 km de você</div>
-                <div class="frete-card-footer">
-                    <div class="frete-valor">R$ 280,00</div>
-                    <button class="btn btn-b btn-ver" onclick="abrirModal('Joinville', 'Blumenau', 'R$ 280,00', '400 kg · Amanhã 08h', 'Caixas frágeis, necessário cuidado no manuseio.')">Ver detalhes →
-
-                    </button>
-                </div>
-            </div>
-
-            <div class="frete-card disponivel" data-origem="joinville">
-
-                <div class="frete-card-header">
-                    <div>
-                        <div class="frete-rota">Joinville → Itajaí</div>
-                        <div class="frete-meta">200 kg · Hoje, 14h · Eletrônicos</div>
-                    </div>
-                    <span class="frete-status aberto">Disponível</span>
-                </div>
-                <div class="frete-dist">📍 7 km de você</div>
-                <div class="frete-card-footer">
-                    <div class="frete-valor">R$ 220,00</div>
-                    <button class="btn btn-b btn-ver" onclick="abrirModal('Joinville', 'Itajaí', 'R$ 220,00', '200 kg · Hoje 14h', 'Eletrônicos embalados. Entrega no centro.')">Ver detalhes →</button>
-                </div>
-            </div>
-
-            <div class="frete-card disponivel" data-origem="jaraguá">
-                <div class="frete-card-header">
-                    <div>
-                        <div class="frete-rota">Jaraguá do Sul → Florianópolis</div>
-                        <div class="frete-meta">300 kg · Amanhã, 10h · Móveis</div>
-                    </div>
-                    <span class="frete-status aberto">Disponível</span>
-                </div>
-                <div class="frete-dist">📍 22 km de você</div>
-                <div class="frete-card-footer">
-                    <div class="frete-valor">R$ 380,00</div>
-                    <button class="btn btn-b btn-ver" onclick="abrirModal('Jaraguá do Sul', 'Florianópolis', 'R$ 380,00', '300 kg · Amanhã 10h', 'Móveis desmontados. Ajuda na carga incluída.')">Ver detalhes →</button>
-                </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -228,10 +230,16 @@ include __DIR__ . "/../components/header.php";
             <div id="modal-rota-info" style="display:none; font-size:13px; color:var(--muted); margin-top:10px; text-align:center;"></div>
         </div>
 
-        <div class="modal-btns">
-            <button class="btn btn-gh" onclick="fecharModal()">Cancelar</button>
-            <button class="btn btn-b" onclick="aceitarFrete()">✓ Aceitar frete</button>
-        </div>
+        <form method="POST" action="../controllers/AceitarFreteController.php">
+            <input type="hidden" name="id_frete" id="modal-id-frete">
+
+
+            <div class="modal-btns">
+                <button type="button" class="btn btn-gh" onclick="fecharModal()">Cancelar</button>
+                <button type="submit" class="btn btn-b">✓ Aceitar frete</button>
+            </div>
+        </form>
+    
     </div>
 </div>
 
