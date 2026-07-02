@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         "https://api.openrouteservice.org/geocode/search?" .
         http_build_query([
             "api_key" => $ORS_KEY,
-            "text" => $cidade . ", Santa Catarina, Brasil",
+            "text" => $cidade . ", Brasil",
             "size" => 1
         ]);
 

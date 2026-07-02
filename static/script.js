@@ -319,19 +319,21 @@ function filtrarFretes(){
 
 let freteAtual = {};
 
-function abrirModal(origem, destino, valor, meta, desc){
+function abrirModal(idFrete, origem, destino, valor, meta, desc){
 
-    freteAtual = { origem, destino, valor, meta, desc };
+    freteAtual = { idFrete, origem, destino, valor, meta, desc };
 
     const modalRota = document.getElementById('modal-rota');
     const modalMeta = document.getElementById('modal-meta');
     const modalValor = document.getElementById('modal-valor');
     const modalDesc = document.getElementById('modal-desc');
+    const modalIdFrete = document.getElementById('modal-id-frete');
 
     if (modalRota) modalRota.textContent = origem + ' → ' + destino;
     if (modalMeta) modalMeta.textContent = meta;
     if (modalValor) modalValor.textContent = valor;
     if (modalDesc) modalDesc.textContent = desc;
+    if (modalIdFrete) modalIdFrete.value = idFrete;
 
     carregarMapa(origem, destino);
 
@@ -459,7 +461,7 @@ async function buscarCoordenadas(cidade){
 
     const resposta = await fetch(
         "../controllers/api.php?acao=geocode&cidade=" +
-        encodeURIComponent(cidade)
+        encodeURIComponent(cidade + ", Brasil")
     );
 
     const dados = await resposta.json();
