@@ -90,7 +90,8 @@ class FreteDAO {
                 SET
                     status = 'Aceito',
                     pcu_id = :pcu_id
-                WHERE id_frete = :id_frete";
+                WHERE id_frete = :id_frete
+                AND status = 'Pendente'";
 
         $stmt = $this->conn->prepare($sql);
 
