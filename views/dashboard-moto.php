@@ -117,7 +117,9 @@ include __DIR__ . "/../components/header.php";
                             onclick="abrirModal(
                                 <?= $frete['id_frete']?>, 
                                 '<?= addslashes($frete['origem'])?>',
+                                '<?= addslashes($frete['uf_origem'])?>',
                                 '<?= addslashes($frete['destino'])?>',
+                                '<?= addslashes($frete['uf_destino'])?>',
                                 'R$ <?= number_format($frete['valor'], 2, ',', '.') ?>',
                                 '<?= addslashes($frete['peso'] . ' kg · ' . date('d/m', strtotime($frete['data_coleta'])) . ' ' . substr($frete['hora_coleta'], 0, 5) . 'h') ?>',
                                 '<?= addslashes($frete['descricao']) ?>'

@@ -319,9 +319,9 @@ function filtrarFretes(){
 
 let freteAtual = {};
 
-function abrirModal(idFrete, origem, destino, valor, meta, desc){
+function abrirModal(idFrete, origem, ufOrigem, destino, ufDestino, valor, meta, desc){
 
-    freteAtual = { idFrete, origem, destino, valor, meta, desc };
+    freteAtual = { idFrete, origem, ufOrigem, destino, ufDestino, valor, meta, desc };
 
     const modalRota = document.getElementById('modal-rota');
     const modalMeta = document.getElementById('modal-meta');
@@ -335,7 +335,7 @@ function abrirModal(idFrete, origem, destino, valor, meta, desc){
     if (modalDesc) modalDesc.textContent = desc;
     if (modalIdFrete) modalIdFrete.value = idFrete;
 
-    carregarMapa(origem, destino);
+    carregarMapa(origem, ufOrigem, destino, ufDestino);
 
     const overlay = document.getElementById('modal-overlay');
     if (overlay){
@@ -383,7 +383,7 @@ function aceitarFrete() {
 
 let mapaLeaflet = null;
 
-async function carregarMapa(origem, destino) {
+async function carregarMapa(origem, ufOrigem, destino, ufDestino) {
 
     const mapaDiv = document.getElementById('mapa-div');
     if (!mapaDiv) return;
@@ -410,8 +410,8 @@ async function carregarMapa(origem, destino) {
     try{
 
         const [coordOrigem, coordDestino] = await Promise.all([
-            buscarCoordenadas(origem),
-            buscarCoordenadas(destino)
+            buscarCoordenadas(origem, ufOrigem),
+            buscarCoordenadas(destino, ufDestino)
         ]);
 
         if (!coordOrigem || !coordDestino) {
@@ -450,6 +450,21 @@ async function carregarMapa(origem, destino) {
 
             atualizarInfoRota(rota.distancia, rota.duracao);
         }
+        // }else{
+        //     L.polyline(
+        //         [
+        //             [coordOrigem.lat, coordOrigem.lon]
+        //             [coordDestino.lat, coordDestino.lon]
+        //         ],
+        //         {
+        //             color: '#F26419',
+        //             weight: 3,
+        //             dashArray: '6, 10'
+        //         }
+        //     ).addTo(mapaLeaflet);
+
+        //     atualizarInfoRota(null, null);
+        // }
 
     } catch (erro){
         console.error('Erro ao carregar o mapa: ', erro);
@@ -457,11 +472,11 @@ async function carregarMapa(origem, destino) {
     }
 }
 
-async function buscarCoordenadas(cidade){
+async function buscarCoordenadas(cidade, uf){
 
     const resposta = await fetch(
         "../controllers/api.php?acao=geocode&cidade=" +
-        encodeURIComponent(cidade + ", Brasil")
+        encodeURIComponent(cidade) + "&uf=" + encodeURIComponent(uf)
     );
 
     const dados = await resposta.json();
@@ -514,20 +529,33 @@ async function buscarRota(origem, destino){
 
         });
 
-        return{
+        const duracaoSegundos = rota.properties.summary.duration;
 
-            coordenadas:coordenadas,
+        const horas = Math.floor(duracaoSegundos / 3600);
+        const minutos = Math.round((duracaoSegundos % 3600) / 60);
 
+        let duracaoFormatada = "";
+
+        if (horas > 0) {
+            duracaoFormatada = minutos > 0
+                ? `${horas}h ${minutos}min`
+                : `${horas}h`;
+        } else {
+            duracaoFormatada = `${minutos} min`;
+        }
+
+        return {
+            coordenadas: coordenadas,
             distancia:
-            (rota.properties.summary.distance/1000).toFixed(1) + " km",
+            (rota.properties.summary.distance / 1000).toFixed(1) + " km",
 
-            duracao:
-            Math.round(rota.properties.summary.duration/60) + " min"
+            duracao: duracaoFormatada
 
         };
 
     }
 
+    console.error("Rota não encontrada:", dados);
     return null;
 
 }

@@ -31,10 +31,7 @@ include __DIR__ . '/../components/header.php';
             <div id="campo-empresa">
                 <div class="form-group">
                     <label for="cnpj">CNPJ</label>
-                    <input type="text"
-                            id="cnpj"
-                            name="cnpj"
-                            placeholder="00.000.000/0000-00" maxlenght="18">
+                    <input type="text" id="cnpj" name="cnpj"placeholder="00.000.000/0000-00" maxlength="18">
                 </div>
             </div>
 
@@ -45,17 +42,14 @@ include __DIR__ . '/../components/header.php';
                     <input type="text"
                             id="cpf"
                             name="cpf"
-                            placeholder="000.000.000-00" maxlenght="14">
+                            placeholder="000.000.000-00" maxlength="14">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="senha">Senha</label>
                 <div class="senha-wrap">
-                    <input type="password"
-                            id="senha"
-                            name="senha"
-                            placeholder="Sua senha">
+                    <input type="password" id="senha" name="senha" placeholder="Sua senha" minlength="8">
                     <span class="toggle-senha" id="toggle-senha">👁️</span>
                 </div>
             </div>

@@ -8,7 +8,9 @@ require_once "../models/FreteDAO.php";
 try {
 
     $origem = $_POST['origem'];
+    $uf_origem = $_POST['uf_origem'];
     $destino = $_POST['destino'];
+    $uf_destino = $_POST['uf_destino'];
     $peso = $_POST['peso'];
     $valor = $_POST['valor'];
     $data_coleta = $_POST['data_coleta'];
@@ -20,7 +22,9 @@ try {
 
     $frete = new Frete(
         $origem,
+        $uf_origem,
         $destino,
+        $uf_destino,
         $peso,
         $valor,
         $data_coleta,
