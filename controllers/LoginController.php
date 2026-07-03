@@ -51,7 +51,7 @@ try {
         if ($motorista && password_verify($senha, $motorista['senha'])) {
 
             $_SESSION['tipo'] = 'motorista';
-            $_SESSION['id'] = $motorista['id'];
+            $_SESSION['id'] = $motorista['pcu_id'];
             $_SESSION['nome'] = $motorista['nome'];
 
             header("Location: ../views/dashboard-moto.php");
