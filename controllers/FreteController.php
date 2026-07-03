@@ -5,6 +5,31 @@ session_start();
 require_once "../models/Frete.php";
 require_once "../models/FreteDAO.php";
 
+$dao = new FreteDAO;
+
+if (isset($_POST["acao"]) && $_POST["acao"] == "aceitar") {
+    $id_frete = $_POST["id_frete"];
+    $pcu_id = $_SESSION["id"];
+
+   
+    if ($dao->aceitarFrete($id_frete, $pcu_id)){
+
+        $_SESSION["feedback"] = [
+            "tipo" => "sucesso",
+            "mensagem" => "Frete aceito com sucesso!"
+        ];
+    }else{
+
+        $_SESSION["feedback"] = [
+            "tipo" => "erro",
+            "mensagem" => "Não foi possível aceitar o frete."
+        ];
+    }
+
+    header("Location: ../views/dashboard-moto.php");
+    exit;
+}
+
 try {
 
     $origem = $_POST['origem'];

@@ -51,7 +51,9 @@ try {
         if ($motorista && password_verify($senha, $motorista['senha'])) {
 
             $_SESSION['tipo'] = 'motorista';
-            $_SESSION['id'] = $motorista['id'];
+
+            $_SESSION['id'] = $motorista['pcu_id'];
+
             $_SESSION['nome'] = $motorista['nome'];
 
             header("Location: ../views/dashboard-moto.php");
@@ -60,8 +62,8 @@ try {
     }
 
     $_SESSION['feedback'] = [
-        'tipo' => 'sucesso',
-        'mensagem' => '✅ Motorista cadastrado com sucesso!'
+        'tipo' => 'erro',
+        'mensagem' => '❌ CPF/CNPJ ou senha inválidos.'
     ];
 
     header("Location: ../views/login.php");

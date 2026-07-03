@@ -13,6 +13,7 @@ require_once __DIR__ . "/../models/FreteDAO.php";
 
 $dao = new FreteDAO();
 $fretesDisponiveis = $dao->listarDisponiveis();
+$fretesAceitos = $dao->listarAceitosMotorista($_SESSION["id"]);
 ?>
 <?php 
 $bodyClass = 'dashboard';
@@ -132,36 +133,66 @@ include __DIR__ . "/../components/header.php";
 
     
     <div class="aba escondido" id="aba-aceitos">
-        
         <div class="fretes-grid">
-            <div class="frete-card">
-                <div class="frete-card-header">
-                    <div>
-                        <div class="frete-rota">Joinville → Blumenau</div>
-                        <div class="frete-meta">400 kg · Hoje, 08h</div>
+
+            <?php if(empty($fretesAceitos)): ?>
+                <p>Você ainda não aceitou nenhum frete.</p>
+            <?php else: ?>
+
+                <?php foreach($fretesAceitos as $frete): ?>
+
+                    <div class="frete-card">
+
+                        <div class="frete-card-header">
+                            <div>
+                                <div class="frete-rota">
+                                    <?= htmlspecialchars($frete["origem"])?> 
+                                    →
+                                    <?= htmlspecialchars($frete["destino"])?>
+                                </div>
+
+                                <div class="frete-meta">
+                                    <?= $frete["peso"]?> kg ·
+                                    <?= date("d/m", strtotime($frete["data_coleta"]))?> ·
+                                    <?= substr($frete["hora_coleta"],0,5) ?>h
+                                </div>
+                            </div>
+                            <span class="frete-status">
+                                <?= $frete["status"]?>
+                            </span>
+                        </div>
+                    <div class="frete-dist">
+                        <?php if($frete["status"] == "Pago"): ?>
+                            ✅ Pagamento recebido
+                        <?php else: ?>
+                            💰 Pagamento pendente
+                        <?php endif; ?>
                     </div>
-                    <span class="frete-status aceito">Em andamento</span>
+
+                    <div class="frete-card-footer">
+                        <div class="frete-valor">
+                            R$ <?= number_format($frete["valor"],2,",",".") ?>
+                        </div>
+
+                        <button class="btn btn-b btn-ver" 
+                        onclick="abrirModal(
+                             <?= $frete['id_frete']?>,
+                            '<?= addslashes($frete['origem'])?>',
+                            '<?= addslashes($frete['uf_origem'])?>',
+                            '<?= addslashes($frete['destino'])?>',
+                            '<?= addslashes($frete['uf_destino'])?>',
+                            'R$ <?= number_format($frete['valor'],2,',','.') ?>',
+                            '<?= addslashes($frete['peso'].' kg · '.date('d/m',strtotime($frete['data_coleta'])).' '.substr($frete['hora_coleta'],0,5).'h')?>',
+                            '<?= addslashes($frete['descricao'])?>
+                        )">
+
+                        Ver detalhes →
+                        </button>
+                    </div>
                 </div>
-                <div class="frete-dist">💰 Pagamento pendente (até 48h)</div>
-                <div class="frete-card-footer">
-                    <div class="frete-valor">R$ 280,00</div>
-                    <button class="btn btn-b btn-ver" onclick="abrirModal('Joinville', 'Blumenau', 'R$ 280,00', '400 kg · Hoje 08h', 'Caixas frágeis.')">Ver rota →</button>
-                </div>
-            </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
             
-            <div class="frete-card">
-                <div class="frete-card-header">
-                    <div>
-                        <div class="frete-rota">Joinville → Itajaí</div>
-                        <div class="frete-meta">200 kg · Ontem, 14h</div>
-                    </div>
-                    <span class="frete-status pago">Pago ✓</span>
-                </div>
-                <div class="frete-dist" style="color:var(--green)">✅ Pagamento recebido</div>
-                <div class="frete-card-footer">
-                    <div class="frete-valor">R$ 220,00</div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -232,7 +263,8 @@ include __DIR__ . "/../components/header.php";
             <div id="modal-rota-info" style="display:none; font-size:13px; color:var(--muted); margin-top:10px; text-align:center;"></div>
         </div>
 
-        <form method="POST" action="../controllers/AceitarFreteController.php">
+        <form method="POST" action="../controllers/FreteController.php">
+            <input type="hidden" name="acao" value="aceitar">
             <input type="hidden" name="id_frete" id="modal-id-frete">
 
 

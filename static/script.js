@@ -242,7 +242,7 @@ toggleSenha('confirmar-senha', 'toggle-confirmar');
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const feedback = document.getElementById("feedback");
+    const feedback = document.getElementById(".form-feedback");
 
     if (feedback && feedback.textContent.trim() !== "") {
 
