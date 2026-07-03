@@ -15,7 +15,9 @@ class FreteDAO {
         $sql = "INSERT INTO tb_frete
                 (
                     origem,
+                    uf_origem,
                     destino,
+                    uf_destino,
                     peso,
                     valor,
                     data_coleta,
@@ -26,23 +28,14 @@ class FreteDAO {
                     status
                 )
                 VALUES
-                (
-                    :origem,
-                    :destino,
-                    :peso,
-                    :valor,
-                    :data_coleta,
-                    :hora_coleta,
-                    :descricao,
-                    :empresa_id,
-                    :carro_necessario,
-                    'Pendente'
-                )";
+                (:origem,:uf_origem,:destino,:uf_destino,:peso,:valor,:data_coleta,:hora_coleta,:descricao,:empresa_id,:carro_necessario,'Pendente')";
 
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindValue(':origem', $frete->getOrigem());
+        $stmt->bindValue(':uf_origem', $frete->getUfOrigem());
         $stmt->bindValue(':destino', $frete->getDestino());
+        $stmt->bindValue(':uf_destino', $frete->getUfDestino());
         $stmt->bindValue(':peso', $frete->getPeso());
         $stmt->bindValue(':valor', $frete->getValor());
         $stmt->bindValue(':data_coleta', $frete->getDataColeta());
