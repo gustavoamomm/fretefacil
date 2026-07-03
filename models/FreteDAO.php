@@ -93,4 +93,17 @@ class FreteDAO {
 
         return $stmt->execute();
     }
+
+    public function listarAceitosMotorista($pcu_id){
+
+        $sql = "SELECT * FROM tb_frete WHERE pcu_id = :pcu_id
+        AND status IN ('Aceito','Pago')
+        ORDER BY data_coleta DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":pcu_id", $pcu_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
