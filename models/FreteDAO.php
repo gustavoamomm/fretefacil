@@ -15,7 +15,9 @@ class FreteDAO {
         $sql = "INSERT INTO tb_frete
                 (
                     origem,
+                    uf_origem,
                     destino,
+                    uf_destino,
                     peso,
                     valor,
                     data_coleta,
@@ -26,23 +28,14 @@ class FreteDAO {
                     status
                 )
                 VALUES
-                (
-                    :origem,
-                    :destino,
-                    :peso,
-                    :valor,
-                    :data_coleta,
-                    :hora_coleta,
-                    :descricao,
-                    :empresa_id,
-                    :carro_necessario,
-                    'Pendente'
-                )";
+                (:origem,:uf_origem,:destino,:uf_destino,:peso,:valor,:data_coleta,:hora_coleta,:descricao,:empresa_id,:carro_necessario,'Pendente')";
 
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindValue(':origem', $frete->getOrigem());
+        $stmt->bindValue(':uf_origem', $frete->getUfOrigem());
         $stmt->bindValue(':destino', $frete->getDestino());
+        $stmt->bindValue(':uf_destino', $frete->getUfDestino());
         $stmt->bindValue(':peso', $frete->getPeso());
         $stmt->bindValue(':valor', $frete->getValor());
         $stmt->bindValue(':data_coleta', $frete->getDataColeta());
@@ -90,7 +83,8 @@ class FreteDAO {
                 SET
                     status = 'Aceito',
                     pcu_id = :pcu_id
-                WHERE id_frete = :id_frete AND status='Pendnte'";
+                WHERE id_frete = :id_frete
+                AND status = 'Pendente'";
 
         $stmt = $this->conn->prepare($sql);
 
@@ -98,5 +92,18 @@ class FreteDAO {
         $stmt->bindParam(':id_frete', $id_frete);
 
         return $stmt->execute();
+    }
+
+    public function listarAceitosMotorista($pcu_id){
+
+        $sql = "SELECT * FROM tb_frete WHERE pcu_id = :pcu_id
+        AND status IN ('Aceito','Pago')
+        ORDER BY data_coleta DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(":pcu_id", $pcu_id);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

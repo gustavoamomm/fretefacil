@@ -19,12 +19,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($_GET['acao'] === 'geocode') {
 
         $cidade = $_GET['cidade'] ?? '';
+        $uf = $_GET['uf'] ?? '';
+
+        $estados = [
+            'AC' => 'Acre', 'AL' => 'Alagoas', 'AM' => 'Amazonas', 'AP' => 'Amapá',
+            'BA' => 'Bahia', 'CE' => 'Ceará', 'DF' => 'Distrito Federal', 'ES' => 'Espírito Santo',
+            'GO' => 'Goiás', 'MA' => 'Maranhão', 'MG' => 'Minas Gerais', 'MS' => 'Mato Grosso do Sul',
+            'MT' => 'Mato Grosso', 'PA' => 'Pará', 'PB' => 'Paraíba', 'PE' => 'Pernambuco',
+            'PI' => 'Piauí', 'PR' => 'Paraná', 'RJ' => 'Rio de Janeiro', 'RN' => 'Rio Grande do Norte',
+            'RO' => 'Rondônia', 'RR' => 'Roraima', 'RS' => 'Rio Grande do Sul', 'SC' => 'Santa Catarina',
+            'SE' => 'Sergipe', 'SP' => 'São Paulo', 'TO' => 'Tocantins'
+        ];
+
+        $nomeEstado = $estados[$uf] ?? '';
+        $textoBusca = $nomeEstado ? "$cidade, $nomeEstado, Brasil" : "$cidade, Brasil";
+
 
         $url =
         "https://api.openrouteservice.org/geocode/search?" .
         http_build_query([
             "api_key" => $ORS_KEY,
-            "text" => $cidade . ", Santa Catarina, Brasil",
+            "text" => $textoBusca,
+            "boundary.country" => "BR",
+            "layers" => "locality,region",
             "size" => 1
         ]);
 
@@ -67,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]
     ]);
 
-    $curl = curl_init("https://api.openrouteservice.org/v2/directions/driving-car");
+    $curl = curl_init("https://api.openrouteservice.org/v2/directions/driving-car/geojson");
 
     curl_setopt_array($curl, [
 

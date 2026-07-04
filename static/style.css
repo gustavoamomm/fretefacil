@@ -356,10 +356,6 @@ section{
     transition: border-color 0.3s, transform 0.3s;
 }
 
-.benefit:hover {
-    border-color: rgba(242, 100, 25, 0.3);
-    transform: translateY(-4px);
-}
 
 .b-icon {
     font-size: 28px;

@@ -3,7 +3,9 @@
 class Frete {
     private $id_frete;
     private $origem;
+    private $uf_origem;
     private $destino;
+    private $uf_destino;
     private $valor;
     private $empresa_id;
     private $carro_necessario;
@@ -16,10 +18,12 @@ class Frete {
     private $descricao;
 
 
-    public function __construct($origem, $destino, $peso,  $valor, $data_coleta, $hora_coleta, $descricao, $empresa_id, $carro_necessario, $status = "Pendente", $pcu_id = null, $data_pagamento = null){
+    public function __construct($origem,$uf_origem, $destino,$uf_destino ,$peso,  $valor, $data_coleta, $hora_coleta, $descricao, $empresa_id, $carro_necessario, $status = "Pendente", $pcu_id = null, $data_pagamento = null){
 
         $this->origem = $origem;
+        $this->uf_origem = $uf_origem;
         $this->destino = $destino;
+        $this->uf_destino = $uf_destino;
         $this->peso = $peso;
         $this->valor = $valor;
         $this->data_coleta = $data_coleta;
@@ -39,9 +43,15 @@ class Frete {
     public function getOrigem(){return $this->origem;}
     public function setOrigem($origem){$this->origem = $origem;}
 
+    public function getUfOrigem(){return $this->uf_origem;}
+    public function setUfOrigem($uf_origem){$this->uf_origem = $uf_origem;}
+
     public function getDestino(){return $this->destino;}
     public function setDestino($destino){$this->destino = $destino;}
     
+    public function getUfDestino(){return $this->uf_destino;}
+    public function setUfDestino($uf_destino){$this->uf_destino = $uf_destino;}
+
     public function getPeso(){return $this->peso;}
     public function setPeso($peso){$this->peso = $peso;}
 
