@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 if (
     !isset($_SESSION['tipo']) ||
     $_SESSION['tipo'] !== 'motorista'
@@ -164,35 +165,40 @@ include __DIR__ . "/../components/header.php";
                                 <?= $frete["status"]?>
                             </span>
                         </div>
-                    <div class="frete-dist">
-                        <?php if($frete["status"] == "Pago"): ?>
-                            ✅ Pagamento recebido
-                        <?php else: ?>
-                            💰 Pagamento pendente
-                        <?php endif; ?>
-                    </div>
 
-                    <div class="frete-card-footer">
-                        <div class="frete-valor">
-                            R$ <?= number_format($frete["valor"],2,",",".") ?>
+                        <div class="frete-card-footer">
+                            <div class="frete-valor">
+                              R$ <?= number_format($frete["valor"],2,",",".") ?>
+                            </div>
+
+                        
+                            <div class="acoes-frete">
+                                <?php if ($frete["status"] == "Aceito"): ?>
+                                    <form method="POST" action="../controllers/FreteController.php">
+                                        <input type="hidden" name="acao" value="iniciar">
+                                        <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
+                                    
+                                        <button type="submit" class="btn btn-verde">▶ Iniciar viagem</button>
+                                    </form>
+
+                                <?php elseif ($frete["status"] == "Em andamento"): ?>
+                                    <form method="POST" action="../controllers/FreteController.php">
+                                        <input type="hidden" name="acao" value="concluir">
+                                        <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
+
+                                        <button type="submit" class="btn btn-laranja">✔ Solicitar conclusão</button>
+                                    </form>
+
+                                <?php elseif ($frete["status"] == "Aguardando confirmacao"): ?>
+                                    <span class="status-info">⏳ Aguardando confirmação da empresa</span>
+
+                                <?php elseif ($frete["status"] == "Concluido"): ?>
+                                    <span class="status-info">✅ Entrega concluída</span>
+                                <?php endif; ?>
+                            
+                            </div>
                         </div>
-
-                        <button class="btn btn-b btn-ver" 
-                        onclick="abrirModal(
-                             <?= $frete['id_frete']?>,
-                            '<?= addslashes($frete['origem'])?>',
-                            '<?= addslashes($frete['uf_origem'])?>',
-                            '<?= addslashes($frete['destino'])?>',
-                            '<?= addslashes($frete['uf_destino'])?>',
-                            'R$ <?= number_format($frete['valor'],2,',','.') ?>',
-                            '<?= addslashes($frete['peso'].' kg · '.date('d/m',strtotime($frete['data_coleta'])).' '.substr($frete['hora_coleta'],0,5).'h')?>',
-                            '<?= addslashes($frete['descricao'])?>
-                        )">
-
-                        Ver detalhes →
-                        </button>
                     </div>
-                </div>
                 <?php endforeach; ?>
             <?php endif; ?>
             

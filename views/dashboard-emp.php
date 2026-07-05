@@ -15,6 +15,14 @@ if (
 $bodyClass = 'dashboard';
 
 include __DIR__ . '/../components/header.php';
+require_once __DIR__ . "/../models/FreteDAO.php";
+require_once __DIR__ . "/../models/PagamentoDAO.php";
+
+$freteDAO = new FreteDAO();
+$fretes = $freteDAO->listarPorEmpresa($_SESSION['id']);
+
+$pagamentoDAO = new PagamentoDAO();
+$pagamentos = $pagamentoDAO->listarPorEmpresa($_SESSION["id"]);
 
 ?>
 <head>
@@ -348,92 +356,81 @@ include __DIR__ . '/../components/header.php';
         </form>
 
     </div>
-    <div
-        class="aba escondido"
-        id="aba-fretes">
+    <div class="aba escondido" id="aba-fretes">
 
-        <div
-            class="fretes-grid"
-            id="fretes-grid">
+        <div class="fretes-grid" id="fretes-grid">
+            <?php if (count($fretes) > 0): ?>
+                <?php foreach($fretes as $frete ): ?>
+                    <div class="frete-card">
+                        <div class="frete-card-header">
 
-            <div class="frete-card">
+                            <div>
+                                <div class="frete-rota">
+                                    <?=  htmlspecialchars($frete['origem'])?>
+                                    →
+                                    <?=  htmlspecialchars($frete['destino'])?>
+                                </div>
 
-                <div class="frete-card-header">
-
-                    <div>
-
-                        <div class="frete-rota">
-                            Joinville → Blumenau
+                                <div class="frete-meta">
+                                    <?= $frete['peso']?> kg ·
+                                    <?= date('d/m/Y', strtotime($frete['data_coleta'])) ?>
+                                </div>
+                            </div>
+                            <span class="frete-status">
+                                <?= htmlspecialchars($frete['status'])?>
+                            </span>
                         </div>
+                        <div class="frete-card-footer">
+                            <div class="frete-valor">
+                                R$
+                                <?= number_format($frete['valor'],2,',','.') ?>
+                            </div>
 
-                        <div class="frete-meta">
-                            400 kg · Amanhã, 08h
+                            <div class="acoes-frete">
+                                <?php if($frete["status"] == "Disponivel"): ?>
+                                    <span class="status-info">
+                                        ⏳ Aguardando um motorista
+                                    </span>
+                                <?php elseif($frete["status"] == "Aceito"): ?>
+                                    <span class="status-info">
+                                        🚚 Motorista aceitou o frete
+                                    </span>
+                                <?php elseif($frete["status"] == "Em andamento"): ?>
+                                    <span class="status-info">
+                                        🚛 Entrega em andamento
+                                    </span>
+                                <?php elseif($frete["status"] == "Aguardando confirmacao"): ?>
+                                    <form action="../controllers/FreteController.php" method="POST">
+                                        <input type="hidden" name="acao" value="confirmar">
+                                        <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
+
+                                        <button type="submit" class="btn btn-verde">
+                                            ✓ Confirmar entrega
+                                        </button>
+                                    </form>
+                                <?php elseif ($frete["status"] == "Concluido"): ?>
+                                    <span class="status-info">
+                                        ✅ Entrega concluída
+                                    </span>
+                                <?php elseif($frete["status"] == "Pago"): ?>
+                                    <span class="status-info">
+                                        💰 Frete pago
+                                    </span>
+                                <?php endif;?>
+
+                            </div>
                         </div>
-
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Nenhum frete publicado</p>
+            <?php endif; ?>
 
-                    <span class="frete-status aberto">
-                        Aberto
-                    </span>
-
-                </div>
-
-                <div class="frete-card-footer">
-
-                    <div class="frete-valor">
-                        R$ 280,00
-                    </div>
-
-                    <button class="btn btn-cancelar">
-                        Cancelar
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="frete-card">
-
-                <div class="frete-card-header">
-
-                    <div>
-
-                        <div class="frete-rota">
-                            Joinville → Itajaí
-                        </div>
-
-                        <div class="frete-meta">
-                            200 kg · Hoje, 14h
-                        </div>
-
-                    </div>
-
-                    <span class="frete-status aceito">
-                        Aceito ✓
-                    </span>
-
-                </div>
-
-                <div class="frete-card-footer">
-
-                    <div class="frete-valor">
-                        R$ 190,00
-                    </div>
-
-                    <div class="motorista-info">
-                        🚐 Roberto S.
-                    </div>
-
-                </div>
-
-            </div>
 
         </div>
 
     </div>
-    <div
-        class="aba escondido"
-        id="aba-pagamentos">
+    <div class="aba escondido" id="aba-pagamentos">
 
         <div class="pagamento-resumo">
 

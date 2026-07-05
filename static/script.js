@@ -576,4 +576,39 @@ function atualizarInfoRota(distancia, duracao) {
     infoEl.style.display = 'block';
 }
 
+function abrirConfirmacao(idFrete, acao){
 
+    document.getElementById("id-frete-confirmacao").value = idFrete;
+    document.getElementById("acao-confirmacao").value = acao;
+
+    if(acao == "iniciar"){
+
+        document.getElementById("titulo-confirmacao").textContent =
+            "Iniciar viagem";
+
+        document.getElementById("texto-confirmacao").textContent =
+            "Deseja iniciar esta viagem?";
+
+    }else{
+
+        document.getElementById("titulo-confirmacao").textContent =
+            "Solicitar conclusão";
+
+        document.getElementById("texto-confirmacao").textContent =
+            "Confirma que a entrega foi concluída?";
+
+    }
+
+    document
+        .getElementById("modal-confirmacao")
+        .classList.remove("escondido");
+
+}
+
+function fecharConfirmacao(){
+
+    document
+        .getElementById("modal-confirmacao")
+        .classList.add("escondido");
+
+}

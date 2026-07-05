@@ -959,6 +959,38 @@ main.main-content{
 .btn-cancelar:hover { background: rgba(239,68,68,0.15); }
 .motorista-info { font-size: 13px; color: var(--muted); }
 
+.acoes-frete{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.acoes-frete form{
+    margin: 0;
+}
+
+.btn-verde{
+    background:#28a745;
+    color:#fff;
+}
+
+.btn-verde:hover{
+    opacity:.9;
+}
+
+.btn-laranja{
+    background:#ff9800;
+    color:#fff;
+}
+
+.btn-laranja:hover{
+    opacity:.9;
+}
+
+.status-info{
+    color:#d0d0d0;
+    font-size:14px;
+}
 
 /* Cards de resumo */
 .pagamento-resumo {
