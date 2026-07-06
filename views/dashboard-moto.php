@@ -58,6 +58,15 @@ include __DIR__ . "/../components/header.php";
         </button>
     </nav>
 
+    <button class="nav-item" id="btn-tema">
+        <span class="nav-icon">
+            🌙
+        </span>
+        <span id="texto-tema">
+            Alterar Tema
+        </span>
+    </button>
+
     <div class="sidebar-bottom">
         <div class="sidebar-divider"></div>
         <a href="../logout.php" class="nav-item sair">
@@ -199,7 +208,7 @@ include __DIR__ . "/../components/header.php";
         </div>
     </div>
 
-    <div class="aba escondido" id="aba-carteira">
+    <!-- <div class="aba escondido" id="aba-carteira">
         
         <div class="resumo-card">
 
@@ -211,10 +220,66 @@ include __DIR__ . "/../components/header.php";
                 Saldo disponível
             </div>
 
+        </div> -->
+    <div class="aba escondido" id="aba-carteira">
+        <div class="carteira-saldo">
+            <div class="saldo-label">💰 Saldo disponível</div>
+            <div class="saldo-valor">R$ 1.840,00</div>
+            <button class="btn btn-b" style="margin-top:20px;">
+                Solicitar saque →
+            </button>
         </div>
 
-        
+        <div class="pagamento-resumo" style="margin-top:20px;">
+
+            <div class="resumo-card">
+                <div class="resumo-icon">✅</div>
+                <div class="resumo-valor" style="color: var(--green);">
+                    R$ 1.840,00
+                </div>
+        <div class="resumo-label">Total recebido</div>
+            </div>
+
+            <div class="resumo-card">
+                <div class="resumo-icon">⌛</div>
+                <div class="resumo-valor" style="color: var(--yellow);">
+                    R$ 280,00
+                </div>
+                <div class="resumo-label">Aguardando pagamento</div>
+            </div>
+
+            <div class="resumo-card">
+                <div class="resumo-icon">🚛</div>
+                <div class="resumo-valor">12</div>
+                <div class="resumo-label">Fretes realizados</div>
+            </div>
+
+        </div>
+
+        <div class="pagamento-secao" style="margin-top:36px;">
+            <h3 class="secao-titulo">📄 Histórico de pagamentos</h3>
+
+            <div class="pagamento-item pago">
+                <div class="pagamento-info">
+                    <div class="pagamento-rota">
+                        Joinville → Itajaí
+                    </div>
+
+                    <div class="pagamento-meta">
+                        Empresa: Distribuidora Silva · Pago em 20/05/2025
+                    </div>
+                </div>
+
+                <div class="pagamento-direita">
+                    <div class="pagamento-valor">R$ 280,00</div>
+                    <span class="frete-status pago">Recebido</span>
+                </div>
+            </div>
+        </div>
     </div>
+
+        
+    <!-- </div> -->
 </main>
 
 <div class="modal-overlay escondido" id="modal-overlay">
@@ -253,6 +318,26 @@ include __DIR__ . "/../components/header.php";
     
     </div>
 </div>
+
+<script>
+const btnTema = document.getElementById("btn-tema");
+
+if (localStorage.getItem("tema_motorista") === "light") {
+    document.body.classList.add("light");
+}
+
+btnTema.addEventListener("click", () => {
+
+    document.body.classList.toggle("light");
+
+    if (document.body.classList.contains("light")) {
+        localStorage.setItem("tema_motorista", "light");
+    } else {
+        localStorage.setItem("tema_motorista", "dark");
+    }
+
+});
+</script>
 
 <script src="../static/script.js"></script>
 
