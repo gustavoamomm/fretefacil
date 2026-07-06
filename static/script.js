@@ -576,4 +576,3 @@ function atualizarInfoRota(distancia, duracao) {
     infoEl.style.display = 'block';
 }
 
-

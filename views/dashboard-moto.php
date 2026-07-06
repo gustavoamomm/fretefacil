@@ -58,6 +58,15 @@ include __DIR__ . "/../components/header.php";
         </button>
     </nav>
 
+    <button class="nav-item" id="btn-tema">
+        <span class="nav-icon">
+            🌙
+        </span>
+        <span id="texto-tema">
+            Alterar Tema
+        </span>
+    </button>
+
     <div class="sidebar-bottom">
         <div class="sidebar-divider"></div>
         <a href="../logout.php" class="nav-item sair">
@@ -253,6 +262,26 @@ include __DIR__ . "/../components/header.php";
     
     </div>
 </div>
+
+<script>
+const btnTema = document.getElementById("btn-tema");
+
+if (localStorage.getItem("tema_motorista") === "light") {
+    document.body.classList.add("light");
+}
+
+btnTema.addEventListener("click", () => {
+
+    document.body.classList.toggle("light");
+
+    if (document.body.classList.contains("light")) {
+        localStorage.setItem("tema_motorista", "light");
+    } else {
+        localStorage.setItem("tema_motorista", "dark");
+    }
+
+});
+</script>
 
 <script src="../static/script.js"></script>
 
