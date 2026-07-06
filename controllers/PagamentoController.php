@@ -3,6 +3,7 @@
 session_start();
 
 require_once __DIR__ . "/../models/PagamentoDAO.php";
+require_once __DIR__ . "/../models/FreteDAO.php";
 
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
     header("Location: ../views/dashboard-emp.php");

@@ -116,6 +116,43 @@ class PagamentoDAO{
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function totalPagoMes($empresa_id){
+        $sql = "SELECT SUM(valor) AS total FROM tb_pagamento WHERE empresa_id = :empresa_id
+        AND status = 'Pago' AND MONTH(data) = MONTH(CURRENT_DATE()) AND YEAR(data) = YEAR(CURRENT_DATE())";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(":empresa_id", $empresa_id);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC)["total"] ?? 0;
+    }
+
+    public function realizarPagamento($id, $metodo){
+        $sql = "UPDATE tb_pagamento SET status = 'Pago', metodo = :metodo, data = NOW()
+        WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":metodo", $metodo);
+        $stmt->bindValue(":id", $id);
+
+        return $stmt->execute();
+    }
+
+    public function buscarFretePagamento($id){
+        $sql = "SELECT frete_id FROM tb_pagamento
+        WHERE id = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":id",$id);
+
+        $stmt->execute;
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+
 
 
     }

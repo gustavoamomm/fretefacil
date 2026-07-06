@@ -1,7 +1,7 @@
 <?php
 
-require_once "../config/config.php";
-require_once "../models/Frete.php";
+require_once __DIR__ . "/../config/config.php";
+require_once __DIR__ . "/Frete.php";
 class FreteDAO {
 
     private PDO $conn;
@@ -144,5 +144,15 @@ class FreteDAO {
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function marcarComoPago($id_frete){
+        $sql = "UPDATE tb_frete SET status = 'Pago', data_pagamento = NOW() 
+        WHERE id_frete = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":id",$id_frete);
+        return $stmt->execute();
     }
 }

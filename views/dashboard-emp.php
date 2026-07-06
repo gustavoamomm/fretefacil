@@ -23,6 +23,7 @@ $fretes = $freteDAO->listarPorEmpresa($_SESSION['id']);
 
 $pagamentoDAO = new PagamentoDAO();
 $pagamentos = $pagamentoDAO->listarPorEmpresa($_SESSION["id"]);
+$totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
 
 ?>
 <head>
@@ -302,25 +303,22 @@ $pagamentos = $pagamentoDAO->listarPorEmpresa($_SESSION["id"]);
                     Veículo necessário
                 </label>
 
-                <select
-                    id="carro_necessario"
-                    name="carro_necessario"
-                    required>
+                <select id="carro_necessario" name="carro_necessario"required>
 
                     <option value="">
                         Selecione
                     </option>
 
-                    <option value="Fiorino">
-                        Fiorino
+                    <option value="furgao">
+                        Furgão
                     </option>
 
-                    <option value="Sprinter">
-                        Sprinter
+                    <option value="van">
+                        Van
                     </option>
 
-                    <option value="HR">
-                        HR
+                    <option value="caminhao_pqn">
+                        Caminhão pequeno
                     </option>
 
                 </select>
@@ -359,257 +357,18 @@ $pagamentos = $pagamentoDAO->listarPorEmpresa($_SESSION["id"]);
     <div class="aba escondido" id="aba-fretes">
 
         <div class="fretes-grid" id="fretes-grid">
-            <?php if (count($fretes) > 0): ?>
-                <?php foreach($fretes as $frete ): ?>
-                    <div class="frete-card">
-                        <div class="frete-card-header">
-
-                            <div>
-                                <div class="frete-rota">
-                                    <?=  htmlspecialchars($frete['origem'])?>
-                                    →
-                                    <?=  htmlspecialchars($frete['destino'])?>
-                                </div>
-
-                                <div class="frete-meta">
-                                    <?= $frete['peso']?> kg ·
-                                    <?= date('d/m/Y', strtotime($frete['data_coleta'])) ?>
-                                </div>
-                            </div>
-                            <span class="frete-status">
-                                <?= htmlspecialchars($frete['status'])?>
-                            </span>
-                        </div>
-                        <div class="frete-card-footer">
-                            <div class="frete-valor">
-                                R$
-                                <?= number_format($frete['valor'],2,',','.') ?>
-                            </div>
-
-                            <div class="acoes-frete">
-                                <?php if($frete["status"] == "Disponivel"): ?>
-                                    <span class="status-info">
-                                        ⏳ Aguardando um motorista
-                                    </span>
-                                <?php elseif($frete["status"] == "Aceito"): ?>
-                                    <span class="status-info">
-                                        🚚 Motorista aceitou o frete
-                                    </span>
-                                <?php elseif($frete["status"] == "Em andamento"): ?>
-                                    <span class="status-info">
-                                        🚛 Entrega em andamento
-                                    </span>
-                                <?php elseif($frete["status"] == "Aguardando confirmacao"): ?>
-                                    <form action="../controllers/FreteController.php" method="POST">
-                                        <input type="hidden" name="acao" value="confirmar">
-                                        <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
-
-                                        <button type="submit" class="btn btn-verde">
-                                            ✓ Confirmar entrega
-                                        </button>
-                                    </form>
-                                <?php elseif ($frete["status"] == "Concluido"): ?>
-                                    <span class="status-info">
-                                        ✅ Entrega concluída
-                                    </span>
-                                <?php elseif($frete["status"] == "Pago"): ?>
-                                    <span class="status-info">
-                                        💰 Frete pago
-                                    </span>
-                                <?php endif;?>
-
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>Nenhum frete publicado</p>
-            <?php endif; ?>
-
+            <?php include "ajax/fretes-empresa.php";?>
 
         </div>
 
     </div>
     <div class="aba escondido" id="aba-pagamentos">
-
-        <div class="pagamento-resumo">
-
-            <div class="resumo-card">
-
-                <div class="resumo-icon">
-                    ⏳
-                </div>
-
-                <div
-                    class="resumo-valor"
-                    style="color: var(--yellow);">
-
-                    R$ 470,00
-
-                </div>
-
-                <div class="resumo-label">
-                    Pendente de pagamento
-                </div>
-
-            </div>
-
-            <div class="resumo-card">
-
-                <div class="resumo-icon">
-                    ✅
-                </div>
-
-                <div
-                    class="resumo-valor"
-                    style="color: var(--green);">
-
-                    R$ 1.240,00
-
-                </div>
-
-                <div class="resumo-label">
-                    Total pago este mês
-                </div>
-
-            </div>
-
-            <div class="resumo-card">
-
-                <div class="resumo-icon">
-                    🚚
-                </div>
-
-                <div class="resumo-valor">
-                    8
-                </div>
-
-                <div class="resumo-label">
-                    Fretes realizados
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="pagamento-secao">
-
-            <h3 class="secao-titulo">
-
-                Pendentes
-
-                <span class="secao-hint">
-                    (pague em até 48h)
-                </span>
-
-            </h3>
-
-            <div class="pagamento-item pendente">
-
-                <div class="pagamento-info">
-
-                    <div class="pagamento-rota">
-                        Joinville → Itajaí
-                    </div>
-
-                    <div class="pagamento-meta">
-                        Motorista: Roberto S. · Entregue ontem às 15h
-                    </div>
-
-                </div>
-
-                <div class="pagamento-direita">
-
-                    <div class="pagamento-valor">
-                        R$ 190,00
-                    </div>
-
-                    <div class="pagamento-prazo">
-                        ⚠️ Vence em 24h
-                    </div>
-
-                </div>
-
-                <button class="btn btn-o btn-pagar">
-                    Pagar agora
-                </button>
-
-            </div>
-
-            <div class="pagamento-item pendente">
-
-                <div class="pagamento-info">
-
-                    <div class="pagamento-rota">
-                        Joinville → Florianópolis
-                    </div>
-
-                    <div class="pagamento-meta">
-                        Motorista: Carlos M. · Entregue hoje às 10h
-                    </div>
-
-                </div>
-
-                <div class="pagamento-direita">
-
-                    <div class="pagamento-valor">
-                        R$ 280,00
-                    </div>
-
-                    <div class="pagamento-prazo">
-                        ✅ Vence em 48h
-                    </div>
-
-                </div>
-
-                <button class="btn btn-o btn-pagar">
-                    Pagar agora
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="pagamento-secao">
-
-            <h3 class="secao-titulo">
-                ✅ Histórico de pagamentos
-            </h3>
-
-            <div class="pagamento-item pago">
-
-                <div class="pagamento-info">
-
-                    <div class="pagamento-rota">
-                        Joinville → Blumenau
-                    </div>
-
-                    <div class="pagamento-meta">
-                        Motorista: João P. · Pago em 20/05/2025
-                    </div>
-
-                </div>
-
-                <div class="pagamento-direita">
-
-                    <div class="pagamento-valor">
-                        R$ 220,00
-                    </div>
-
-                    <span class="frete-status pago">
-                        Pago
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
+        <?php include "ajax/pagamentos.php";?>
+        
     </div>
-
 </main>
 <script>
+
 
     function trocarAba(aba, botao) {
 
@@ -684,5 +443,23 @@ $pagamentos = $pagamentoDAO->listarPorEmpresa($_SESSION["id"]);
         }
 
     }
+
+    setInterval(() => {
+
+    fetch("ajax/fretes-empresa.php")
+        .then(res => res.text())
+        .then(html => {
+
+            document.getElementById("fretes-grid").innerHTML = html;
+
+        });
+
+    }, 5000);
+
+
+
+
+    console.log("Script carregado");
+    console.log(typeof trocarAba);
 
 </script>

@@ -193,7 +193,7 @@ include __DIR__ . "/../components/header.php";
                                     <span class="status-info">⏳ Aguardando confirmação da empresa</span>
 
                                 <?php elseif ($frete["status"] == "Concluido"): ?>
-                                    <span class="status-info">✅ Entrega concluída</span>
+                                    <span class="status-info">Entrega concluída</span>
                                 <?php endif; ?>
                             
                             </div>
