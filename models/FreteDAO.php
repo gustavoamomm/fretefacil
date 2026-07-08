@@ -81,6 +81,68 @@ class FreteDAO {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function atualizar(Frete $frete) {
+
+        // Só permite editar um frete que ainda esteja Disponivel
+        // e que pertença à empresa que está fazendo a requisição.
+        $sql = "UPDATE tb_frete
+                SET
+                    origem = :origem,
+                    uf_origem = :uf_origem,
+                    destino = :destino,
+                    uf_destino = :uf_destino,
+                    peso = :peso,
+                    valor = :valor,
+                    data_coleta = :data_coleta,
+                    hora_coleta = :hora_coleta,
+                    descricao = :descricao,
+                    carro_necessario = :carro_necessario
+                WHERE id_frete = :id_frete
+                    AND empresa_id = :empresa_id
+                    AND status = 'Disponivel'";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(':origem', $frete->getOrigem());
+        $stmt->bindValue(':uf_origem', $frete->getUfOrigem());
+        $stmt->bindValue(':destino', $frete->getDestino());
+        $stmt->bindValue(':uf_destino', $frete->getUfDestino());
+        $stmt->bindValue(':peso', $frete->getPeso());
+        $stmt->bindValue(':valor', $frete->getValor());
+        $stmt->bindValue(':data_coleta', $frete->getDataColeta());
+        $stmt->bindValue(':hora_coleta', $frete->getHoraColeta());
+        $stmt->bindValue(':descricao', $frete->getDescricao());
+        $stmt->bindValue(':carro_necessario', $frete->getCarroNecessario());
+        $stmt->bindValue(':id_frete', $frete->getIdFrete());
+        $stmt->bindValue(':empresa_id', $frete->getEmpresaId());
+
+        $stmt->execute();
+
+        // rowCount() == 0 tanto pode significar "não existe" quanto
+        // "não é dono" ou "não está mais disponível" — nesses casos
+        // consideramos que a edição não foi permitida.
+        return $stmt->rowCount() > 0;
+    }
+
+    public function excluir($id_frete, $empresa_id) {
+
+        // Mesma trava de segurança: só exclui se for da empresa
+        // e ainda estiver Disponivel (frete já aceito não pode sumir).
+        $sql = "DELETE FROM tb_frete
+                WHERE id_frete = :id_frete
+                    AND empresa_id = :empresa_id
+                    AND status = 'Disponivel'";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(':id_frete', $id_frete);
+        $stmt->bindValue(':empresa_id', $empresa_id);
+
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
+    }
+
     public function aceitarFrete($id_frete, $pcu_id) {
 
         $sql = "UPDATE tb_frete

@@ -65,8 +65,9 @@ include __DIR__ . '/../components/header.php';
         </div>
         <div class="form-group">
           <label for="cnh">CNH</label>
-          <input type="text" id="cnh" name="cnh"
-            placeholder="" maxlength="11">
+          <input type="text" id="cnh" name="cnh" inputmode="numeric"
+            placeholder="Somente números" maxlength="9">
+          <span class="field-hint">9 números, sem pontos ou traços</span>
         </div>
         <div class="form-group">
           <label for="dt_nasc">Data de nascimento</label>
@@ -84,7 +85,8 @@ include __DIR__ . '/../components/header.php';
         <div class="form-group">
           <label for="placa">Placa do veículo</label>
           <input type="text" id="placa" name="placa"
-            placeholder="Ex: ABC-1234" maxlength="8">
+            placeholder="ABC-1234 ou ABC1D23" maxlength="8">
+          <span class="field-hint">Aceita modelo antigo ou Mercosul</span>
         </div>
       </div>
 

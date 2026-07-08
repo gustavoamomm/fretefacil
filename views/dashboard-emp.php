@@ -166,6 +166,13 @@ $totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
 
     </div>
 
+    <?php if (isset($_SESSION['feedback'])): $feedback = $_SESSION['feedback']; ?>
+        <div class="form-feedback <?= $feedback['tipo']; ?>" style="margin-bottom:20px;">
+            <?= $feedback['mensagem']; ?>
+        </div>
+        <?php unset($_SESSION['feedback']); ?>
+    <?php endif; ?>
+
     <div
         class="aba"
         id="aba-publicar">
@@ -301,6 +308,8 @@ $totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
                         type="date"
                         id="data_coleta"
                         name="data_coleta"
+                        min="<?= date('Y-m-d') ?>"
+                        max="<?= date('Y-m-d', strtotime('+2 years')) ?>"
                         required>
 
                 </div>
@@ -391,6 +400,152 @@ $totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
         
     </div>
 </main>
+
+<div class="modal-overlay escondido" id="modal-editar-overlay">
+    <div class="modal">
+
+        <div class="modal-header">
+            <div class="modal-rota">Editar frete</div>
+            <button type="button" class="modal-fechar" id="btn-fechar-editar">✕</button>
+        </div>
+
+        <form
+            class="dash-form"
+            id="form-editar-frete"
+            method="POST"
+            action="../controllers/FreteController.php">
+
+            <input type="hidden" name="acao" value="editar">
+            <input type="hidden" name="id_frete" id="edit-id_frete">
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="edit-origem">Cidade de origem</label>
+                    <input type="text" id="edit-origem" name="origem" required>
+
+                    <label for="edit-uf_origem">Estado</label>
+                    <select name="uf_origem" id="edit-uf_origem" required>
+                        <option value="">UF</option>
+                        <option value="AC">AC</option>
+                        <option value="AL">AL</option>
+                        <option value="AM">AM</option>
+                        <option value="BA">BA</option>
+                        <option value="CE">CE</option>
+                        <option value="DF">DF</option>
+                        <option value="ES">ES</option>
+                        <option value="GO">GO</option>
+                        <option value="MA">MA</option>
+                        <option value="MG">MG</option>
+                        <option value="MS">MS</option>
+                        <option value="MT">MT</option>
+                        <option value="PA">PA</option>
+                        <option value="PB">PB</option>
+                        <option value="PE">PE</option>
+                        <option value="PI">PI</option>
+                        <option value="PR">PR</option>
+                        <option value="RJ">RJ</option>
+                        <option value="RN">RN</option>
+                        <option value="RO">RO</option>
+                        <option value="RR">RR</option>
+                        <option value="RS">RS</option>
+                        <option value="SC">SC</option>
+                        <option value="SE">SE</option>
+                        <option value="SP">SP</option>
+                        <option value="TO">TO</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-destino">Cidade de destino</label>
+                    <input type="text" id="edit-destino" name="destino" required>
+
+                    <label for="edit-uf_destino">Estado</label>
+                    <select name="uf_destino" id="edit-uf_destino" required>
+                        <option value="">UF</option>
+                        <option value="AC">AC</option>
+                        <option value="AL">AL</option>
+                        <option value="AM">AM</option>
+                        <option value="BA">BA</option>
+                        <option value="CE">CE</option>
+                        <option value="DF">DF</option>
+                        <option value="ES">ES</option>
+                        <option value="GO">GO</option>
+                        <option value="MA">MA</option>
+                        <option value="MG">MG</option>
+                        <option value="MS">MS</option>
+                        <option value="MT">MT</option>
+                        <option value="PA">PA</option>
+                        <option value="PB">PB</option>
+                        <option value="PE">PE</option>
+                        <option value="PI">PI</option>
+                        <option value="PR">PR</option>
+                        <option value="RJ">RJ</option>
+                        <option value="RN">RN</option>
+                        <option value="RO">RO</option>
+                        <option value="RR">RR</option>
+                        <option value="RS">RS</option>
+                        <option value="SC">SC</option>
+                        <option value="SE">SE</option>
+                        <option value="SP">SP</option>
+                        <option value="TO">TO</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="edit-peso">Peso da carga (kg)</label>
+                    <input type="number" id="edit-peso" name="peso" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-valor">Valor do frete (R$)</label>
+                    <input type="number" id="edit-valor" name="valor" step="0.01" required>
+                </div>
+
+            </div>
+
+            <div class="form-row">
+
+                <div class="form-group">
+                    <label for="edit-data_coleta">Data da coleta</label>
+                    <input type="date" id="edit-data_coleta" name="data_coleta" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit-hora_coleta">Hora da coleta</label>
+                    <input type="time" id="edit-hora_coleta" name="hora_coleta" required>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="edit-carro_necessario">Veículo necessário</label>
+                <select id="edit-carro_necessario" name="carro_necessario" required>
+                    <option value="">Selecione</option>
+                    <option value="furgao">Furgão</option>
+                    <option value="van">Van</option>
+                    <option value="caminhao_pqn">Caminhão pequeno</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="edit-descricao">Descrição da carga</label>
+                <textarea id="edit-descricao" name="descricao" rows="3"></textarea>
+            </div>
+
+            <div class="modal-btns">
+                <button type="button" class="btn btn-gh" id="btn-cancelar-editar">Cancelar</button>
+                <button type="submit" class="btn btn-o">Salvar alterações</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
 
 <script>
 const btnTema = document.getElementById("btn-tema");
@@ -501,7 +656,68 @@ btnTema.addEventListener("click", () => {
 
     }, 5000);
 
-    
+
+    // =========================
+    // Editar / excluir frete
+    // =========================
+    // #fretes-grid e recarregado via AJAX a cada 5s, entao usamos
+    // delegacao de evento no container (que nunca e substituido)
+    // em vez de addEventListener direto nos botoes.
+
+    const gridFretes = document.getElementById('fretes-grid');
+    const modalEditarOverlay = document.getElementById('modal-editar-overlay');
+
+    function abrirModalEditar(botao) {
+        document.getElementById('edit-id_frete').value = botao.dataset.idFrete;
+        document.getElementById('edit-origem').value = botao.dataset.origem;
+        document.getElementById('edit-uf_origem').value = botao.dataset.ufOrigem;
+        document.getElementById('edit-destino').value = botao.dataset.destino;
+        document.getElementById('edit-uf_destino').value = botao.dataset.ufDestino;
+        document.getElementById('edit-peso').value = botao.dataset.peso;
+        document.getElementById('edit-valor').value = botao.dataset.valor;
+        document.getElementById('edit-data_coleta').value = botao.dataset.dataColeta;
+        document.getElementById('edit-hora_coleta').value = botao.dataset.horaColeta;
+        document.getElementById('edit-carro_necessario').value = botao.dataset.carro;
+        document.getElementById('edit-descricao').value = botao.dataset.descricao;
+
+        modalEditarOverlay.classList.remove('escondido');
+    }
+
+    function fecharModalEditar() {
+        modalEditarOverlay.classList.add('escondido');
+    }
+
+    if (gridFretes) {
+
+        gridFretes.addEventListener('click', function (e) {
+            const botaoEditar = e.target.closest('.btn-editar-frete');
+            if (botaoEditar) {
+                abrirModalEditar(botaoEditar);
+            }
+        });
+
+        gridFretes.addEventListener('submit', function (e) {
+            const formExcluir = e.target.closest('.form-excluir-frete');
+            if (formExcluir) {
+                const confirmado = confirm('Tem certeza que deseja excluir este frete? Essa acao nao pode ser desfeita.');
+                if (!confirmado) {
+                    e.preventDefault();
+                }
+            }
+        });
+    }
+
+    if (modalEditarOverlay) {
+        modalEditarOverlay.addEventListener('click', function (e) {
+            if (e.target === this) fecharModalEditar();
+        });
+    }
+
+    const btnFecharEditar = document.getElementById('btn-fechar-editar');
+    if (btnFecharEditar) btnFecharEditar.addEventListener('click', fecharModalEditar);
+
+    const btnCancelarEditar = document.getElementById('btn-cancelar-editar');
+    if (btnCancelarEditar) btnCancelarEditar.addEventListener('click', fecharModalEditar);
 
 
 

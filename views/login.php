@@ -52,6 +52,11 @@ include __DIR__ . '/../components/header.php';
                     <input type="password" id="senha" name="senha" placeholder="Sua senha" minlength="8">
                     <span class="toggle-senha" id="toggle-senha">👁️</span>
                 </div>
+                <div class="auth-footer"style="text-align:right;margin-top:10px;">
+                    <a href="esqueci-senha.php">
+                         Esqueceu sua senha?
+                    </a>
+                </div>
             </div>
 
             <?php

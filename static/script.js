@@ -195,10 +195,62 @@ if (cnh) {
 
         let v = this.value.replace(/\D/g, '');
 
-        if (v.length > 11)
-            v = v.slice(0, 11);
+        if (v.length > 9)
+            v = v.slice(0, 9);
 
         this.value = v;
+
+    });
+
+}
+
+
+// =========================
+// MÁSCARA PLACA (antiga + Mercosul)
+// =========================
+// Formato antigo:  AAA-9999  (3 letras, 4 números)
+// Formato Mercosul: AAA9A99  (3 letras, 1 número, 1 letra, 2 números)
+// O 5º caractere decide o formato: letra = Mercosul (sem traço),
+// número = modelo antigo (com traço após as 3 letras).
+
+const placa = document.getElementById('placa');
+
+if (placa) {
+
+    placa.addEventListener('input', function() {
+
+        let v = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+        v = v.slice(0, 7);
+
+        let letras = v.slice(0, 3).replace(/[^A-Z]/g, '');
+        let resto = v.slice(3);
+
+        if (resto.length > 0) {
+            resto = resto.slice(0, 1).replace(/[^0-9]/g, '') + resto.slice(1);
+        }
+
+        if (resto.length > 1) {
+            resto = resto.slice(0, 1) + resto.slice(1, 2).replace(/[^A-Z0-9]/g, '') + resto.slice(2);
+        }
+
+        if (resto.length > 2) {
+            resto = resto.slice(0, 2) + resto.slice(2).replace(/[^0-9]/g, '');
+        }
+
+        v = letras + resto;
+
+        let formatado = v;
+
+        if (v.length > 4) {
+            const quintoChar = v.charAt(4);
+            const ehMercosul = /[A-Z]/.test(quintoChar);
+
+            if (!ehMercosul) {
+                formatado = v.slice(0, 3) + '-' + v.slice(3);
+            }
+        }
+
+        this.value = formatado;
 
     });
 
@@ -486,7 +538,12 @@ async function buscarCoordenadas(cidade, uf){
     );
 
     const dados = await resposta.json();
-    
+
+    if (dados.erro) {
+        console.error('Erro da API (geocode):', dados.erro);
+        return null;
+    }
+
     if (dados.features && dados.features.length > 0){
 
         const [lon, lat] = dados.features[0].geometry.coordinates;
@@ -524,6 +581,11 @@ async function buscarRota(origem, destino){
     });
 
     const dados = await resposta.json();
+
+    if (dados.erro) {
+        console.error('Erro da API (rota):', dados.erro);
+        return null;
+    }
 
     if(dados.features && dados.features.length){
 
