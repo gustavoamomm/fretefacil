@@ -1234,6 +1234,204 @@ main.main-content{
     justify-content: flex-end;
 }
 
+/* =========================
+   SIMULAÇÃO DE PAGAMENTO
+   ========================= */
+
+.btn-block{
+    width: 100%;
+    justify-content: center;
+}
+
+.metodo-tabs{
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+}
+
+.metodo-tab{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    background: var(--dark);
+    color: var(--muted);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color .2s, color .2s, background .2s;
+}
+
+.metodo-tab input{
+    accent-color: var(--orange);
+}
+
+.metodo-tab:has(input:checked){
+    border-color: var(--orange);
+    color: var(--text);
+    background: rgba(242,100,25,0.08);
+}
+
+.metodo-painel{
+    animation: fadeIn .25s both;
+}
+
+.pagamento-status{
+    min-height: 20px;
+    margin: 14px 0;
+    font-size: 14px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pagamento-status.sucesso{
+    color: var(--green);
+    font-weight: 600;
+}
+
+.pagamento-status .spinner{
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--orange);
+    border-radius: 50%;
+    animation: girar .7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes girar{
+    to{ transform: rotate(360deg); }
+}
+
+/* PIX */
+.pix-qr-wrap{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.pix-qr{
+    width: 180px;
+    height: 180px;
+    border-radius: var(--r);
+    border: 1px solid var(--border);
+    background: #fff;
+    padding: 8px;
+}
+
+.pix-chave-wrap{
+    margin-bottom: 16px;
+}
+
+.pix-chave{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 10px 14px;
+    margin-top: 6px;
+}
+
+.pix-chave code{
+    color: var(--text);
+    font-size: 14px;
+    word-break: break-all;
+}
+
+.pix-timer{
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 6px;
+}
+
+.pix-timer strong{
+    color: var(--orange);
+    font-family: var(--fh);
+    font-size: 18px;
+    letter-spacing: .03em;
+}
+
+/* CARTÃO */
+.campo-erro{
+    display: block;
+    min-height: 16px;
+    font-size: 12px;
+    color: var(--red);
+    margin-top: 4px;
+}
+
+.parcelas-lista{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.parcela-opcao{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    background: var(--dark);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color .2s;
+}
+
+.parcela-opcao:has(input:checked){
+    border-color: var(--orange);
+}
+
+.parcela-opcao input{
+    accent-color: var(--orange);
+}
+
+/* BOLETO */
+.boleto-info{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.boleto-vencimento{
+    font-family: var(--fh);
+    font-size: 24px;
+    color: var(--text);
+    letter-spacing: .03em;
+    margin-top: 4px;
+}
+
+.boleto-codigo-wrap{
+    margin-bottom: 16px;
+}
+
+.boleto-codigo{
+    display: block;
+    margin-top: 6px;
+    background: var(--dark);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 12px 14px;
+    font-size: 15px;
+    letter-spacing: .06em;
+    color: var(--text);
+    text-align: center;
+}
+
 .leaflet-container {
   background: var(--dark2) !important;
   border-radius: 12px;

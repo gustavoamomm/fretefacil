@@ -135,21 +135,22 @@ class PagamentoDAO{
 
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindValue(":metodo", $metodo);
         $stmt->bindValue(":id", $id);
+        $stmt->bindValue(":metodo", $metodo);
+        
 
         return $stmt->execute();
     }
 
     public function buscarFretePagamento($id){
-        $sql = "SELECT frete_id FROM tb_pagamento
+        $sql = "SELECT frete_id, usuario_pcu_id, valor FROM tb_pagamento
         WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
 
         $stmt->bindValue(":id",$id);
 
-        $stmt->execute;
+        $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -160,3 +161,6 @@ class PagamentoDAO{
 
 
 }
+
+
+

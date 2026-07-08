@@ -29,6 +29,7 @@ $totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../static/pagamento-simulacao.js" defer></script>
 </head>
 <aside class="sidebar">
 
@@ -456,6 +457,7 @@ $totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
 
     }, 5000);
 
+    
 
 
 
