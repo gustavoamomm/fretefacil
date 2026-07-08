@@ -910,6 +910,7 @@ main.main-content{
 .fretes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    align-items: stretch;
     gap: 16px;
 }
 
@@ -918,6 +919,9 @@ main.main-content{
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 24px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
     transition: border-color .3s;
 }
 
@@ -930,6 +934,16 @@ main.main-content{
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 20px;
+    flex: 0 0 auto;
+}
+
+.frete-aguardando {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--yellow);
+    margin-top: 8px;
 }
 
 .frete-rota{
@@ -962,10 +976,14 @@ main.main-content{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 20px;
 }
 .frete-valor {
   font-family: var(--fh);
   font-size: 24px; color: var(--orange);
+  white-space: nowrap;
 }
 .btn-cancelar {
   font-size: 12px; padding: 7px 14px;
@@ -995,6 +1013,60 @@ main.main-content{
 
 .btn-verde:hover{
     opacity:.9;
+}
+
+.btn-vermelho{
+    background: var(--red);
+    color:#fff;
+}
+
+.btn-vermelho:hover{
+    opacity:.9;
+}
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    border-radius: var(--r);
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background .2s, border-color .2s, transform .15s;
+}
+
+.btn-icon:hover {
+    transform: translateY(-1px);
+}
+
+.btn-icon-editar {
+    border: 1px solid rgba(242, 100, 25, 0.3);
+    background: rgba(242, 100, 25, 0.08);
+    color: var(--orange);
+}
+
+.btn-icon-editar:hover {
+    background: rgba(242, 100, 25, 0.18);
+}
+
+.btn-icon-excluir {
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--red);
+}
+
+.btn-icon-excluir:hover {
+    background: rgba(239, 68, 68, 0.18);
+}
+
+.acoes-frete{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .btn-laranja{

@@ -486,7 +486,12 @@ async function buscarCoordenadas(cidade, uf){
     );
 
     const dados = await resposta.json();
-    
+
+    if (dados.erro) {
+        console.error('Erro da API (geocode):', dados.erro);
+        return null;
+    }
+
     if (dados.features && dados.features.length > 0){
 
         const [lon, lat] = dados.features[0].geometry.coordinates;
@@ -524,6 +529,11 @@ async function buscarRota(origem, destino){
     });
 
     const dados = await resposta.json();
+
+    if (dados.erro) {
+        console.error('Erro da API (rota):', dados.erro);
+        return null;
+    }
 
     if(dados.features && dados.features.length){
 
