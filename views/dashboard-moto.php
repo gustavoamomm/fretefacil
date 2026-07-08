@@ -115,17 +115,15 @@ include __DIR__ . "/../components/header.php";
                         </div>
                         <div class="frete-card-footer">
                             <div class="frete-valor">R$ <?= number_format($frete['valor'], 2, ',', '.') ?></div>
-                            <button class="btn btn-b btn-ver" 
-                            onclick="abrirModal(
-                                <?= $frete['id_frete']?>, 
-                                '<?= addslashes($frete['origem'])?>',
-                                '<?= addslashes($frete['uf_origem'])?>',
-                                '<?= addslashes($frete['destino'])?>',
-                                '<?= addslashes($frete['uf_destino'])?>',
-                                'R$ <?= number_format($frete['valor'], 2, ',', '.') ?>',
-                                '<?= addslashes($frete['peso'] . ' kg · ' . date('d/m', strtotime($frete['data_coleta'])) . ' ' . substr($frete['hora_coleta'], 0, 5) . 'h') ?>',
-                                '<?= addslashes($frete['descricao']) ?>'
-                                )">
+                            <button class="btn btn-b btn-ver"
+                                data-id-frete="<?= $frete['id_frete'] ?>"
+                                data-origem="<?= htmlspecialchars($frete['origem']) ?>"
+                                data-uf-origem="<?= htmlspecialchars($frete['uf_origem']) ?>"
+                                data-destino="<?= htmlspecialchars($frete['destino']) ?>"
+                                data-uf-destino="<?= htmlspecialchars($frete['uf_destino']) ?>"
+                                data-valor="R$ <?= number_format($frete['valor'], 2, ',', '.') ?>"
+                                data-meta="<?= htmlspecialchars($frete['peso'] . ' kg · ' . date('d/m', strtotime($frete['data_coleta'])) . ' ' . substr($frete['hora_coleta'], 0, 5) . 'h') ?>"
+                                data-desc="<?= htmlspecialchars($frete['descricao']) ?>">
                                 Ver detalhes →
                             </button>
                         </div>
@@ -134,6 +132,23 @@ include __DIR__ . "/../components/header.php";
             <?php endif; ?>
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.btn-ver').forEach(function(botao){
+            botao.addEventListener('click', function(){
+                abrirModal(
+                    botao.dataset.idFrete,
+                    botao.dataset.origem,
+                    botao.dataset.ufOrigem,
+                    botao.dataset.destino,
+                    botao.dataset.ufDestino,
+                    botao.dataset.valor,
+                    botao.dataset.meta,
+                    botao.dataset.desc
+                );
+            });
+        });
+    </script>
 
     
     <div class="aba escondido" id="aba-aceitos">

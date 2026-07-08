@@ -242,7 +242,7 @@ toggleSenha('confirmar-senha', 'toggle-confirmar');
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const feedback = document.getElementById(".form-feedback");
+    const feedback = document.querySelector(".form-feedback");
 
     if (feedback && feedback.textContent.trim() !== "") {
 
@@ -335,13 +335,13 @@ function abrirModal(idFrete, origem, ufOrigem, destino, ufDestino, valor, meta, 
     if (modalDesc) modalDesc.textContent = desc;
     if (modalIdFrete) modalIdFrete.value = idFrete;
 
-    carregarMapa(origem, ufOrigem, destino, ufDestino);
-
     const overlay = document.getElementById('modal-overlay');
     if (overlay){
         overlay.classList.remove('escondido');
         document.body.style.overflow = 'hidden';
     }
+
+    carregarMapa(origem, ufOrigem, destino, ufDestino);
 }
 
 function fecharModal(){
@@ -430,6 +430,12 @@ async function carregarMapa(origem, ufOrigem, destino, ufDestino) {
             attribution: '&copy OpenStreetMap contributors',
             maxZoom: 18
         }).addTo(mapaLeaflet);
+
+        // garante que o Leaflet recalcule o tamanho do container
+        // (o modal pode acabar de se tornar visível nesse mesmo frame)
+        setTimeout(function(){
+            if (mapaLeaflet) mapaLeaflet.invalidateSize();
+        }, 100);
 
 
 
