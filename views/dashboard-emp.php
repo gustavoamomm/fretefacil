@@ -128,6 +128,20 @@ $totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
 </aside>
 <main class="main-content">
 
+    <?php if (!empty($_SESSION['erro'])): ?>
+        <div class="alert alert-erro" style="background:#fdecea;color:#611a15;border:1px solid #f5c6cb;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+            <?= htmlspecialchars($_SESSION['erro']) ?>
+        </div>
+        <?php unset($_SESSION['erro']); ?>
+    <?php endif; ?>
+
+    <?php if (!empty($_SESSION['sucesso'])): ?>
+        <div class="alert alert-sucesso" style="background:#e6f4ea;color:#1e4620;border:1px solid #b7dfc0;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+            <?= htmlspecialchars($_SESSION['sucesso']) ?>
+        </div>
+        <?php unset($_SESSION['sucesso']); ?>
+    <?php endif; ?>
+
     <div class="page-header">
 
         <div>

@@ -32,8 +32,12 @@ try{
 
     $freteDAO->marcarComoPago($pagamento["frete_id"]);
 
-    // Credita o valor do frete na carteira do motorista que fez a entrega
-    $carteiraDAO->atualizarSaldo($pagamento["usuario_pcu_id"], $pagamento["valor"]);
+    $carteiraDAO->atualizarSaldo(
+        $pagamento["usuario_pcu_id"],
+        $pagamento["valor"],
+        $pagamento["frete_id"],
+        "Pagamento do frete #" . $pagamento["frete_id"]
+    );
 
     $_SESSION["sucesso"] = "Pagamento realizado com sucesso!";
 

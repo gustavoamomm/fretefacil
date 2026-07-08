@@ -147,7 +147,12 @@ class FreteDAO {
     }
 
     public function marcarComoPago($id_frete){
-        $sql = "UPDATE tb_frete SET status = 'Pago', data_pagamento = NOW() 
+        // OBS: o enum de status da tb_frete não possui o valor 'Pago'
+        // (só Disponivel, Aceito, Em andamento, Aguardando confirmacao, Concluido).
+        // Por isso usamos a coluna data_pagamento para marcar que o pagamento
+        // foi feito, sem tentar setar um status inválido (o que gerava
+        // exceção e travava o fluxo antes de creditar a carteira).
+        $sql = "UPDATE tb_frete SET data_pagamento = NOW()
         WHERE id_frete = :id";
 
         $stmt = $this->conn->prepare($sql);

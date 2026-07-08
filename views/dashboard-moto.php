@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-
 if (
     !isset($_SESSION['tipo']) ||
     $_SESSION['tipo'] !== 'motorista'
@@ -9,20 +8,25 @@ if (
     header("Location: login.php");
     exit;
 }
+
 require_once __DIR__ . "/../models/Frete.php";
 require_once __DIR__ . "/../models/FreteDAO.php";
 require_once __DIR__ . "/../models/CarteiraDAO.php";
+
 $daoCarteira = new CarteiraDAO();
 $carteira = $daoCarteira->buscarPorMotorista($_SESSION["id"]);
+
+$totalRecebido = $daoCarteira->buscarTotalRecebido($carteira["id"]);
+$aguardando = $daoCarteira->buscarAguardandoPagamento($_SESSION["id"]);
+$concluidos = $daoCarteira->buscarFretesConcluidos($_SESSION["id"]);
+$extrato = $daoCarteira->buscarExtrato($carteira["id"]);
 
 $dao = new FreteDAO();
 $fretesDisponiveis = $dao->listarDisponiveis();
 $fretesAceitos = $dao->listarAceitosMotorista($_SESSION["id"]);
-?>
-<?php 
+
 $bodyClass = 'dashboard';
 include __DIR__ . "/../components/header.php";
-
 ?>
 
 <head>
@@ -47,7 +51,7 @@ include __DIR__ . "/../components/header.php";
         <button class="nav-item ativo" onclick="trocarAbaMotorista('disponiveis', this)">
             <span class="nav-icon">🔍</span>
             Fretes Disponíveis
-            <span class="nav-badge" style="background:var(--blue);"><?=count($fretesDisponiveis)?></span>
+            <span class="nav-badge" style="background:var(--blue);"><?= count($fretesDisponiveis) ?></span>
         </button>
         <button class="nav-item" onclick="trocarAbaMotorista('aceitos', this)">
             <span class="nav-icon">📦</span>
@@ -60,12 +64,8 @@ include __DIR__ . "/../components/header.php";
     </nav>
 
     <button class="nav-item" id="btn-tema">
-        <span class="nav-icon">
-            🌙
-        </span>
-        <span id="texto-tema">
-            Alterar Tema
-        </span>
+        <span class="nav-icon">🌙</span>
+        <span id="texto-tema">Alterar Tema</span>
     </button>
 
     <div class="sidebar-bottom">
@@ -75,11 +75,10 @@ include __DIR__ . "/../components/header.php";
             Sair
         </a>
     </div>
-
 </aside>
 
 <main class="main-content">
-    <div  class="page-header">
+    <div class="page-header">
         <div>
             <h1 class="page-title" id="page-title">FRETES DISPONÍVEIS</h1>
             <p class="page-sub" id="page-sub">
@@ -88,13 +87,12 @@ include __DIR__ . "/../components/header.php";
         </div>
     </div>
 
-    <?php if(isset($_SESSION['feedback'])): $feedback = $_SESSION['feedback']; ?>
+    <?php if (isset($_SESSION['feedback'])): $feedback = $_SESSION['feedback']; ?>
         <div class="form-feedback <?= $feedback['tipo']; ?>" style="margin-bottom:20px;">
-            <?= $feedback['mensagem']?>
+            <?= $feedback['mensagem'] ?>
         </div>
         <?php unset($_SESSION['feedback']); ?>
     <?php endif; ?>
-
 
     <div class="aba" id="aba-disponiveis">
         <div class="filtro-bar">
@@ -102,9 +100,7 @@ include __DIR__ . "/../components/header.php";
         </div>
 
         <div class="fretes-grid" id="lista-disponiveis">
-            <?php include "ajax/fretes-disponiveis.php";?>
-
-            
+            <?php include "ajax/fretes-disponiveis.php"; ?>
         </div>
     </div>
 
@@ -125,148 +121,139 @@ include __DIR__ . "/../components/header.php";
         });
     </script>
 
-    
     <div class="aba escondido" id="aba-aceitos">
         <div class="fretes-grid">
-
-            <?php if(empty($fretesAceitos)): ?>
+            <?php if (empty($fretesAceitos)): ?>
                 <p>Você ainda não aceitou nenhum frete.</p>
             <?php else: ?>
-
-                <?php foreach($fretesAceitos as $frete): ?>
-
+                <?php foreach ($fretesAceitos as $frete): ?>
                     <div class="frete-card">
-
                         <div class="frete-card-header">
                             <div>
                                 <div class="frete-rota">
-                                    <?= htmlspecialchars($frete["origem"])?> 
-                                    →
-                                    <?= htmlspecialchars($frete["destino"])?>
+                                    <?= htmlspecialchars($frete["origem"]) ?> → <?= htmlspecialchars($frete["destino"]) ?>
                                 </div>
-
                                 <div class="frete-meta">
-                                    <?= $frete["peso"]?> kg ·
-                                    <?= date("d/m", strtotime($frete["data_coleta"]))?> ·
-                                    <?= substr($frete["hora_coleta"],0,5) ?>h
+                                    <?= $frete["peso"] ?> kg ·
+                                    <?= date("d/m", strtotime($frete["data_coleta"])) ?> ·
+                                    <?= substr($frete["hora_coleta"], 0, 5) ?>h
                                 </div>
                             </div>
                             <span class="frete-status">
-                                <?= $frete["status"]?>
+                                <?= $frete["status"] ?>
                             </span>
                         </div>
 
                         <div class="frete-card-footer">
                             <div class="frete-valor">
-                              R$ <?= number_format($frete["valor"],2,",",".") ?>
+                                R$ <?= number_format($frete["valor"], 2, ",", ".") ?>
                             </div>
 
-                        
                             <div class="acoes-frete">
                                 <?php if ($frete["status"] == "Aceito"): ?>
                                     <form method="POST" action="../controllers/FreteController.php">
                                         <input type="hidden" name="acao" value="iniciar">
                                         <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
-                                    
                                         <button type="submit" class="btn btn-verde">▶ Iniciar viagem</button>
                                     </form>
-
                                 <?php elseif ($frete["status"] == "Em andamento"): ?>
                                     <form method="POST" action="../controllers/FreteController.php">
                                         <input type="hidden" name="acao" value="concluir">
                                         <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
-
                                         <button type="submit" class="btn btn-laranja">✔ Solicitar conclusão</button>
                                     </form>
-
                                 <?php elseif ($frete["status"] == "Aguardando confirmacao"): ?>
                                     <span class="status-info">⏳ Aguardando confirmação da empresa</span>
-
                                 <?php elseif ($frete["status"] == "Concluido"): ?>
                                     <span class="status-info">Entrega concluída</span>
                                 <?php endif; ?>
-                            
                             </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php endif; ?>
-            
         </div>
     </div>
 
-    <!-- <div class="aba escondido" id="aba-carteira">
-        
-        <div class="resumo-card">
+    <div class="aba" id="aba-carteira" class="aba-escondido">
 
-            <div class="resumo-valor">
+        <div class="carteira-saldo">
+            <div class="saldo-label">Saldo disponível</div>
+            <div class="saldo-valor">
                 R$ <?= number_format($carteira["saldo"], 2, ",", ".") ?>
             </div>
-
-            <div class="resumo-label">
-                Saldo disponível
-            </div>
-
-        </div> -->
-    <div class="aba escondido" id="aba-carteira">
-        <div class="carteira-saldo">
-            <div class="saldo-label">💰 Saldo disponível</div>
-            <div class="saldo-valor">R$ 1.840,00</div>
-            <button class="btn btn-b" style="margin-top:20px;">
-                Solicitar saque →
+            <br>
+            <button class="btn btn-b" id="btnAbrirSaque">
+                Solicitar saque
             </button>
         </div>
 
-        <div class="pagamento-resumo" style="margin-top:20px;">
+        <br><br>
 
+        <div class="pagamento-resumo">
             <div class="resumo-card">
-                <div class="resumo-icon">✅</div>
-                <div class="resumo-valor" style="color: var(--green);">
-                    R$ 1.840,00
+                <div class="resumo-icon">💰</div>
+                <div class="resumo-valor">
+                    R$ <?= number_format($totalRecebido, 2, ",", ".") ?>
                 </div>
-        <div class="resumo-label">Total recebido</div>
+                <div class="resumo-label">Total recebido</div>
             </div>
 
             <div class="resumo-card">
-                <div class="resumo-icon">⌛</div>
-                <div class="resumo-valor" style="color: var(--yellow);">
-                    R$ 280,00
+                <div class="resumo-icon">⏳</div>
+                <div class="resumo-valor">
+                    R$ <?= number_format($aguardando, 2, ",", ".") ?>
                 </div>
                 <div class="resumo-label">Aguardando pagamento</div>
             </div>
 
             <div class="resumo-card">
-                <div class="resumo-icon">🚛</div>
-                <div class="resumo-valor">12</div>
-                <div class="resumo-label">Fretes realizados</div>
-            </div>
-
-        </div>
-
-        <div class="pagamento-secao" style="margin-top:36px;">
-            <h3 class="secao-titulo">📄 Histórico de pagamentos</h3>
-
-            <div class="pagamento-item pago">
-                <div class="pagamento-info">
-                    <div class="pagamento-rota">
-                        Joinville → Itajaí
-                    </div>
-
-                    <div class="pagamento-meta">
-                        Empresa: Distribuidora Silva · Pago em 20/05/2025
-                    </div>
+                <div class="resumo-icon">🚚</div>
+                <div class="resumo-valor">
+                    <?= $concluidos ?>
                 </div>
-
-                <div class="pagamento-direita">
-                    <div class="pagamento-valor">R$ 280,00</div>
-                    <span class="frete-status pago">Recebido</span>
-                </div>
+                <div class="resumo-label">Fretes concluídos</div>
             </div>
         </div>
+
+        <br>
+
+        <div class="tabs">
+            <button class="tab ativo" id="tabExtrato">Extrato</button>
+            <button class="tab" id="tabSaques">Histórico de Saques</button>
+        </div>
+
+        <div id="conteudoExtrato">
+            <?php if (empty($extrato)): ?>
+                <p class="page-sub">Nenhuma movimentação encontrada.</p>
+            <?php else: ?>
+                <?php foreach ($extrato as $mov): ?>
+                    <div class="pagamento-item">
+                        <div class="pagamento-info">
+                            <div class="pagamento-rota">
+                                <?= $mov["descricao"] ?>
+                            </div>
+                            <div class="pagamento-meta">
+                                <?= date("d/m/Y H:i", strtotime($mov["data"])) ?>
+                            </div>
+                        </div>
+                        <div class="pagamento-direita">
+                            <div class="pagamento-valor">
+                                <?php if ($mov["tipo"] == "Entrada"): ?>
+                                    + R$ <?= number_format($mov["valor"], 2, ",", ".") ?>
+                                <?php else: ?>
+                                    - R$ <?= number_format($mov["valor"], 2, ",", ".") ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+
+        <div id="conteudoSaques" class="escondido">
+            </div>
     </div>
-
-        
-    <!-- </div> -->
 </main>
 
 <div class="modal-overlay escondido" id="modal-overlay">
@@ -296,38 +283,32 @@ include __DIR__ . "/../components/header.php";
             <input type="hidden" name="acao" value="aceitar">
             <input type="hidden" name="id_frete" id="modal-id-frete">
 
-
             <div class="modal-btns">
                 <button type="button" class="btn btn-gh" onclick="fecharModal()">Cancelar</button>
                 <button type="submit" class="btn btn-b">✓ Aceitar frete</button>
             </div>
         </form>
-    
     </div>
 </div>
 
 <script>
-const btnTema = document.getElementById("btn-tema");
+    const btnTema = document.getElementById("btn-tema");
 
-if (localStorage.getItem("tema_motorista") === "light") {
-    document.body.classList.add("light");
-}
-
-btnTema.addEventListener("click", () => {
-
-    document.body.classList.toggle("light");
-
-    if (document.body.classList.contains("light")) {
-        localStorage.setItem("tema_motorista", "light");
-    } else {
-        localStorage.setItem("tema_motorista", "dark");
+    if (localStorage.getItem("tema_motorista") === "light") {
+        document.body.classList.add("light");
     }
 
-});
+    btnTema.addEventListener("click", () => {
+        document.body.classList.toggle("light");
+
+        if (document.body.classList.contains("light")) {
+            localStorage.setItem("tema_motorista", "light");
+        } else {
+            localStorage.setItem("tema_motorista", "dark");
+        }
+    });
 </script>
 
 <script src="../static/script.js"></script>
-
-
 </body>
 </html>
