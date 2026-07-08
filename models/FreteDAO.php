@@ -1,14 +1,18 @@
 <?php
 
-require_once "../config/config.php";
-require_once "../models/Frete.php";
+require_once __DIR__ . "/../config/config.php";
+require_once __DIR__ . "/Frete.php";
 class FreteDAO {
 
     private PDO $conn;
 
+    
+
     public function __construct() {
         $this->conn = Config::getConexao();
     }
+
+    
 
     public function cadastrar(Frete $frete) {
 
@@ -28,7 +32,7 @@ class FreteDAO {
                     status
                 )
                 VALUES
-                (:origem,:uf_origem,:destino,:uf_destino,:peso,:valor,:data_coleta,:hora_coleta,:descricao,:empresa_id,:carro_necessario,'Pendente')";
+                (:origem,:uf_origem,:destino,:uf_destino,:peso,:valor,:data_coleta,:hora_coleta,:descricao,:empresa_id,:carro_necessario,'Disponivel')";
 
         $stmt = $this->conn->prepare($sql);
 
@@ -67,7 +71,7 @@ class FreteDAO {
 
         $sql = "SELECT *
                 FROM tb_frete
-                WHERE status = 'Pendente'
+                WHERE status = 'Disponivel'
                 ORDER BY id_frete DESC";
 
         $stmt = $this->conn->prepare($sql);
@@ -84,7 +88,7 @@ class FreteDAO {
                     status = 'Aceito',
                     pcu_id = :pcu_id
                 WHERE id_frete = :id_frete
-                AND status = 'Pendente'";
+                AND status = 'Disponivel'";
 
         $stmt = $this->conn->prepare($sql);
 
@@ -97,7 +101,7 @@ class FreteDAO {
     public function listarAceitosMotorista($pcu_id){
 
         $sql = "SELECT * FROM tb_frete WHERE pcu_id = :pcu_id
-        AND status IN ('Aceito','Pago')
+        AND status IN ('Aceito','Em andamento', 'Aguardando confirmacao', 'Concluido')
         ORDER BY data_coleta DESC";
 
         $stmt = $this->conn->prepare($sql);
@@ -105,5 +109,50 @@ class FreteDAO {
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function iniciarViagem($id_frete){
+        $sql = "UPDATE tb_frete SET status = 'Em andamento'
+        WHERE id_frete = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$id_frete]);
+    }
+
+    public function solicitarConclusao($id_frete){
+        $sql = "UPDATE tb_frete SET status = 'Aguardando confirmacao' WHERE id_frete = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$id_frete]);
+    }
+
+    public function confirmarEntrega($id_frete){
+        $sql = "UPDATE tb_frete SET status = 'Concluido' WHERE id_frete = ?";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([$id_frete]);
+    }
+
+    public function buscarPorId($id_frete){
+        $sql = "SELECT * FROM tb_frete WHERE id_frete = :id_frete";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":id_frete", $id_frete);
+
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function marcarComoPago($id_frete){
+        $sql = "UPDATE tb_frete SET status = 'Pago', data_pagamento = NOW() 
+        WHERE id_frete = :id";
+
+        $stmt = $this->conn->prepare($sql);
+
+        $stmt->bindValue(":id",$id_frete);
+        return $stmt->execute();
     }
 }

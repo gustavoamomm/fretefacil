@@ -242,7 +242,7 @@ toggleSenha('confirmar-senha', 'toggle-confirmar');
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const feedback = document.getElementById(".form-feedback");
+    const feedback = document.querySelector(".form-feedback");
 
     if (feedback && feedback.textContent.trim() !== "") {
 
@@ -335,13 +335,13 @@ function abrirModal(idFrete, origem, ufOrigem, destino, ufDestino, valor, meta, 
     if (modalDesc) modalDesc.textContent = desc;
     if (modalIdFrete) modalIdFrete.value = idFrete;
 
-    carregarMapa(origem, ufOrigem, destino, ufDestino);
-
     const overlay = document.getElementById('modal-overlay');
     if (overlay){
         overlay.classList.remove('escondido');
         document.body.style.overflow = 'hidden';
     }
+
+    carregarMapa(origem, ufOrigem, destino, ufDestino);
 }
 
 function fecharModal(){
@@ -430,6 +430,12 @@ async function carregarMapa(origem, ufOrigem, destino, ufDestino) {
             attribution: '&copy OpenStreetMap contributors',
             maxZoom: 18
         }).addTo(mapaLeaflet);
+
+        // garante que o Leaflet recalcule o tamanho do container
+        // (o modal pode acabar de se tornar visível nesse mesmo frame)
+        setTimeout(function(){
+            if (mapaLeaflet) mapaLeaflet.invalidateSize();
+        }, 100);
 
 
 
@@ -576,3 +582,39 @@ function atualizarInfoRota(distancia, duracao) {
     infoEl.style.display = 'block';
 }
 
+function abrirConfirmacao(idFrete, acao){
+
+    document.getElementById("id-frete-confirmacao").value = idFrete;
+    document.getElementById("acao-confirmacao").value = acao;
+
+    if(acao == "iniciar"){
+
+        document.getElementById("titulo-confirmacao").textContent =
+            "Iniciar viagem";
+
+        document.getElementById("texto-confirmacao").textContent =
+            "Deseja iniciar esta viagem?";
+
+    }else{
+
+        document.getElementById("titulo-confirmacao").textContent =
+            "Solicitar conclusão";
+
+        document.getElementById("texto-confirmacao").textContent =
+            "Confirma que a entrega foi concluída?";
+
+    }
+
+    document
+        .getElementById("modal-confirmacao")
+        .classList.remove("escondido");
+
+}
+
+function fecharConfirmacao(){
+
+    document
+        .getElementById("modal-confirmacao")
+        .classList.add("escondido");
+
+}

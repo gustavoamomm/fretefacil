@@ -15,11 +15,21 @@ if (
 $bodyClass = 'dashboard';
 
 include __DIR__ . '/../components/header.php';
+require_once __DIR__ . "/../models/FreteDAO.php";
+require_once __DIR__ . "/../models/PagamentoDAO.php";
+
+$freteDAO = new FreteDAO();
+$fretes = $freteDAO->listarPorEmpresa($_SESSION['id']);
+
+$pagamentoDAO = new PagamentoDAO();
+$pagamentos = $pagamentoDAO->listarPorEmpresa($_SESSION["id"]);
+$totalPagoMes = $pagamentoDAO->totalPagoMes($_SESSION["id"]);
 
 ?>
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../static/pagamento-simulacao.js" defer></script>
 </head>
 <aside class="sidebar">
 
@@ -303,25 +313,22 @@ include __DIR__ . '/../components/header.php';
                     Veículo necessário
                 </label>
 
-                <select
-                    id="carro_necessario"
-                    name="carro_necessario"
-                    required>
+                <select id="carro_necessario" name="carro_necessario"required>
 
                     <option value="">
                         Selecione
                     </option>
 
-                    <option value="Fiorino">
-                        Fiorino
+                    <option value="furgao">
+                        Furgão
                     </option>
 
-                    <option value="Sprinter">
-                        Sprinter
+                    <option value="van">
+                        Van
                     </option>
 
-                    <option value="HR">
-                        HR
+                    <option value="caminhao_pqn">
+                        Caminhão pequeno
                     </option>
 
                 </select>
@@ -357,269 +364,18 @@ include __DIR__ . '/../components/header.php';
         </form>
 
     </div>
-    <div
-        class="aba escondido"
-        id="aba-fretes">
+    <div class="aba escondido" id="aba-fretes">
 
-        <div
-            class="fretes-grid"
-            id="fretes-grid">
-
-            <div class="frete-card">
-
-                <div class="frete-card-header">
-
-                    <div>
-
-                        <div class="frete-rota">
-                            Joinville → Blumenau
-                        </div>
-
-                        <div class="frete-meta">
-                            400 kg · Amanhã, 08h
-                        </div>
-
-                    </div>
-
-                    <span class="frete-status aberto">
-                        Aberto
-                    </span>
-
-                </div>
-
-                <div class="frete-card-footer">
-
-                    <div class="frete-valor">
-                        R$ 280,00
-                    </div>
-
-                    <button class="btn btn-cancelar">
-                        Cancelar
-                    </button>
-
-                </div>
-
-            </div>
-
-            <div class="frete-card">
-
-                <div class="frete-card-header">
-
-                    <div>
-
-                        <div class="frete-rota">
-                            Joinville → Itajaí
-                        </div>
-
-                        <div class="frete-meta">
-                            200 kg · Hoje, 14h
-                        </div>
-
-                    </div>
-
-                    <span class="frete-status aceito">
-                        Aceito ✓
-                    </span>
-
-                </div>
-
-                <div class="frete-card-footer">
-
-                    <div class="frete-valor">
-                        R$ 190,00
-                    </div>
-
-                    <div class="motorista-info">
-                        🚐 Roberto S.
-                    </div>
-
-                </div>
-
-            </div>
+        <div class="fretes-grid" id="fretes-grid">
+            <?php include "ajax/fretes-empresa.php";?>
 
         </div>
 
     </div>
-    <div
-        class="aba escondido"
-        id="aba-pagamentos">
-
-        <div class="pagamento-resumo">
-
-            <div class="resumo-card">
-
-                <div class="resumo-icon">
-                    ⏳
-                </div>
-
-                <div
-                    class="resumo-valor"
-                    style="color: var(--yellow);">
-
-                    R$ 470,00
-
-                </div>
-
-                <div class="resumo-label">
-                    Pendente de pagamento
-                </div>
-
-            </div>
-
-            <div class="resumo-card">
-
-                <div class="resumo-icon">
-                    ✅
-                </div>
-
-                <div
-                    class="resumo-valor"
-                    style="color: var(--green);">
-
-                    R$ 1.240,00
-
-                </div>
-
-                <div class="resumo-label">
-                    Total pago este mês
-                </div>
-
-            </div>
-
-            <div class="resumo-card">
-
-                <div class="resumo-icon">
-                    🚚
-                </div>
-
-                <div class="resumo-valor">
-                    8
-                </div>
-
-                <div class="resumo-label">
-                    Fretes realizados
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="pagamento-secao">
-
-            <h3 class="secao-titulo">
-
-                Pendentes
-
-                <span class="secao-hint">
-                    (pague em até 48h)
-                </span>
-
-            </h3>
-
-            <div class="pagamento-item pendente">
-
-                <div class="pagamento-info">
-
-                    <div class="pagamento-rota">
-                        Joinville → Itajaí
-                    </div>
-
-                    <div class="pagamento-meta">
-                        Motorista: Roberto S. · Entregue ontem às 15h
-                    </div>
-
-                </div>
-
-                <div class="pagamento-direita">
-
-                    <div class="pagamento-valor">
-                        R$ 190,00
-                    </div>
-
-                    <div class="pagamento-prazo">
-                        ⚠️ Vence em 24h
-                    </div>
-
-                </div>
-
-                <button class="btn btn-o btn-pagar">
-                    Pagar agora
-                </button>
-
-            </div>
-
-            <div class="pagamento-item pendente">
-
-                <div class="pagamento-info">
-
-                    <div class="pagamento-rota">
-                        Joinville → Florianópolis
-                    </div>
-
-                    <div class="pagamento-meta">
-                        Motorista: Carlos M. · Entregue hoje às 10h
-                    </div>
-
-                </div>
-
-                <div class="pagamento-direita">
-
-                    <div class="pagamento-valor">
-                        R$ 280,00
-                    </div>
-
-                    <div class="pagamento-prazo">
-                        ✅ Vence em 48h
-                    </div>
-
-                </div>
-
-                <button class="btn btn-o btn-pagar">
-                    Pagar agora
-                </button>
-
-            </div>
-
-        </div>
-
-        <div class="pagamento-secao">
-
-            <h3 class="secao-titulo">
-                ✅ Histórico de pagamentos
-            </h3>
-
-            <div class="pagamento-item pago">
-
-                <div class="pagamento-info">
-
-                    <div class="pagamento-rota">
-                        Joinville → Blumenau
-                    </div>
-
-                    <div class="pagamento-meta">
-                        Motorista: João P. · Pago em 20/05/2025
-                    </div>
-
-                </div>
-
-                <div class="pagamento-direita">
-
-                    <div class="pagamento-valor">
-                        R$ 220,00
-                    </div>
-
-                    <span class="frete-status pago">
-                        Pago
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
+    <div class="aba escondido" id="aba-pagamentos">
+        <?php include "ajax/pagamentos.php";?>
+        
     </div>
-
 </main>
 
 <script>
@@ -643,6 +399,7 @@ btnTema.addEventListener("click", () => {
 </script>
 
 <script>
+
 
     function trocarAba(aba, botao) {
 
@@ -717,5 +474,24 @@ btnTema.addEventListener("click", () => {
         }
 
     }
+
+    setInterval(() => {
+
+    fetch("ajax/fretes-empresa.php")
+        .then(res => res.text())
+        .then(html => {
+
+            document.getElementById("fretes-grid").innerHTML = html;
+
+        });
+
+    }, 5000);
+
+    
+
+
+
+    console.log("Script carregado");
+    console.log(typeof trocarAba);
 
 </script>

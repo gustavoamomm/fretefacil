@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 if (
     !isset($_SESSION['tipo']) ||
     $_SESSION['tipo'] !== 'motorista'
@@ -101,47 +102,28 @@ include __DIR__ . "/../components/header.php";
         </div>
 
         <div class="fretes-grid" id="lista-disponiveis">
+            <?php include "ajax/fretes-disponiveis.php";?>
 
-            <?php if(empty($fretesDisponiveis)): ?>
-                <p>Nenhum frete disponível no momento.</p>
-            <?php else: ?>
-                <?php foreach($fretesDisponiveis as $frete): ?>
-                    <div class="frete-card disponivel" data-origem="<?= strtolower(htmlspecialchars($frete['origem'])) ?>">
-                        <div class="frete-card-header">
-                            <div>
-                                <div class="frete-rota">
-                                    <?= htmlspecialchars($frete['origem'])?> → <?= htmlspecialchars($frete['destino'])?>
-                                </div>
-                                <div class="frete-meta">
-                                    <?= htmlspecialchars($frete['peso']) ?> kg ·
-                                    <?= date('d/m', strtotime($frete['data_coleta'])) ?>,
-                                    <?= substr($frete['hora_coleta'], 0, 5) ?>h ·
-                                    <?= htmlspecialchars($frete['carro_necessario']) ?>
-                                </div>
-                            </div>
-                            <span class="frete-status aberto">Disponível</span>
-                        </div>
-                        <div class="frete-card-footer">
-                            <div class="frete-valor">R$ <?= number_format($frete['valor'], 2, ',', '.') ?></div>
-                            <button class="btn btn-b btn-ver" 
-                            onclick="abrirModal(
-                                <?= $frete['id_frete']?>, 
-                                '<?= addslashes($frete['origem'])?>',
-                                '<?= addslashes($frete['uf_origem'])?>',
-                                '<?= addslashes($frete['destino'])?>',
-                                '<?= addslashes($frete['uf_destino'])?>',
-                                'R$ <?= number_format($frete['valor'], 2, ',', '.') ?>',
-                                '<?= addslashes($frete['peso'] . ' kg · ' . date('d/m', strtotime($frete['data_coleta'])) . ' ' . substr($frete['hora_coleta'], 0, 5) . 'h') ?>',
-                                '<?= addslashes($frete['descricao']) ?>'
-                                )">
-                                Ver detalhes →
-                            </button>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+            
         </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.btn-ver').forEach(function(botao){
+            botao.addEventListener('click', function(){
+                abrirModal(
+                    botao.dataset.idFrete,
+                    botao.dataset.origem,
+                    botao.dataset.ufOrigem,
+                    botao.dataset.destino,
+                    botao.dataset.ufDestino,
+                    botao.dataset.valor,
+                    botao.dataset.meta,
+                    botao.dataset.desc
+                );
+            });
+        });
+    </script>
 
     
     <div class="aba escondido" id="aba-aceitos">
@@ -173,35 +155,40 @@ include __DIR__ . "/../components/header.php";
                                 <?= $frete["status"]?>
                             </span>
                         </div>
-                    <div class="frete-dist">
-                        <?php if($frete["status"] == "Pago"): ?>
-                            ✅ Pagamento recebido
-                        <?php else: ?>
-                            💰 Pagamento pendente
-                        <?php endif; ?>
-                    </div>
 
-                    <div class="frete-card-footer">
-                        <div class="frete-valor">
-                            R$ <?= number_format($frete["valor"],2,",",".") ?>
+                        <div class="frete-card-footer">
+                            <div class="frete-valor">
+                              R$ <?= number_format($frete["valor"],2,",",".") ?>
+                            </div>
+
+                        
+                            <div class="acoes-frete">
+                                <?php if ($frete["status"] == "Aceito"): ?>
+                                    <form method="POST" action="../controllers/FreteController.php">
+                                        <input type="hidden" name="acao" value="iniciar">
+                                        <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
+                                    
+                                        <button type="submit" class="btn btn-verde">▶ Iniciar viagem</button>
+                                    </form>
+
+                                <?php elseif ($frete["status"] == "Em andamento"): ?>
+                                    <form method="POST" action="../controllers/FreteController.php">
+                                        <input type="hidden" name="acao" value="concluir">
+                                        <input type="hidden" name="id_frete" value="<?= $frete["id_frete"] ?>">
+
+                                        <button type="submit" class="btn btn-laranja">✔ Solicitar conclusão</button>
+                                    </form>
+
+                                <?php elseif ($frete["status"] == "Aguardando confirmacao"): ?>
+                                    <span class="status-info">⏳ Aguardando confirmação da empresa</span>
+
+                                <?php elseif ($frete["status"] == "Concluido"): ?>
+                                    <span class="status-info">Entrega concluída</span>
+                                <?php endif; ?>
+                            
+                            </div>
                         </div>
-
-                        <button class="btn btn-b btn-ver" 
-                        onclick="abrirModal(
-                             <?= $frete['id_frete']?>,
-                            '<?= addslashes($frete['origem'])?>',
-                            '<?= addslashes($frete['uf_origem'])?>',
-                            '<?= addslashes($frete['destino'])?>',
-                            '<?= addslashes($frete['uf_destino'])?>',
-                            'R$ <?= number_format($frete['valor'],2,',','.') ?>',
-                            '<?= addslashes($frete['peso'].' kg · '.date('d/m',strtotime($frete['data_coleta'])).' '.substr($frete['hora_coleta'],0,5).'h')?>',
-                            '<?= addslashes($frete['descricao'])?>
-                        )">
-
-                        Ver detalhes →
-                        </button>
                     </div>
-                </div>
                 <?php endforeach; ?>
             <?php endif; ?>
             
