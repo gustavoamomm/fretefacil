@@ -131,53 +131,7 @@
   </div>
 </section>
 
-<section id="vantagens">
-  <div class="container">
-    <div class="s-head reveal">
-      <div class="s-tag">Por que o Frete Fácil? </div>
-      <h2 class="s-title">VANTAGENS DA PLATAFORMA</h2>
-    </div>
 
-    <div class="benefits-grid">
-      <div class="benefit reveal">
-        <div class="b-icon">⚡</div>
-        <h4>Fretes em minutos</h4>
-        <p>Publique ou aceite um frete em menos de 2 minutos. Sem ligações.</p>
-      </div>
-
-      <div class="benefit reveal">
-        <div class= "b-icon">📍</div>
-        <h4>Por região</h4>
-        <p>Motoristas veem apenas fretes próximos. Empresas recebem motoristas da área.</p>
-      </div>
-
-      
-      <div class="benefit reveal">
-        <div class= "b-icon">🔒</div>
-        <h4>Segurança para ambos</h4>
-        <p>Perfis verificados e rastreamento garantem confiança em cada entrega.</p>
-      </div>
-
-      
-      <div class="benefit reveal">
-        <div class= "b-icon">💸</div>
-        <h4>Sem intermediários</h4>
-        <p>Empresa e motorista combinam direto. Menos custo, mais renda.</p>
-      </div>
-
-      <div class="benefit reveal">
-        <div class="b-icon">📊</div>
-        <h4>Painel completo</h4>
-        <p>Histórico, relatórios e avaliações em um único painel intuitivo.</p>
-      </div>
-
-      <div class="benefit reveal">
-        <div class="b-icon">🤝</div>
-        <h4>Avaliações mútuas</h4>
-        <p>Empresas e motoristas se avaliam, criando uma comunidade de confiança.</p>
-      </div>
-    </div>
-</section>
 
 
 <section id="cta">
