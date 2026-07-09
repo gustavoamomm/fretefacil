@@ -129,38 +129,55 @@ class PagamentoDAO{
         return $stmt->fetch(PDO::FETCH_ASSOC)["total"] ?? 0;
     }
 
-    public function realizarPagamento($id, $metodo){
-        $sql = "UPDATE tb_pagamento SET status = 'Pago', metodo = :metodo, data = NOW()
-        WHERE id = :id";
+    public function realizarPagamento($id, $metodo, $empresa_id = null){
+        $sql = "UPDATE tb_pagamento
+                SET status = 'Pago', metodo = :metodo, data = NOW()
+                WHERE id = :id
+                AND status <> 'Pago'";
+
+        if ($empresa_id !== null) {
+            $sql .= " AND empresa_id = :empresa_id";
+        }
 
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->bindValue(":id", $id);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->bindValue(":metodo", $metodo);
-        
 
-        return $stmt->execute();
+        if ($empresa_id !== null) {
+            $stmt->bindValue(":empresa_id", $empresa_id, PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
     }
 
     public function buscarFretePagamento($id){
-        $sql = "SELECT frete_id, usuario_pcu_id, valor FROM tb_pagamento
-        WHERE id = :id";
+        $sql = "SELECT
+                    p.id,
+                    p.frete_id,
+                    p.empresa_id,
+                    p.usuario_pcu_id,
+                    p.valor,
+                    p.metodo,
+                    p.status,
+                    p.data
+                FROM tb_pagamento p
+                WHERE p.id = :id";
 
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->bindValue(":id",$id);
-
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-
     }
 
 
 
 }
+
+
+
+
 
 
 

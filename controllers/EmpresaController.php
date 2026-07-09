@@ -77,7 +77,7 @@ try {
 
     $_SESSION['feedback'] = [
         'tipo' => 'erro',
-        'mensagem' => '⚠️ Erro ao cadastrar motorista. Tente novamente.'
+        'mensagem' => '⚠️ Erro ao cadastrar empresa. Verifique se o CNPJ já está cadastrado e tente novamente.'
     ];
 
     header("Location: ../views/cadastro.php");

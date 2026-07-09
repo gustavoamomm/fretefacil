@@ -20,6 +20,7 @@ $totalRecebido = $daoCarteira->buscarTotalRecebido($carteira["id"]);
 $aguardando = $daoCarteira->buscarAguardandoPagamento($_SESSION["id"]);
 $concluidos = $daoCarteira->buscarFretesConcluidos($_SESSION["id"]);
 $extrato = $daoCarteira->buscarExtrato($carteira["id"]);
+$saques = $daoCarteira->buscarSaques($carteira["id"]);
 
 $dao = new FreteDAO();
 $fretesDisponiveis = $dao->listarDisponiveis();
@@ -78,6 +79,19 @@ include __DIR__ . "/../components/header.php";
 </aside>
 
 <main class="main-content">
+    <?php if (!empty($_SESSION['erro'])): ?>
+        <div class="alert alert-erro" style="background:#fdecea;color:#611a15;border:1px solid #f5c6cb;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+            <?= htmlspecialchars($_SESSION['erro']) ?>
+        </div>
+        <?php unset($_SESSION['erro']); ?>
+    <?php endif; ?>
+
+    <?php if (!empty($_SESSION['sucesso'])): ?>
+        <div class="alert alert-sucesso" style="background:#e6f4ea;color:#1e4620;border:1px solid #b7dfc0;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+            <?= htmlspecialchars($_SESSION['sucesso']) ?>
+        </div>
+        <?php unset($_SESSION['sucesso']); ?>
+    <?php endif; ?>
     <div class="page-header">
         <div>
             <h1 class="page-title" id="page-title">FRETES DISPONÍVEIS</h1>
@@ -175,86 +189,39 @@ include __DIR__ . "/../components/header.php";
         </div>
     </div>
 
-    <div class="aba" id="aba-carteira" class="aba-escondido">
-
-        <div class="carteira-saldo">
-            <div class="saldo-label">Saldo disponível</div>
-            <div class="saldo-valor">
-                R$ <?= number_format($carteira["saldo"], 2, ",", ".") ?>
-            </div>
-            <br>
-            <button class="btn btn-b" id="btnAbrirSaque">
-                Solicitar saque
-            </button>
-        </div>
-
-        <br><br>
-
-        <div class="pagamento-resumo">
-            <div class="resumo-card">
-                <div class="resumo-icon">💰</div>
-                <div class="resumo-valor">
-                    R$ <?= number_format($totalRecebido, 2, ",", ".") ?>
-                </div>
-                <div class="resumo-label">Total recebido</div>
-            </div>
-
-            <div class="resumo-card">
-                <div class="resumo-icon">⏳</div>
-                <div class="resumo-valor">
-                    R$ <?= number_format($aguardando, 2, ",", ".") ?>
-                </div>
-                <div class="resumo-label">Aguardando pagamento</div>
-            </div>
-
-            <div class="resumo-card">
-                <div class="resumo-icon">🚚</div>
-                <div class="resumo-valor">
-                    <?= $concluidos ?>
-                </div>
-                <div class="resumo-label">Fretes concluídos</div>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="tabs">
-            <button class="tab ativo" id="tabExtrato">Extrato</button>
-            <button class="tab" id="tabSaques">Histórico de Saques</button>
-        </div>
-
-        <div id="conteudoExtrato">
-            <?php if (empty($extrato)): ?>
-                <p class="page-sub">Nenhuma movimentação encontrada.</p>
-            <?php else: ?>
-                <?php foreach ($extrato as $mov): ?>
-                    <div class="pagamento-item">
-                        <div class="pagamento-info">
-                            <div class="pagamento-rota">
-                                <?= $mov["descricao"] ?>
-                            </div>
-                            <div class="pagamento-meta">
-                                <?= date("d/m/Y H:i", strtotime($mov["data"])) ?>
-                            </div>
-                        </div>
-                        <div class="pagamento-direita">
-                            <div class="pagamento-valor">
-                                <?php if ($mov["tipo"] == "Entrada"): ?>
-                                    + R$ <?= number_format($mov["valor"], 2, ",", ".") ?>
-                                <?php else: ?>
-                                    - R$ <?= number_format($mov["valor"], 2, ",", ".") ?>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-        </div>
-
-        <div id="conteudoSaques" class="escondido">
-            </div>
+    <div class="aba escondido" id="aba-carteira">
+        <?php include "ajax/carteira-motorista.php"; ?>
     </div>
 </main>
+
+<div class="modal-overlay escondido" id="modal-saque">
+    <div class="modal">
+        <div class="modal-header">
+            <div>
+                <div class="modal-rota">Solicitar saque</div>
+                <div class="modal-meta">Saldo disponível: R$ <?= number_format($carteira["saldo"], 2, ",", ".") ?></div>
+            </div>
+            <button class="modal-fechar" type="button" onclick="fecharModalSaque()">✕</button>
+        </div>
+
+        <form method="POST" action="../controllers/SaqueController.php">
+            <div class="form-group">
+                <label for="valor-saque">Valor do saque</label>
+                <input type="number" id="valor-saque" name="valor" min="0.01" step="0.01" max="<?= htmlspecialchars($carteira["saldo"]) ?>" required>
+            </div>
+
+            <div class="form-group">
+                <label for="chave-pix-saque">Chave PIX</label>
+                <input type="text" id="chave-pix-saque" name="chave_pix" placeholder="CPF, e-mail, telefone ou chave aleatória" required>
+            </div>
+
+            <div class="modal-btns">
+                <button type="button" class="btn btn-gh" onclick="fecharModalSaque()">Cancelar</button>
+                <button type="submit" class="btn btn-b">Confirmar saque</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <div class="modal-overlay escondido" id="modal-overlay">
     <div class="modal">
@@ -307,6 +274,43 @@ include __DIR__ . "/../components/header.php";
             localStorage.setItem("tema_motorista", "dark");
         }
     });
+</script>
+
+<script>
+    const btnAbrirSaque = document.getElementById("btnAbrirSaque");
+    const modalSaque = document.getElementById("modal-saque");
+    const tabExtrato = document.getElementById("tabExtrato");
+    const tabSaques = document.getElementById("tabSaques");
+    const conteudoExtrato = document.getElementById("conteudoExtrato");
+    const conteudoSaques = document.getElementById("conteudoSaques");
+
+    function abrirModalSaque() {
+        modalSaque.classList.remove("escondido");
+    }
+
+    function fecharModalSaque() {
+        modalSaque.classList.add("escondido");
+    }
+
+    if (btnAbrirSaque) {
+        btnAbrirSaque.addEventListener("click", abrirModalSaque);
+    }
+
+    if (tabExtrato && tabSaques) {
+        tabExtrato.addEventListener("click", () => {
+            tabExtrato.classList.add("ativo");
+            tabSaques.classList.remove("ativo");
+            conteudoExtrato.classList.remove("escondido");
+            conteudoSaques.classList.add("escondido");
+        });
+
+        tabSaques.addEventListener("click", () => {
+            tabSaques.classList.add("ativo");
+            tabExtrato.classList.remove("ativo");
+            conteudoSaques.classList.remove("escondido");
+            conteudoExtrato.classList.add("escondido");
+        });
+    }
 </script>
 
 <script src="../static/script.js"></script>

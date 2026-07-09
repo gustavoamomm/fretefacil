@@ -145,6 +145,8 @@ class FreteDAO {
 
     public function aceitarFrete($id_frete, $pcu_id) {
 
+        // Só permite aceitar frete que ainda esteja disponível.
+        // rowCount() evita mostrar sucesso quando nenhum registro foi alterado.
         $sql = "UPDATE tb_frete
                 SET
                     status = 'Aceito',
@@ -154,10 +156,12 @@ class FreteDAO {
 
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindParam(':pcu_id', $pcu_id);
-        $stmt->bindParam(':id_frete', $id_frete);
+        $stmt->bindValue(':pcu_id', $pcu_id);
+        $stmt->bindValue(':id_frete', $id_frete);
 
-        return $stmt->execute();
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 
     public function listarAceitosMotorista($pcu_id){
@@ -173,27 +177,53 @@ class FreteDAO {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function iniciarViagem($id_frete){
-        $sql = "UPDATE tb_frete SET status = 'Em andamento'
-        WHERE id_frete = ?";
+    public function iniciarViagem($id_frete, $pcu_id){
+        // O motorista só pode iniciar frete aceito por ele.
+        $sql = "UPDATE tb_frete
+                SET status = 'Em andamento'
+                WHERE id_frete = :id_frete
+                AND pcu_id = :pcu_id
+                AND status = 'Aceito'";
 
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$id_frete]);
+        $stmt->bindValue(':id_frete', $id_frete);
+        $stmt->bindValue(':pcu_id', $pcu_id);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 
-    public function solicitarConclusao($id_frete){
-        $sql = "UPDATE tb_frete SET status = 'Aguardando confirmacao' WHERE id_frete = ?";
+    public function solicitarConclusao($id_frete, $pcu_id){
+        // O motorista só pode solicitar conclusão do próprio frete em andamento.
+        $sql = "UPDATE tb_frete
+                SET status = 'Aguardando confirmacao'
+                WHERE id_frete = :id_frete
+                AND pcu_id = :pcu_id
+                AND status = 'Em andamento'";
 
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$id_frete]);
+        $stmt->bindValue(':id_frete', $id_frete);
+        $stmt->bindValue(':pcu_id', $pcu_id);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 
-    public function confirmarEntrega($id_frete){
-        $sql = "UPDATE tb_frete SET status = 'Concluido' WHERE id_frete = ?";
+    public function confirmarEntrega($id_frete, $empresa_id){
+        // A empresa só pode confirmar entrega dos fretes dela
+        // e somente quando o motorista já solicitou conclusão.
+        $sql = "UPDATE tb_frete
+                SET status = 'Concluido'
+                WHERE id_frete = :id_frete
+                AND empresa_id = :empresa_id
+                AND status = 'Aguardando confirmacao'";
 
         $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(':id_frete', $id_frete);
+        $stmt->bindValue(':empresa_id', $empresa_id);
+        $stmt->execute();
 
-        return $stmt->execute([$id_frete]);
+        return $stmt->rowCount() > 0;
     }
 
     public function buscarPorId($id_frete){
@@ -209,17 +239,17 @@ class FreteDAO {
     }
 
     public function marcarComoPago($id_frete){
-        // OBS: o enum de status da tb_frete não possui o valor 'Pago'
-        // (só Disponivel, Aceito, Em andamento, Aguardando confirmacao, Concluido).
-        // Por isso usamos a coluna data_pagamento para marcar que o pagamento
-        // foi feito, sem tentar setar um status inválido (o que gerava
-        // exceção e travava o fluxo antes de creditar a carteira).
-        $sql = "UPDATE tb_frete SET data_pagamento = NOW()
-        WHERE id_frete = :id";
+        // Marca pagamento apenas uma vez.
+        $sql = "UPDATE tb_frete
+                SET data_pagamento = NOW()
+                WHERE id_frete = :id
+                AND data_pagamento IS NULL";
 
         $stmt = $this->conn->prepare($sql);
 
-        $stmt->bindValue(":id",$id_frete);
-        return $stmt->execute();
+        $stmt->bindValue(":id", $id_frete);
+        $stmt->execute();
+
+        return $stmt->rowCount() > 0;
     }
 }

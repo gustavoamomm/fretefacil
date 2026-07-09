@@ -118,6 +118,11 @@ if (isset($_POST["acao"])) {
 
         case "aceitar":
 
+            if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'motorista') {
+                header("Location: ../views/login.php");
+                exit;
+            }
+
             $id_frete = $_POST["id_frete"];
             $pcu_id = $_SESSION["id"];
 
@@ -142,9 +147,15 @@ if (isset($_POST["acao"])) {
 
         case "iniciar":
 
-            $id_frete = $_POST["id_frete"];
+            if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'motorista') {
+                header("Location: ../views/login.php");
+                exit;
+            }
 
-            if ($dao->iniciarViagem($id_frete)) {
+            $id_frete = $_POST["id_frete"];
+            $pcu_id = $_SESSION["id"];
+
+            if ($dao->iniciarViagem($id_frete, $pcu_id)) {
 
                 $_SESSION["feedback"] = [
                     "tipo" => "sucesso",
@@ -165,9 +176,15 @@ if (isset($_POST["acao"])) {
 
         case "concluir":
 
-            $id_frete = $_POST["id_frete"];
+            if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'motorista') {
+                header("Location: ../views/login.php");
+                exit;
+            }
 
-            if ($dao->solicitarConclusao($id_frete)) {
+            $id_frete = $_POST["id_frete"];
+            $pcu_id = $_SESSION["id"];
+
+            if ($dao->solicitarConclusao($id_frete, $pcu_id)) {
 
                 $_SESSION["feedback"] = [
                     "tipo" => "sucesso",
@@ -188,21 +205,29 @@ if (isset($_POST["acao"])) {
 
         case "confirmar":
 
+            if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'empresa') {
+                header("Location: ../views/login.php");
+                exit;
+            }
+
             $id_frete = $_POST["id_frete"];
+            $empresa_id = $_SESSION["id"];
 
-            if ($dao->confirmarEntrega($id_frete)) {
+            if ($dao->confirmarEntrega($id_frete, $empresa_id)) {
                 $frete = $dao->buscarPorId($id_frete);
-                
-                $pagamento = new Pagamento(
-                    $frete["id_frete"],
-                    $frete["empresa_id"],
-                    $frete["pcu_id"],
-                    $frete["valor"]
-                );
 
-                $pagamento->setStatus("Pendente");
+                if (!$pagamentoDAO->buscarPorFrete($id_frete)) {
+                    $pagamento = new Pagamento(
+                        $frete["id_frete"],
+                        $frete["empresa_id"],
+                        $frete["pcu_id"],
+                        $frete["valor"]
+                    );
 
-                $pagamentoDAO->criarPagamento($pagamento);
+                    $pagamento->setStatus("Pendente");
+
+                    $pagamentoDAO->criarPagamento($pagamento);
+                }
                 
                 $_SESSION["feedback"] = [
                     "tipo" => "sucesso",
@@ -225,6 +250,12 @@ if (isset($_POST["acao"])) {
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST["acao"])){
+
+    if (!isset($_SESSION['tipo']) || $_SESSION['tipo'] !== 'empresa') {
+        header("Location: ../views/login.php");
+        exit;
+    }
+
     try {
 
         $origem = $_POST['origem'];
@@ -290,4 +321,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && !isset($_POST["acao"])){
     }
 
 }
-

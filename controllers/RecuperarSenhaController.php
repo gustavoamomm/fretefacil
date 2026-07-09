@@ -6,11 +6,26 @@ require_once "../config/config.php";
 
 try {
 
+    if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+        header("Location: ../views/esqueci-senha.php");
+        exit;
+    }
+
     $conn = Config::getConexao();
 
-    $tipo = $_POST["tipo"];
-    $senha = $_POST["senha"];
-    $confirmar = $_POST["confirmar"];
+    $tipo = $_POST["tipo"] ?? "";
+    $senha = $_POST["senha"] ?? "";
+    $confirmar = $_POST["confirmar"] ?? "";
+
+    if (strlen($senha) < 8) {
+        $_SESSION["feedback"] = [
+            "tipo" => "erro",
+            "mensagem" => "❌ A senha deve ter no mínimo 8 caracteres."
+        ];
+
+        header("Location: ../views/esqueci-senha.php");
+        exit;
+    }
 
     if ($senha !== $confirmar) {
 
@@ -25,23 +40,26 @@ try {
 
     $senhaHash = password_hash($senha, PASSWORD_DEFAULT);
 
-    if ($tipo == "empresa") {
+    if ($tipo === "empresa") {
 
-        $cnpj = preg_replace('/\D/', '', $_POST["cnpj"]);
+        $cnpj = preg_replace('/\D/', '', $_POST["cnpj"] ?? "");
+        $nomeEmpresa = trim($_POST["nome_empresa"] ?? "");
 
         $sql = "SELECT id_empresa
                 FROM tb_usuario_empresa
-                WHERE cnpj = :cnpj";
+                WHERE cnpj = :cnpj
+                AND nome = :nome";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":cnpj", $cnpj);
+        $stmt->bindValue(":cnpj", $cnpj);
+        $stmt->bindValue(":nome", $nomeEmpresa);
         $stmt->execute();
 
         if ($stmt->rowCount() == 0) {
 
             $_SESSION["feedback"] = [
                 "tipo" => "erro",
-                "mensagem" => "❌ Empresa não encontrada."
+                "mensagem" => "❌ Empresa não encontrada. Confira CNPJ e nome da empresa."
             ];
 
             header("Location: ../views/esqueci-senha.php");
@@ -50,32 +68,37 @@ try {
 
         $sql = "UPDATE tb_usuario_empresa
                 SET senha = :senha
-                WHERE cnpj = :cnpj";
+                WHERE cnpj = :cnpj
+                AND nome = :nome";
 
         $stmt = $conn->prepare($sql);
 
-        $stmt->bindParam(":senha", $senhaHash);
-        $stmt->bindParam(":cnpj", $cnpj);
+        $stmt->bindValue(":senha", $senhaHash);
+        $stmt->bindValue(":cnpj", $cnpj);
+        $stmt->bindValue(":nome", $nomeEmpresa);
 
         $stmt->execute();
 
-    } else {
+    } elseif ($tipo === "motorista") {
 
-        $cpf = preg_replace('/\D/', '', $_POST["cpf"]);
+        $cpf = preg_replace('/\D/', '', $_POST["cpf"] ?? "");
+        $dtNasc = $_POST["dt_nasc"] ?? "";
 
         $sql = "SELECT pcu_id
                 FROM tb_usuario_pcu
-                WHERE cpf = :cpf";
+                WHERE cpf = :cpf
+                AND dt_nasc = :dt_nasc";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(":cpf", $cpf);
+        $stmt->bindValue(":cpf", $cpf);
+        $stmt->bindValue(":dt_nasc", $dtNasc);
         $stmt->execute();
 
         if ($stmt->rowCount() == 0) {
 
             $_SESSION["feedback"] = [
                 "tipo" => "erro",
-                "mensagem" => "❌ Motorista não encontrado."
+                "mensagem" => "❌ Motorista não encontrado. Confira CPF e data de nascimento."
             ];
 
             header("Location: ../views/esqueci-senha.php");
@@ -84,15 +107,25 @@ try {
 
         $sql = "UPDATE tb_usuario_pcu
                 SET senha = :senha
-                WHERE cpf = :cpf";
+                WHERE cpf = :cpf
+                AND dt_nasc = :dt_nasc";
 
         $stmt = $conn->prepare($sql);
 
-        $stmt->bindParam(":senha", $senhaHash);
-        $stmt->bindParam(":cpf", $cpf);
+        $stmt->bindValue(":senha", $senhaHash);
+        $stmt->bindValue(":cpf", $cpf);
+        $stmt->bindValue(":dt_nasc", $dtNasc);
 
         $stmt->execute();
 
+    } else {
+        $_SESSION["feedback"] = [
+            "tipo" => "erro",
+            "mensagem" => "❌ Tipo de usuário inválido."
+        ];
+
+        header("Location: ../views/esqueci-senha.php");
+        exit;
     }
 
     $_SESSION["feedback"] = [

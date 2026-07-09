@@ -431,7 +431,9 @@ function aceitarFrete() {
 }
 
 //leaflet e openrouteservice
-
+// Chave pública usada somente para demonstração do projeto técnico.
+// Para produção, o ideal é proteger essa chave no servidor.
+const ORS_API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6ImFkNjU4NmJkMTFlNTRiMmNhOWRkOWVjYmU3YWZkYmM1IiwiaCI6Im11cm11cjY0In0=';
 
 let mapaLeaflet = null;
 
@@ -507,22 +509,25 @@ async function carregarMapa(origem, ufOrigem, destino, ufDestino) {
             mapaLeaflet.fitBounds(rota.coordenadas);
 
             atualizarInfoRota(rota.distancia, rota.duracao);
-        }
-        // }else{
-        //     L.polyline(
-        //         [
-        //             [coordOrigem.lat, coordOrigem.lon]
-        //             [coordDestino.lat, coordDestino.lon]
-        //         ],
-        //         {
-        //             color: '#F26419',
-        //             weight: 3,
-        //             dashArray: '6, 10'
-        //         }
-        //     ).addTo(mapaLeaflet);
+        } else {
+            // Fallback para a banca: se a API de rota falhar, o mapa não quebra.
+            // Mostra uma linha simples entre origem e destino e informa distância aproximada.
+            const linhaFallback = [
+                [coordOrigem.lat, coordOrigem.lon],
+                [coordDestino.lat, coordDestino.lon]
+            ];
 
-        //     atualizarInfoRota(null, null);
-        // }
+            L.polyline(linhaFallback, {
+                color: '#F26419',
+                weight: 3,
+                dashArray: '6, 10'
+            }).addTo(mapaLeaflet);
+
+            mapaLeaflet.fitBounds(linhaFallback);
+
+            const distanciaAproximada = calcularDistanciaAproximada(coordOrigem, coordDestino);
+            atualizarInfoRota(distanciaAproximada + ' km aprox.', 'rota detalhada indisponível');
+        }
 
     } catch (erro){
         console.error('Erro ao carregar o mapa: ', erro);
@@ -532,100 +537,123 @@ async function carregarMapa(origem, ufOrigem, destino, ufDestino) {
 
 async function buscarCoordenadas(cidade, uf){
 
-    const resposta = await fetch(
-        "../controllers/api.php?acao=geocode&cidade=" +
-        encodeURIComponent(cidade) + "&uf=" + encodeURIComponent(uf)
-    );
+    const estados = {
+        AC: 'Acre', AL: 'Alagoas', AM: 'Amazonas', AP: 'Amapá',
+        BA: 'Bahia', CE: 'Ceará', DF: 'Distrito Federal', ES: 'Espírito Santo',
+        GO: 'Goiás', MA: 'Maranhão', MG: 'Minas Gerais', MS: 'Mato Grosso do Sul',
+        MT: 'Mato Grosso', PA: 'Pará', PB: 'Paraíba', PE: 'Pernambuco',
+        PI: 'Piauí', PR: 'Paraná', RJ: 'Rio de Janeiro', RN: 'Rio Grande do Norte',
+        RO: 'Rondônia', RR: 'Roraima', RS: 'Rio Grande do Sul', SC: 'Santa Catarina',
+        SE: 'Sergipe', SP: 'São Paulo', TO: 'Tocantins'
+    };
 
-    const dados = await resposta.json();
+    const nomeEstado = estados[uf] || uf || '';
+    const textoBusca = nomeEstado
+        ? `${cidade}, ${nomeEstado}, Brasil`
+        : `${cidade}, Brasil`;
 
-    if (dados.erro) {
-        console.error('Erro da API (geocode):', dados.erro);
-        return null;
-    }
+    const url = 'https://api.openrouteservice.org/geocode/search?' +
+        new URLSearchParams({
+            api_key: ORS_API_KEY,
+            text: textoBusca,
+            'boundary.country': 'BR',
+            layers: 'locality,region',
+            size: '1'
+        }).toString();
 
-    if (dados.features && dados.features.length > 0){
+    try {
+        const resposta = await fetch(url);
 
-        const [lon, lat] = dados.features[0].geometry.coordinates;
+        if (!resposta.ok) {
+            console.error('Erro da API ORS geocode:', resposta.status);
+            return null;
+        }
 
-        return {
-            lat, 
-            lon
-        };
+        const dados = await resposta.json();
+
+        if (dados.features && dados.features.length > 0){
+            const [lon, lat] = dados.features[0].geometry.coordinates;
+            return { lat, lon };
+        }
+    } catch (erro) {
+        console.error('Falha ao buscar coordenadas direto pelo navegador:', erro);
     }
 
     return null;
-
 }
 
 async function buscarRota(origem, destino){
 
-    const resposta = await fetch("../controllers/api.php",{
-
-        method:"POST",
-
-        headers:{
-            "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify({
-
-            acao:"rota",
-
-            origem:origem,
-
-            destino:destino
-
-        })
-
-    });
-
-    const dados = await resposta.json();
-
-    if (dados.erro) {
-        console.error('Erro da API (rota):', dados.erro);
-        return null;
-    }
-
-    if(dados.features && dados.features.length){
-
-        const rota = dados.features[0];
-
-        const coordenadas = rota.geometry.coordinates.map(function(c){
-
-            return [c[1], c[0]];
-
+    try {
+        const resposta = await fetch('https://api.openrouteservice.org/v2/directions/driving-car/geojson', {
+            method: 'POST',
+            headers: {
+                'Authorization': ORS_API_KEY,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                coordinates: [
+                    [origem.lon, origem.lat],
+                    [destino.lon, destino.lat]
+                ]
+            })
         });
 
-        const duracaoSegundos = rota.properties.summary.duration;
-
-        const horas = Math.floor(duracaoSegundos / 3600);
-        const minutos = Math.round((duracaoSegundos % 3600) / 60);
-
-        let duracaoFormatada = "";
-
-        if (horas > 0) {
-            duracaoFormatada = minutos > 0
-                ? `${horas}h ${minutos}min`
-                : `${horas}h`;
-        } else {
-            duracaoFormatada = `${minutos} min`;
+        if (!resposta.ok) {
+            console.error('Erro da API ORS rota:', resposta.status);
+            return null;
         }
 
-        return {
-            coordenadas: coordenadas,
-            distancia:
-            (rota.properties.summary.distance / 1000).toFixed(1) + " km",
+        const dados = await resposta.json();
 
-            duracao: duracaoFormatada
+        if(dados.features && dados.features.length){
 
-        };
+            const rota = dados.features[0];
 
+            const coordenadas = rota.geometry.coordinates.map(function(c){
+                return [c[1], c[0]];
+            });
+
+            const duracaoSegundos = rota.properties.summary.duration;
+            const horas = Math.floor(duracaoSegundos / 3600);
+            const minutos = Math.round((duracaoSegundos % 3600) / 60);
+
+            let duracaoFormatada = '';
+
+            if (horas > 0) {
+                duracaoFormatada = minutos > 0
+                    ? `${horas}h ${minutos}min`
+                    : `${horas}h`;
+            } else {
+                duracaoFormatada = `${minutos} min`;
+            }
+
+            return {
+                coordenadas: coordenadas,
+                distancia: (rota.properties.summary.distance / 1000).toFixed(1) + ' km',
+                duracao: duracaoFormatada
+            };
+        }
+    } catch (erro) {
+        console.error('Falha ao buscar rota direto pelo navegador:', erro);
     }
 
-    console.error("Rota não encontrada:", dados);
     return null;
+}
 
+function calcularDistanciaAproximada(origem, destino) {
+    const raioTerraKm = 6371;
+    const lat1 = origem.lat * Math.PI / 180;
+    const lat2 = destino.lat * Math.PI / 180;
+    const deltaLat = (destino.lat - origem.lat) * Math.PI / 180;
+    const deltaLon = (destino.lon - origem.lon) * Math.PI / 180;
+
+    const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) *
+        Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return (raioTerraKm * c).toFixed(1);
 }
 
 
