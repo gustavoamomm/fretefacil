@@ -53,7 +53,7 @@ try {
         exit;
     }
 
-    $tiposPermitidos = ['Fiorino', 'Sprinter', 'HR'];
+    $tiposPermitidos = ['Furgao', 'Van', 'Caminhao_pequeno'];
 
     if (!in_array($tipo_veiculo, $tiposPermitidos)) {
 

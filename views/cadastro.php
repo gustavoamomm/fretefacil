@@ -77,9 +77,9 @@ include __DIR__ . '/../components/header.php';
           <label for="veiculo">Tipo de veículo</label>
           <select id="veiculo" name="tipo_veiculo">
             <option value="">Selecione seu veículo</option>
-            <option value="Fiorino">Fiorino</option>
-            <option value="Sprinter">Sprinter</option>
-            <option value="HR">HR</option>
+            <option value="Furgao">Furgão</option>
+            <option value="Van">Van</option>
+            <option value="Caminhao_pequeno">Caminhão pequeno</option>
           </select>
         </div>
         <div class="form-group">
