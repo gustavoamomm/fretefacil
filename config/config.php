@@ -1,14 +1,24 @@
 <?php
+
 class Config {
     private static $instancia = null;
 
     public static function getConexao() {
-        $host = "tini.click";
-        $porta = "3306";
-        $banco = "fretefacil_db";
-        $usuario = "fretefacil_db";
-        $senha = "ec34854404589aea43b2fa279a9d827a";
-    
+
+        // Carrega o .env apenas uma vez
+        if (file_exists(__DIR__ . '/../.env')) {
+            $env = parse_ini_file(__DIR__ . '/../.env');
+
+            foreach ($env as $chave => $valor) {
+                $_ENV[$chave] = $valor;
+            }
+        }
+
+        $host = $_ENV['DB_HOST'];
+        $porta = $_ENV['DB_PORT'];
+        $banco = $_ENV['DB_NAME'];
+        $usuario = $_ENV['DB_USER'];
+        $senha = $_ENV['DB_PASS'];
 
         if (self::$instancia === null) {
 
@@ -17,21 +27,22 @@ class Config {
             }
 
             try {
-
                 self::$instancia = new PDO(
-                    "mysql:host=" . $host . ";port=" . $porta . ";dbname=" . $banco . ";charset=utf8",
+                    "mysql:host=$host;port=$porta;dbname=$banco;charset=utf8",
                     $usuario,
                     $senha
                 );
+
                 self::$instancia->setAttribute(
                     PDO::ATTR_ERRMODE,
                     PDO::ERRMODE_EXCEPTION
                 );
+
             } catch (PDOException $e) {
-              die("Erro: " . $e->getMessage());
+                die("Erro: " . $e->getMessage());
             }
         }
+
         return self::$instancia;
     }
 }
-?>
