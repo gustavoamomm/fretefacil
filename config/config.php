@@ -14,11 +14,18 @@ class Config {
             }
         }
 
-        $host = $_ENV['DB_HOST'];
-        $porta = $_ENV['DB_PORT'];
-        $banco = $_ENV['DB_NAME'];
-        $usuario = $_ENV['DB_USER'];
-        $senha = $_ENV['DB_PASS'];
+        // $host = $_ENV['DB_HOST'];
+        // $porta = $_ENV['DB_PORT'];
+        // $banco = $_ENV['DB_NAME'];
+        // $usuario = $_ENV['DB_USER'];
+        // $senha = $_ENV['DB_PASS'];
+
+        $host = "tini.click";
+        $porta = "3306";
+        $banco = "fretefacil_db";
+        $usuario = "fretefacil_db";
+        $senha = "ec34854404589aea43b2fa279a9d827a";
+
 
         if (self::$instancia === null) {
 
