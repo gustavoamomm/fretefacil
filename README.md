@@ -6,9 +6,9 @@ A plataforma permite que empresas publiquem fretes e acompanhem seus pagamentos,
 
 ---
 
-## 📋 Funcionalidades
+# 📋 Funcionalidades
 
-### 🏢 Empresa
+## 🏢 Empresa
 
 * Cadastro de empresa;
 * Login;
@@ -18,7 +18,7 @@ A plataforma permite que empresas publiquem fretes e acompanhem seus pagamentos,
 * Gerenciamento dos fretes;
 * Realização de pagamentos.
 
-### 🚚 Motorista / PCU
+## 🚚 Motorista / PCU
 
 * Cadastro de motorista;
 * Login;
@@ -81,17 +81,24 @@ fretefacil/
 │   ├── js/
 │   └── imagens/
 │
-├── .env
+├── database/
+│   ├── 01_estrutura.sql
+│   ├── 02_dados_teste.sql
+│   └── README.md
+│
+├── .env.example
 ├── .gitignore
 ├── index.php
 └── README.md
 ```
 
+> O arquivo `.env` é criado localmente e não é enviado para o GitHub, pois contém as configurações de acesso ao banco de dados.
+
 ---
 
 # 🧩 Arquitetura
 
-### Models
+## Models
 
 Representam as entidades utilizadas pelo sistema, como:
 
@@ -104,7 +111,7 @@ Representam as entidades utilizadas pelo sistema, como:
 
 ---
 
-### DAOs
+## DAOs
 
 DAO significa **Data Access Object**.
 
@@ -120,7 +127,7 @@ FreteDAO
 
 ---
 
-### Controllers
+## Controllers
 
 Os Controllers controlam o fluxo da aplicação e fazem a comunicação entre as Views e os DAOs.
 
@@ -138,51 +145,79 @@ Banco de Dados
 
 ---
 
-### Views
+## Views
 
 São as interfaces utilizadas pelos usuários.
 
-Elas são responsáveis pela apresentação das informações e interação com o sistema.
+Elas são responsáveis pela apresentação das informações e pela interação com o sistema.
 
 ---
 
 # 🗄️ Banco de dados
 
-O FreteFácil utiliza um banco de dados **MySQL/MariaDB hospedado online**.
+O FreteFácil utiliza **MySQL/MariaDB**.
 
-Portanto, **não é necessário criar ou importar o banco de dados localmente** para executar o projeto.
+O projeto possui scripts SQL dentro da pasta:
 
-O sistema utiliza as tabelas do banco online através da conexão configurada no projeto.
-
----
-
-# 🔐 Configuração das variáveis de ambiente
-
-As informações de conexão com o banco de dados são armazenadas em um arquivo `.env`.
-
-Exemplo:
-
-```env
-DB_HOST=seu_host
-DB_NAME=seu_banco
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
-DB_PORT=3306
+```text
+database/
 ```
 
-> Os valores acima são apenas exemplos. Utilize as credenciais fornecidas para o banco de dados do projeto.
+Esses scripts permitem que o banco de dados seja reproduzido localmente, sem depender do banco online utilizado durante o desenvolvimento.
 
-O arquivo `.env` contém informações sensíveis e, por isso, **não deve ser enviado ao GitHub**.
+A pasta contém:
 
-O arquivo `.env` está incluído no `.gitignore`.
+```text
+database/
+├── 01_estrutura.sql
+├── 02_dados_teste.sql
+└── README.md
+```
 
-Para configurar o projeto pela primeira vez, crie um arquivo `.env` na raiz do projeto e informe as credenciais corretas do banco online.
+### `01_estrutura.sql`
+
+Cria o banco de dados, tabelas, relacionamentos, chaves estrangeiras e demais estruturas necessárias para o funcionamento do sistema.
+
+### `02_dados_teste.sql`
+
+Insere dados fictícios para facilitar os testes do sistema.
+
+Os dados de teste incluem:
+
+* Empresa;
+* Motorista/PCU;
+* Carteira;
+* Frete disponível.
+
+> Os dados presentes nesse arquivo são fictícios e destinados apenas a testes e demonstrações.
 
 ---
 
-# 📦 Como baixar o projeto
+# 💻 Executando o projeto localmente
 
-## 1. Clonar o repositório
+A execução local permite que qualquer pessoa baixe o projeto e utilize seu próprio banco de dados MySQL/MariaDB.
+
+Dessa forma, **não é necessário possuir a senha do banco online do projeto**.
+
+O funcionamento será:
+
+```text
+Projeto no GitHub
+       ↓
+Clone do projeto
+       ↓
+Scripts SQL
+       ↓
+MySQL/MariaDB local
+       ↓
+Arquivo .env
+       ↓
+FreteFácil
+```
+
+---
+
+# 📦 1. Clonar o projeto
 
 No terminal:
 
@@ -190,7 +225,7 @@ No terminal:
 git clone URL_DO_REPOSITORIO
 ```
 
-Entre na pasta do projeto:
+Entre na pasta:
 
 ```bash
 cd fretefacil
@@ -198,17 +233,23 @@ cd fretefacil
 
 ---
 
-# ⚙️ Configurar o ambiente
+# ⚙️ 2. Instalar os requisitos
 
-Antes de executar o sistema, é necessário ter instalado:
+Para executar o projeto localmente, é necessário possuir:
 
-* PHP;
+* PHP 8.2 ou superior;
+* MySQL ou MariaDB;
 * Git;
-* Acesso à internet para conexão com o banco de dados online.
+* Navegador;
+* Extensão `pdo_mysql` habilitada no PHP.
 
-Também é necessário possuir a extensão **PDO MySQL** habilitada no PHP.
+Para verificar o PHP:
 
-Para verificar:
+```bash
+php -v
+```
+
+Para verificar o PDO MySQL:
 
 ```bash
 php -m
@@ -223,45 +264,148 @@ pdo_mysql
 
 ---
 
-# 🔑 Configurar o `.env`
+# 🗄️ 3. Criar o banco de dados local
 
-Após baixar o projeto, crie o arquivo:
+Instale e inicie o **MySQL ou MariaDB**.
+
+Depois, abra o MySQL Workbench, phpMyAdmin ou outro cliente MySQL.
+
+Execute primeiro o arquivo:
+
+```text
+database/01_estrutura.sql
+```
+
+Esse arquivo irá criar o banco:
+
+```text
+fretefacil_db
+```
+
+e suas respectivas tabelas.
+
+Depois execute:
+
+```text
+database/02_dados_teste.sql
+```
+
+Esse segundo script irá inserir dados fictícios para testes.
+
+---
+
+# 🔑 4. Configurar o `.env`
+
+Na raiz do projeto existe o arquivo:
+
+```text
+.env.example
+```
+
+Faça uma cópia dele e renomeie para:
 
 ```text
 .env
 ```
 
-na raiz do projeto.
+A estrutura ficará:
 
-Exemplo:
-
-```env
-DB_HOST=seu_host
-DB_NAME=seu_banco
-DB_USER=seu_usuario
-DB_PASSWORD=sua_senha
-DB_PORT=3306
+```text
+.env
+.env.example
 ```
 
-As informações devem corresponder ao banco de dados online utilizado pelo projeto.
+O `.env` deve apontar para o banco **local**:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=fretefacil_db
+DB_USER=root
+DB_PASS=
+```
+
+### Caso o MySQL possua senha
+
+Se o usuário `root` possuir uma senha, informe-a:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=fretefacil_db
+DB_USER=root
+DB_PASS=sua_senha
+```
+
+> As configurações do `.env` dependem da instalação local do MySQL/MariaDB.
 
 ---
 
-# ▶️ Executando o sistema
+# ▶️ 5. Executar o projeto
 
-Com o PHP instalado e o `.env` configurado, abra o terminal na pasta do projeto e execute:
+Abra o terminal dentro da pasta do projeto:
+
+```bash
+cd fretefacil
+```
+
+Execute:
 
 ```bash
 php -S localhost:8000
 ```
 
-O servidor PHP será iniciado localmente.
+O servidor será iniciado.
 
-Depois, abra o navegador e acesse:
+Abra o navegador e acesse:
 
 ```text
 http://localhost:8000
 ```
+
+O FreteFácil estará sendo executado localmente.
+
+---
+
+# 🧪 6. Dados para teste
+
+O script `02_dados_teste.sql` cria usuários fictícios para facilitar a demonstração.
+
+### Empresa
+
+```text
+CNPJ: 12345678000199
+Senha: 12345678
+```
+
+### Motorista / PCU
+
+```text
+CPF: 12345678901
+Senha: 12345678
+```
+
+> Esses dados são exclusivamente para testes locais.
+
+---
+
+# 🌐 Banco online
+
+Durante o desenvolvimento, o FreteFácil também pode utilizar um banco MySQL/MariaDB hospedado online.
+
+Nesse caso, o `.env` deve conter as credenciais do banco online:
+
+```env
+DB_HOST=seu_host
+DB_PORT=3306
+DB_NAME=seu_banco
+DB_USER=seu_usuario
+DB_PASS=sua_senha
+```
+
+O banco online **não é necessário para executar o projeto localmente**, pois os scripts da pasta `database/` permitem criar uma cópia local do banco.
+
+Essa abordagem também evita a necessidade de compartilhar as credenciais do banco online com outras pessoas.
 
 ---
 
@@ -269,7 +413,7 @@ http://localhost:8000
 
 Também é possível executar o projeto utilizando o Apache do XAMPP.
 
-Coloque a pasta do projeto dentro de:
+Copie a pasta do projeto para:
 
 ```text
 C:\xampp\htdocs\
@@ -281,9 +425,19 @@ Por exemplo:
 C:\xampp\htdocs\fretefacil
 ```
 
-Inicie o **Apache** no XAMPP.
+Inicie o **Apache** e o **MySQL** no XAMPP.
 
-Como o banco de dados utilizado pelo sistema é online, **não é necessário iniciar o MySQL do XAMPP** para acessar o banco do projeto.
+Como a execução local utiliza o banco criado pelos scripts SQL, nesse caso o **MySQL do XAMPP deve estar iniciado**.
+
+Configure o `.env`:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=fretefacil_db
+DB_USER=root
+DB_PASS=
+```
 
 Depois acesse:
 
@@ -291,17 +445,11 @@ Depois acesse:
 http://localhost/fretefacil/
 ```
 
-Caso o Apache esteja configurado para utilizar outra porta:
-
-```text
-http://localhost:8080/fretefacil/
-```
-
 ---
 
 # 🔄 Fluxo do sistema
 
-O funcionamento geral segue a estrutura:
+O funcionamento geral segue:
 
 ```text
 Usuário
@@ -363,18 +511,31 @@ A carteira permite ao motorista acompanhar seus ganhos e movimentações realiza
 
 # 🔒 Segurança
 
-Informações sensíveis, como credenciais do banco de dados, são armazenadas através de variáveis de ambiente.
+As credenciais do banco são armazenadas através de variáveis de ambiente.
 
 O projeto utiliza:
 
 ```text
 .env
+.env.example
 .gitignore
 ```
 
-O `.env` não deve ser enviado ao repositório.
+O arquivo `.env` contém informações sensíveis e **não deve ser enviado ao GitHub**.
 
-O `.gitignore` é utilizado para impedir que arquivos sensíveis ou arquivos desnecessários sejam versionados.
+O arquivo `.env.example` contém apenas o modelo das variáveis necessárias:
+
+```env
+DB_HOST=seu_host
+DB_PORT=3306
+DB_NAME=seu_banco
+DB_USER=seu_usuario
+DB_PASS=sua_senha
+```
+
+O `.gitignore` impede que o `.env` seja versionado.
+
+Os scripts SQL disponíveis no repositório também **não devem conter senhas ou credenciais reais**.
 
 ---
 
@@ -383,7 +544,12 @@ O `.gitignore` é utilizado para impedir que arquivos sensíveis ou arquivos des
 Após iniciar o sistema, verifique:
 
 * [ ] O projeto abre no navegador;
-* [ ] A conexão com o banco online funciona;
+* [ ] O MySQL/MariaDB está em execução;
+* [ ] O banco `fretefacil_db` foi criado;
+* [ ] As tabelas foram criadas;
+* [ ] Os dados de teste foram inseridos;
+* [ ] O arquivo `.env` está configurado;
+* [ ] A conexão com o banco funciona;
 * [ ] O login funciona;
 * [ ] O cadastro funciona;
 * [ ] Os dashboards carregam corretamente;
@@ -395,13 +561,15 @@ Após iniciar o sistema, verifique:
 
 # ❗ Problemas comuns
 
-### `could not find driver`
+## `could not find driver`
 
-Verifique se o PHP possui o driver:
+Verifique se a extensão:
 
 ```text
 pdo_mysql
 ```
+
+está habilitada.
 
 Execute:
 
@@ -409,42 +577,82 @@ Execute:
 php -m
 ```
 
+Procure por:
+
+```text
+PDO
+pdo_mysql
+```
+
 Caso não apareça, habilite a extensão `pdo_mysql` no `php.ini`.
 
 ---
 
-### `Access denied for user`
+## `Access denied for user`
 
-Verifique as credenciais presentes no `.env`:
+Verifique as informações do `.env`:
 
 ```env
-DB_HOST=
-DB_NAME=
-DB_USER=
-DB_PASSWORD=
-DB_PORT=
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=fretefacil_db
+DB_USER=root
+DB_PASS=
+```
+
+Confirme também se o MySQL/MariaDB está em execução.
+
+---
+
+## `Unknown database`
+
+Significa que o banco ainda não foi criado.
+
+Execute:
+
+```text
+database/01_estrutura.sql
 ```
 
 ---
 
-### `Not Found`
+## `Table doesn't exist`
 
-Verifique se:
+Execute novamente:
 
-* o servidor PHP está executando;
-* você está na pasta correta do projeto;
-* a URL utilizada corresponde à porta do servidor.
+```text
+database/01_estrutura.sql
+```
+
+e depois:
+
+```text
+database/02_dados_teste.sql
+```
 
 ---
 
-### Erro de conexão com o banco
+## `Not Found`
 
 Verifique:
 
-* conexão com a internet;
-* disponibilidade do banco online;
-* credenciais do `.env`;
-* host e porta do banco;
+* se o servidor PHP está executando;
+* se você está na pasta correta do projeto;
+* se a URL utilizada corresponde à porta configurada.
+
+---
+
+## Erro de conexão com o banco
+
+Verifique:
+
+* se o MySQL/MariaDB está iniciado;
+* host;
+* porta;
+* nome do banco;
+* usuário;
+* senha;
+* arquivo `.env`;
 * extensão `pdo_mysql`.
 
 ---
