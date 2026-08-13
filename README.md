@@ -1,152 +1,475 @@
-# 🚚 Frete Fácil
+# 🚚 FreteFácil
 
-Plataforma web que conecta **empresas** que precisam enviar cargas a **motoristas/proprietários de utilitários** disponíveis para realizar o transporte, com postagem de fretes, aceite em tempo real, carteira digital, pagamentos e cálculo de rota.
+O **FreteFácil** é uma plataforma web desenvolvida para conectar empresas que precisam realizar entregas a proprietários de veículos utilitários (PCUs).
 
-## Índice
+A plataforma permite que empresas publiquem fretes e acompanhem seus pagamentos, enquanto os motoristas podem encontrar oportunidades, gerenciar seus fretes e acompanhar seus ganhos através da carteira.
 
-- [Sobre o projeto](#sobre-o-projeto)
-- [Funcionalidades](#funcionalidades)
-- [Tecnologias](#tecnologias)
-- [Arquitetura](#arquitetura)
-- [Estrutura de pastas](#estrutura-de-pastas)
-- [Banco de dados](#banco-de-dados)
-- [Como rodar o projeto](#como-rodar-o-projeto)
-- [Configuração de APIs externas](#configuração-de-apis-externas)
-- [Segurança — pontos de atenção](#segurança--pontos-de-atenção)
-- [Documentação](#documentação)
+---
 
-## Sobre o projeto
+## 📋 Funcionalidades
 
-O Frete Fácil é um sistema de intermediação de fretes com dois perfis de usuário:
+### 🏢 Empresa
 
-- **Empresa**: cadastra-se com CNPJ, publica fretes (origem, destino, peso, data/hora de coleta, valor, tipo de veículo necessário) e realiza o pagamento quando o frete é concluído.
-- **Motorista**: cadastra-se com CPF, CNH, tipo de veículo e placa, visualiza os fretes disponíveis, aceita os que desejar e recebe o valor em uma carteira digital, podendo solicitar saque via PIX.
+* Cadastro de empresa;
+* Login;
+* Publicação de fretes;
+* Visualização dos fretes publicados;
+* Acompanhamento do status dos fretes;
+* Gerenciamento dos fretes;
+* Realização de pagamentos.
 
-## Funcionalidades
+### 🚚 Motorista / PCU
 
-- Cadastro e login separados por tipo de usuário (empresa / motorista), com senha protegida via `password_hash`/`password_verify`.
-- Recuperação de senha.
-- Publicação, edição e exclusão de fretes pela empresa.
-- Listagem de fretes disponíveis e aceite pelo motorista.
-- Cálculo de rota e geocodificação de endereços via [OpenRouteService](https://openrouteservice.org/), exibidos em mapa interativo com [Leaflet](https://leafletjs.com/).
-- Simulação/registro de pagamento do frete (dashboard da empresa).
-- Carteira digital do motorista (saldo) e solicitação de saque via chave PIX.
-- Dashboards distintos para empresa (`dashboard-emp.php`) e motorista (`dashboard-moto.php`), com seções carregadas via AJAX.
+* Cadastro de motorista;
+* Login;
+* Visualização de fretes disponíveis;
+* Aceitação de fretes;
+* Acompanhamento dos fretes;
+* Carteira digital;
+* Visualização de saldo;
+* Histórico de movimentações;
+* Acompanhamento de pagamentos.
 
-## Tecnologias
+---
 
-- **Back-end**: PHP puro (sem framework), PDO para acesso ao MySQL/MariaDB.
-- **Front-end**: HTML, CSS e JavaScript vanilla (`static/style.css`, `static/script.js`, `static/pagamento-simulacao.js`).
-- **Banco de dados**: MySQL/MariaDB.
-- **APIs externas**: OpenRouteService (geocodificação e cálculo de rotas) e Leaflet (renderização de mapas via CDN).
-- **Padrão de projeto**: MVC simplificado, com camada de Model/DAO separada dos Controllers e das Views.
+# 🛠️ Tecnologias utilizadas
 
-## Arquitetura
+* **PHP 8.2+**
+* **MySQL / MariaDB**
+* **PDO**
+* **HTML5**
+* **CSS3**
+* **JavaScript**
+* **Bootstrap**
+* **Git / GitHub**
 
-O projeto segue uma organização inspirada em MVC:
+---
 
-- **`models/`** — Entidades (`Frete`, `Empresa`, `Motorista`, `Pagamento`, `Carteira`) e suas classes DAO (`FreteDAO`, `EmpresaDAO`, `MotoristaDAO`, `PagamentoDAO`, `CarteiraDAO`), responsáveis pelo acesso ao banco via PDO.
-- **`controllers/`** — Recebem requisições (POST/GET), validam dados e orquestram as chamadas aos Models. Também concentra a rota de API (`api.php`) usada para geocodificação e cálculo de rota.
-- **`views/`** — Páginas exibidas ao usuário (login, cadastro, dashboards) e subpastas `ajax/` com fragmentos carregados dinamicamente pelos dashboards.
-- **`components/`** — Cabeçalho e rodapé reutilizados pelas páginas.
-- **`config/`** — Classe `Config` (Singleton) que fornece a conexão PDO com o banco.
+# 🏗️ Estrutura do projeto
 
-## Estrutura de pastas
+O projeto utiliza uma arquitetura baseada em **MVC**, com a utilização de **DAOs (Data Access Objects)** para separar o acesso ao banco de dados.
 
-```
+```text
 fretefacil/
-├── index.php                      # Landing page
-├── logout.php
-├── components/
-│   ├── header.php
-│   └── footer.php
+│
 ├── config/
-│   └── config.php                 # Conexão PDO (Singleton)
+│   └── Config.php
+│
 ├── controllers/
-│   ├── api.php                    # Rota de geocodificação/rota (OpenRouteService)
-│   ├── CadastroController.php     # Roteia cadastro para Empresa ou Motorista
 │   ├── EmpresaController.php
-│   ├── MotoristaController.php
-│   ├── LoginController.php
-│   ├── RecuperarSenhaController.php
 │   ├── FreteController.php
 │   ├── PagamentoController.php
-│   ├── CarteiraController.php
-│   ├── SaqueController.php
-│   └── ssl/cacert.pem             # Bundle de CA para validação SSL do cURL
+│   └── ...
+│
 ├── models/
-│   ├── Empresa.php / EmpresaDAO.php
-│   ├── Motorista.php / MotoristaDAO.php
-│   ├── Frete.php / FreteDAO.php
-│   ├── Pagamento.php / PagamentoDAO.php
-│   └── Carteira.php / CarteiraDAO.php
+│   ├── Empresa.php
+│   ├── EmpresaDAO.php
+│   ├── Frete.php
+│   ├── FreteDAO.php
+│   ├── Carteira.php
+│   ├── CarteiraDAO.php
+│   └── ...
+│
 ├── views/
-│   ├── login.php
-│   ├── cadastro.php
-│   ├── esqueci-senha.php
-│   ├── dashboard-emp.php
+│   ├── dashboard-empresa.php
 │   ├── dashboard-moto.php
-│   └── ajax/
-│       ├── fretes-empresa.php
-│       ├── fretes-disponiveis.php
-│       ├── fretes-aceitos.php
-│       ├── pagamentos.php
-│       └── carteira-motorista.php
-├── static/
-│   ├── style.css
-│   ├── script.js
-│   └── pagamento-simulacao.js
-└── docs/
-    ├── Documentação de Software - Plataforma Frete Fácil.pdf
-    ├── Testes - Frete Fácil.pdf
-    └── apresentação.txt
+│   ├── login.php
+│   └── ...
+│
+├── assets/
+│   ├── css/
+│   ├── js/
+│   └── imagens/
+│
+├── .env
+├── .gitignore
+├── index.php
+└── README.md
 ```
 
-## Banco de dados
+---
 
-O sistema espera um banco MySQL/MariaDB com (ao menos) as seguintes tabelas, inferidas do código das DAOs:
+# 🧩 Arquitetura
 
-| Tabela | Descrição |
-|---|---|
-| `tb_usuario_empresa` | Dados da empresa (nome, cnpj, senha com hash) |
-| `tb_usuario_pcu` | Dados do motorista/proprietário de utilitário (nome, dt_nasc, cpf, cnh, tipo_veiculo, placa, senha com hash) |
-| `tb_frete` | Fretes publicados (origem, uf_origem, destino, uf_destino, peso, valor, data_coleta, hora_coleta, descricao, empresa_id, carro_necessario, status, pcu_id, data_pagamento) |
-| `tb_carteira` | Saldo do motorista (saldo, pcu_id) |
-| `tb_pagamento` | Pagamentos vinculados a um frete (frete_id, empresa_id, usuario_pcu_id, valor, metodo, status, data) |
+### Models
 
-> Não há um arquivo `.sql` de schema no projeto — as tabelas precisam ser criadas manualmente com base nos campos utilizados nas classes `models/*DAO.php`.
+Representam as entidades utilizadas pelo sistema, como:
 
-## Como rodar o projeto
+* Empresa;
+* PCU;
+* Frete;
+* Pagamento;
+* Carteira;
+* Usuário.
 
-**Pré-requisitos**: PHP 7.4+ (recomendado 8+, há uso de tipagem de propriedade `private PDO $conn`), extensões `pdo_mysql` e `curl` habilitadas, servidor MySQL/MariaDB, Apache/Nginx ou o servidor embutido do PHP.
+---
 
-1. Clone o repositório e coloque a pasta em seu servidor local (ex.: `htdocs` do XAMPP) ou rode com o servidor embutido:
-   ```bash
-   php -S localhost:8000
-   ```
-2. Crie o banco de dados e as tabelas listadas em [Banco de dados](#banco-de-dados).
-3. Edite `config/config.php` com as credenciais do seu banco local (host, porta, nome do banco, usuário e senha).
-4. Acesse `index.php` pelo navegador, crie uma conta de empresa e uma de motorista para testar o fluxo completo (cadastro → login → publicar frete → aceitar frete → pagamento → carteira/saque).
+### DAOs
 
-## Configuração de APIs externas
+DAO significa **Data Access Object**.
 
-O arquivo `controllers/api.php` consome a API do **OpenRouteService** para:
-- `GET ?acao=geocode` — converter cidade/UF em coordenadas.
-- `POST { acao: "rota" }` — calcular a rota entre origem e destino.
+Essa camada é responsável pelas operações de acesso ao banco de dados, concentrando os comandos SQL.
 
-Para uso em produção, gere sua própria chave gratuita em [openrouteservice.org](https://openrouteservice.org/) e substitua a chave definida na variável `$ORS_KEY` em `controllers/api.php`.
+Por exemplo:
 
-## Segurança — pontos de atenção
+```text
+FreteDAO
+```
 
-Alguns pontos que valem revisão antes de colocar o projeto em produção:
+é responsável pelas operações relacionadas aos fretes no banco de dados.
 
-- **Credenciais em código**: a senha do banco (`config/config.php`) e a chave da API OpenRouteService (`controllers/api.php`) estão hardcoded no código-fonte. O ideal é movê-las para variáveis de ambiente (ex.: arquivo `.env` fora do controle de versão) e adicionar esse arquivo ao `.gitignore`.
-- **Detalhe de erro exposto**: em `api.php`, o `register_shutdown_function` inclui o campo `"detalhe"` com a mensagem de erro do PHP na resposta JSON — há um comentário no próprio código indicando que isso deve ser removido em produção.
-- **Senhas**: cadastro e login já usam `password_hash`/`password_verify`, o que é o correto.
+---
 
-## Documentação
+### Controllers
 
-O projeto inclui documentação adicional na pasta `docs/`:
-- Documento de especificação de software (PDF).
-- Documento de testes (PDF).
-- Link para a apresentação do projeto (Canva), em `apresentacao.txt`.
+Os Controllers controlam o fluxo da aplicação e fazem a comunicação entre as Views e os DAOs.
+
+Fluxo básico:
+
+```text
+View
+  ↓
+Controller
+  ↓
+DAO
+  ↓
+Banco de Dados
+```
+
+---
+
+### Views
+
+São as interfaces utilizadas pelos usuários.
+
+Elas são responsáveis pela apresentação das informações e interação com o sistema.
+
+---
+
+# 🗄️ Banco de dados
+
+O FreteFácil utiliza um banco de dados **MySQL/MariaDB hospedado online**.
+
+Portanto, **não é necessário criar ou importar o banco de dados localmente** para executar o projeto.
+
+O sistema utiliza as tabelas do banco online através da conexão configurada no projeto.
+
+---
+
+# 🔐 Configuração das variáveis de ambiente
+
+As informações de conexão com o banco de dados são armazenadas em um arquivo `.env`.
+
+Exemplo:
+
+```env
+DB_HOST=seu_host
+DB_NAME=seu_banco
+DB_USER=seu_usuario
+DB_PASSWORD=sua_senha
+DB_PORT=3306
+```
+
+> Os valores acima são apenas exemplos. Utilize as credenciais fornecidas para o banco de dados do projeto.
+
+O arquivo `.env` contém informações sensíveis e, por isso, **não deve ser enviado ao GitHub**.
+
+O arquivo `.env` está incluído no `.gitignore`.
+
+Para configurar o projeto pela primeira vez, crie um arquivo `.env` na raiz do projeto e informe as credenciais corretas do banco online.
+
+---
+
+# 📦 Como baixar o projeto
+
+## 1. Clonar o repositório
+
+No terminal:
+
+```bash
+git clone URL_DO_REPOSITORIO
+```
+
+Entre na pasta do projeto:
+
+```bash
+cd fretefacil
+```
+
+---
+
+# ⚙️ Configurar o ambiente
+
+Antes de executar o sistema, é necessário ter instalado:
+
+* PHP;
+* Git;
+* Acesso à internet para conexão com o banco de dados online.
+
+Também é necessário possuir a extensão **PDO MySQL** habilitada no PHP.
+
+Para verificar:
+
+```bash
+php -m
+```
+
+Procure por:
+
+```text
+PDO
+pdo_mysql
+```
+
+---
+
+# 🔑 Configurar o `.env`
+
+Após baixar o projeto, crie o arquivo:
+
+```text
+.env
+```
+
+na raiz do projeto.
+
+Exemplo:
+
+```env
+DB_HOST=seu_host
+DB_NAME=seu_banco
+DB_USER=seu_usuario
+DB_PASSWORD=sua_senha
+DB_PORT=3306
+```
+
+As informações devem corresponder ao banco de dados online utilizado pelo projeto.
+
+---
+
+# ▶️ Executando o sistema
+
+Com o PHP instalado e o `.env` configurado, abra o terminal na pasta do projeto e execute:
+
+```bash
+php -S localhost:8000
+```
+
+O servidor PHP será iniciado localmente.
+
+Depois, abra o navegador e acesse:
+
+```text
+http://localhost:8000
+```
+
+---
+
+# 🌐 Utilizando XAMPP
+
+Também é possível executar o projeto utilizando o Apache do XAMPP.
+
+Coloque a pasta do projeto dentro de:
+
+```text
+C:\xampp\htdocs\
+```
+
+Por exemplo:
+
+```text
+C:\xampp\htdocs\fretefacil
+```
+
+Inicie o **Apache** no XAMPP.
+
+Como o banco de dados utilizado pelo sistema é online, **não é necessário iniciar o MySQL do XAMPP** para acessar o banco do projeto.
+
+Depois acesse:
+
+```text
+http://localhost/fretefacil/
+```
+
+Caso o Apache esteja configurado para utilizar outra porta:
+
+```text
+http://localhost:8080/fretefacil/
+```
+
+---
+
+# 🔄 Fluxo do sistema
+
+O funcionamento geral segue a estrutura:
+
+```text
+Usuário
+   ↓
+View
+   ↓
+Controller
+   ↓
+DAO
+   ↓
+Banco de Dados
+```
+
+Por exemplo, ao publicar um frete:
+
+```text
+Empresa
+   ↓
+Tela de publicação
+   ↓
+FreteController
+   ↓
+FreteDAO
+   ↓
+tb_frete
+```
+
+No pagamento:
+
+```text
+Empresa
+   ↓
+PagamentoController
+   ↓
+PagamentoDAO
+   ↓
+tb_pagamento
+   ↓
+CarteiraDAO
+   ↓
+tb_carteira
+```
+
+---
+
+# 💳 Pagamentos e carteira
+
+O sistema possui um mecanismo de pagamentos integrado à carteira do motorista.
+
+Após o processamento do pagamento, as informações podem ser utilizadas para atualizar:
+
+* Registro do pagamento;
+* Saldo da carteira;
+* Movimentações financeiras.
+
+A carteira permite ao motorista acompanhar seus ganhos e movimentações realizadas dentro da plataforma.
+
+---
+
+# 🔒 Segurança
+
+Informações sensíveis, como credenciais do banco de dados, são armazenadas através de variáveis de ambiente.
+
+O projeto utiliza:
+
+```text
+.env
+.gitignore
+```
+
+O `.env` não deve ser enviado ao repositório.
+
+O `.gitignore` é utilizado para impedir que arquivos sensíveis ou arquivos desnecessários sejam versionados.
+
+---
+
+# 🧪 Verificando a instalação
+
+Após iniciar o sistema, verifique:
+
+* [ ] O projeto abre no navegador;
+* [ ] A conexão com o banco online funciona;
+* [ ] O login funciona;
+* [ ] O cadastro funciona;
+* [ ] Os dashboards carregam corretamente;
+* [ ] Os fretes podem ser consultados;
+* [ ] Os pagamentos funcionam;
+* [ ] A carteira consegue consultar os dados.
+
+---
+
+# ❗ Problemas comuns
+
+### `could not find driver`
+
+Verifique se o PHP possui o driver:
+
+```text
+pdo_mysql
+```
+
+Execute:
+
+```bash
+php -m
+```
+
+Caso não apareça, habilite a extensão `pdo_mysql` no `php.ini`.
+
+---
+
+### `Access denied for user`
+
+Verifique as credenciais presentes no `.env`:
+
+```env
+DB_HOST=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_PORT=
+```
+
+---
+
+### `Not Found`
+
+Verifique se:
+
+* o servidor PHP está executando;
+* você está na pasta correta do projeto;
+* a URL utilizada corresponde à porta do servidor.
+
+---
+
+### Erro de conexão com o banco
+
+Verifique:
+
+* conexão com a internet;
+* disponibilidade do banco online;
+* credenciais do `.env`;
+* host e porta do banco;
+* extensão `pdo_mysql`.
+
+---
+
+# 👨‍💻 Desenvolvimento
+
+O FreteFácil foi desenvolvido utilizando PHP e uma arquitetura organizada em camadas.
+
+A separação entre **Models, DAOs, Controllers e Views** facilita:
+
+* manutenção;
+* organização do código;
+* reutilização;
+* trabalho em equipe;
+* identificação de erros;
+* implementação de novas funcionalidades.
+
+---
+
+# 🎓 Projeto acadêmico
+
+Projeto desenvolvido para fins acadêmicos no curso de **Desenvolvimento de Sistemas – SENAI**.
+
+---
+
+## 📄 Licença
+
+Projeto desenvolvido para fins educacionais e acadêmicos.
