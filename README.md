@@ -6,9 +6,9 @@ A plataforma permite que empresas publiquem fretes e acompanhem seus pagamentos,
 
 ---
 
-# 📋 Funcionalidades
+#  Funcionalidades
 
-## 🏢 Empresa
+## Empresa
 
 * Cadastro de empresa;
 * Login;
@@ -18,7 +18,7 @@ A plataforma permite que empresas publiquem fretes e acompanhem seus pagamentos,
 * Gerenciamento dos fretes;
 * Realização de pagamentos.
 
-## 🚚 Motorista / PCU
+##  Motorista / PCU
 
 * Cadastro de motorista;
 * Login;
@@ -32,7 +32,7 @@ A plataforma permite que empresas publiquem fretes e acompanhem seus pagamentos,
 
 ---
 
-# 🛠️ Tecnologias utilizadas
+#  Tecnologias utilizadas
 
 * **PHP 8.2+**
 * **MySQL / MariaDB**
@@ -45,7 +45,7 @@ A plataforma permite que empresas publiquem fretes e acompanhem seus pagamentos,
 
 ---
 
-# 🏗️ Estrutura do projeto
+#  Estrutura do projeto
 
 O projeto utiliza uma arquitetura baseada em **MVC**, com a utilização de **DAOs (Data Access Objects)** para separar o acesso ao banco de dados.
 
@@ -96,7 +96,7 @@ fretefacil/
 
 ---
 
-# 🧩 Arquitetura
+#  Arquitetura
 
 ## Models
 
@@ -153,7 +153,7 @@ Elas são responsáveis pela apresentação das informações e pela interação
 
 ---
 
-# 🗄️ Banco de dados
+#  Banco de dados
 
 O FreteFácil utiliza **MySQL/MariaDB**.
 
@@ -193,7 +193,7 @@ Os dados de teste incluem:
 
 ---
 
-# 💻 Executando o projeto localmente
+#  Executando o projeto localmente
 
 A execução local permite que qualquer pessoa baixe o projeto e utilize seu próprio banco de dados MySQL/MariaDB.
 
@@ -217,7 +217,7 @@ FreteFácil
 
 ---
 
-# 📦 1. Clonar o projeto
+#  1. Clonar o projeto
 
 No terminal:
 
@@ -233,7 +233,7 @@ cd fretefacil
 
 ---
 
-# ⚙️ 2. Instalar os requisitos
+#  2. Instalar os requisitos
 
 Para executar o projeto localmente, é necessário possuir:
 
@@ -264,37 +264,39 @@ pdo_mysql
 
 ---
 
-# 🗄️ 3. Criar o banco de dados local
+#  3. Criar o banco de dados local
 
-Instale e inicie o **MySQL ou MariaDB**.
+> Siga os sub-passos **na ordem exata abaixo** (3.1 → 3.2 → 3.3). Essa é a causa mais comum de erro ao configurar o projeto: rodar os scripts antes do MySQL estar ligado, ou trocar a ordem dos dois arquivos `.sql`.
 
-Depois, abra o MySQL Workbench, phpMyAdmin ou outro cliente MySQL.
+## 3.1 Ligar o MySQL/MariaDB
 
-Execute primeiro o arquivo:
+Instale e inicie o **MySQL ou MariaDB** (via XAMPP, serviço nativo, Docker, etc.) antes de qualquer outro passo. Sem o serviço ativo, os scripts abaixo não conseguem se conectar ao banco.
+
+## 3.2 Executar `01_estrutura.sql` (cria o banco e as tabelas)
+
+Abra o MySQL Workbench, phpMyAdmin ou outro cliente MySQL e execute o arquivo:
 
 ```text
 database/01_estrutura.sql
 ```
 
-Esse arquivo irá criar o banco:
+Este script **cria o banco `fretefacil_db` do zero**, junto com todas as suas tabelas. Não é necessário criar o banco manualmente antes — o próprio script faz isso.
 
-```text
-fretefacil_db
-```
+## 3.3 Executar `02_dados_teste.sql` (popula os dados de teste)
 
-e suas respectivas tabelas.
-
-Depois execute:
+Com o banco `fretefacil_db` e as tabelas já criadas pelo passo anterior, execute agora:
 
 ```text
 database/02_dados_teste.sql
 ```
 
-Esse segundo script irá inserir dados fictícios para testes.
+Este segundo script insere os dados fictícios usados para testar o sistema (empresa, motorista, carteira, frete).
+
+>  A ordem importa: rodar `02_dados_teste.sql` antes de `01_estrutura.sql` resultará em erro, pois as tabelas ainda não existirão.
 
 ---
 
-# 🔑 4. Configurar o `.env`
+#  4. Configurar o `.env`
 
 Na raiz do projeto existe o arquivo:
 
@@ -341,7 +343,7 @@ DB_PASS=sua_senha
 
 ---
 
-# ▶️ 5. Executar o projeto
+#  5. Executar o projeto
 
 Abra o terminal dentro da pasta do projeto:
 
@@ -367,7 +369,7 @@ O FreteFácil estará sendo executado localmente.
 
 ---
 
-# 🧪 6. Dados para teste
+#  6. Dados para teste
 
 O script `02_dados_teste.sql` cria usuários fictícios para facilitar a demonstração.
 
@@ -389,7 +391,7 @@ Senha: 12345678
 
 ---
 
-# 🌐 Banco online
+#  Banco online
 
 Durante o desenvolvimento, o FreteFácil também pode utilizar um banco MySQL/MariaDB hospedado online.
 
@@ -409,7 +411,7 @@ Essa abordagem também evita a necessidade de compartilhar as credenciais do ban
 
 ---
 
-# 🌐 Utilizando XAMPP
+#  Utilizando XAMPP
 
 Também é possível executar o projeto utilizando o Apache do XAMPP.
 
@@ -447,7 +449,7 @@ http://localhost/fretefacil/
 
 ---
 
-# 🔄 Fluxo do sistema
+#  Fluxo do sistema
 
 O funcionamento geral segue:
 
@@ -494,8 +496,7 @@ tb_carteira
 ```
 
 ---
-
-# 💳 Pagamentos e carteira
+#  Pagamentos e carteira
 
 O sistema possui um mecanismo de pagamentos integrado à carteira do motorista.
 
@@ -509,7 +510,7 @@ A carteira permite ao motorista acompanhar seus ganhos e movimentações realiza
 
 ---
 
-# 🔒 Segurança
+#  Segurança
 
 As credenciais do banco são armazenadas através de variáveis de ambiente.
 
@@ -539,7 +540,7 @@ Os scripts SQL disponíveis no repositório também **não devem conter senhas o
 
 ---
 
-# 🧪 Verificando a instalação
+#  Verificando a instalação
 
 Após iniciar o sistema, verifique:
 
@@ -608,7 +609,7 @@ Confirme também se o MySQL/MariaDB está em execução.
 
 Significa que o banco ainda não foi criado.
 
-Execute:
+Execute (ver seção **3.2** acima):
 
 ```text
 database/01_estrutura.sql
@@ -618,7 +619,7 @@ database/01_estrutura.sql
 
 ## `Table doesn't exist`
 
-Execute novamente:
+Execute novamente, na ordem correta (seção **3**):
 
 ```text
 database/01_estrutura.sql
@@ -657,7 +658,7 @@ Verifique:
 
 ---
 
-# 👨‍💻 Desenvolvimento
+#  Desenvolvimento
 
 O FreteFácil foi desenvolvido utilizando PHP e uma arquitetura organizada em camadas.
 
@@ -672,12 +673,12 @@ A separação entre **Models, DAOs, Controllers e Views** facilita:
 
 ---
 
-# 🎓 Projeto acadêmico
+#  Projeto acadêmico
 
 Projeto desenvolvido para fins acadêmicos no curso de **Desenvolvimento de Sistemas – SENAI**.
 
 ---
 
-## 📄 Licença
+##  Licença
 
 Projeto desenvolvido para fins educacionais e acadêmicos.
