@@ -83,7 +83,7 @@ include __DIR__ . '/../components/header.php';
         
         </form>
         <div class="auth-footer">
-        Não tem conta? <a href="cadastro-emp.php">Cadastre-se grátis</a>
+        Não tem conta? <a href="cadastro.php">Cadastre-se grátis</a>
         </div>
     </div>
 </main>
