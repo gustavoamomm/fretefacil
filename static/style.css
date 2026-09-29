@@ -1202,8 +1202,8 @@ main.main-content{
 }
 
 .carteira-saldo {
-    background: linear-gradient(135deg, #0a1220, #0d1a2e);
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: var(--dark2);
+    border: 1px solid var(--border);
     border-radius: 20px;
     padding: 40px;
     text-align: center;
