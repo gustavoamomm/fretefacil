@@ -1,0 +1,5 @@
+
+FROM mysql:8.4
+
+COPY database/01_estrutura.sql /docker-entrypoint-initdb.d/01_estrutura.sql
+COPY database/02_dados_teste.sql /docker-entrypoint-initdb.d/02_dados_teste.sql
