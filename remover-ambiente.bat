@@ -21,9 +21,10 @@ echo Removendo imagem PHP + Apache...
 docker rmi fretefacil-php-apache:1.0
 
 echo Removendo imagem personalizada MySQL...
-docker rmi fretefacil-mysql:8.4
+docker rmi fretefacil-mysql:8.0
 
 echo.
 echo Remocao concluida.
 echo O volume fretefacil_db_data foi preservado.
 pause
+
